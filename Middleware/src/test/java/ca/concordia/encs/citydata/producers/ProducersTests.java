@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.producers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,9 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import ca.concordia.encs.citydata.producers.OccupancyProducer;
-import ca.concordia.encs.citydata.producers.RandomNumberProducer;
 
 /* This java class is to test randomNumberProducer and occupancyProducer
  * Author: Sikandar Ejaz
