@@ -14,7 +14,7 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 public class JsonReadOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	private String path = "";
 	private JsonElement currentObject;
-	final Pattern containsArrayAccess = Pattern.compile("(.+)\\[(\\d+)\\]");;
+	final Pattern containsArrayAccess = Pattern.compile("(.+)\\[(\\d+)\\]");
 
 	public void setPath(String path) {
 		this.path = path;
@@ -99,7 +99,7 @@ public class JsonReadOperation extends AbstractOperation<JsonObject> implements 
 					matchingJsonObjects.add(this.currentObject.getAsJsonObject());
 				} else {
 					final JsonObject objectWrapper = new JsonObject();
-					objectWrapper.addProperty(pathParts[pathParts.length - 1], this.currentObject.toString());
+					objectWrapper.add(pathParts[pathParts.length - 1], this.currentObject);
 					matchingJsonObjects.add(objectWrapper);
 				}
 
