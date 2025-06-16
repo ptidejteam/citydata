@@ -15,18 +15,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import ca.concordia.encs.citydata.core.AppConfig;
-
 /*
  * Tests added for MergeOperation 
  * Author: Sikandar Ejaz 
  * Date: 4-8-2025
  * Last Update: 16-06-2025
  * Fixed errors in tests. 
- * 
  */
 
-@SpringBootTest(classes = AppConfig.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 public class MergeOperationTests {
 
