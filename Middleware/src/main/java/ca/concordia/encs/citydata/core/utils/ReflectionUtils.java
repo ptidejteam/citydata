@@ -2,6 +2,7 @@ package ca.concordia.encs.citydata.core.utils;
 
 import java.lang.reflect.Method;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.NoSuitableSetterException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,14 +40,14 @@ public abstract class ReflectionUtils {
 	}
 
 	public static Method findSetterMethod(Class<?> clazz, String paramName, JsonElement paramValue)
-			throws NoSuchMethodException {
+			throws NoSuitableSetterException {
 		String methodName = "set" + StringUtils.capitalize(paramName);
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().equals(methodName) && method.getParameterCount() == 1) {
 				return method;
 			}
 		}
-		throw new NoSuchMethodException("No suitable setter found for " + paramName);
+		throw new  NoSuitableSetterException("No suitable setter found for " + paramName);
 	}
 
 	public static Object convertValue(Class<?> targetType, JsonElement value) {
