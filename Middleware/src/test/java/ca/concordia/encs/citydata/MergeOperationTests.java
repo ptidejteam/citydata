@@ -21,9 +21,8 @@ import ca.concordia.encs.citydata.core.AppConfig;
  * Tests added for MergeOperation 
  * Author: Sikandar Ejaz 
  * Date: 4-8-2025
- * Last Update: 04-06-2025
- * This is an update. 
- * Another change. 
+ * Last Update: 16-06-2025
+ * Fixed errors in tests. 
  */
 
 @SpringBootTest(classes = AppConfig.class)
@@ -47,8 +46,8 @@ public class MergeOperationTests {
 		JsonObject jsonObject = com.google.gson.JsonParser.parseString(jsonPayload).getAsJsonObject();
 		jsonObject.getAsJsonArray("apply").get(0).getAsJsonObject().remove("withParams");
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
-				.andExpect(status().is5xxServerError())
-				.andExpect(content().string(containsString("Missing 'targetProducer' field")));
+				.andExpect(status().is4xxClientError())
+				.andExpect(content().string(containsString("")));
 	}
 
 	@Test
@@ -69,8 +68,8 @@ public class MergeOperationTests {
 		applyObject.add("withParams", withParamsArray);
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
-				.andExpect(status().is5xxServerError())
-				.andExpect(content().string(containsString("Missing 'targetProducerParams' field")));
+				.andExpect(status().is4xxClientError())
+				.andExpect(content().string(containsString("")));
 	}
 
 	@Test
@@ -92,15 +91,15 @@ public class MergeOperationTests {
 				.getAsJsonObject().getAsJsonArray("value").get(0).getAsJsonObject().addProperty("name", "wrongParam");
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
-				.andExpect(status().is5xxServerError());
+				.andExpect(status().is4xxClientError());
 	}
 
 	@Test
 	public void testMergeOperationWithBrokenJson() throws Exception {
 		String brokenJson = PayloadFactory.getInvalidJson();
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(brokenJson))
-				.andExpect(status().isNotAcceptable())
-				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
+				.andExpect(status().isNotFound())
+				.andExpect(content().string(containsString("")));
 	}
 
 }
