@@ -1,16 +1,10 @@
 package ca.concordia.encs.citydata.core.utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidProducerException;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidOperationException;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidParameterException;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.UnsupportedParameterTypeException;
 
 /**
  * This class contains Reflection functions used throughout the code to
@@ -28,58 +22,34 @@ public abstract class ReflectionUtils {
 		return jsonObject.get(fieldName);
 	}
 
-	public static Object instantiateClass(String className) throws MiddlewareException {
-		try {
-			Class<?> clazz = Class.forName(className);
-			return clazz.getDeclaredConstructor().newInstance();
-		} catch (ClassNotFoundException | NoSuchMethodException e) {
-			if (className.contains("Operation") || className.contains("operation")) {
-				throw new InvalidOperationException(className);
-			} else if (className.contains("Producer") || className.contains("producer")) {
-				throw new InvalidProducerException(className);
-			} else {
-				throw new MiddlewareException("Producer or Operation " + e.getClass().getSimpleName() + " was not found. Please check for typos and try again.");
-			}
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-			throw new MiddlewareException("CityData entity could not be created: " + e.getClass().getSimpleName() + ". Please contact the system administrator.");
-		}
+	public static Object instantiateClass(String className) throws Exception {
+		Class<?> clazz = Class.forName(className);
+		return clazz.getDeclaredConstructor().newInstance();
 	}
 
-	public static void setParameters(Object instance, JsonArray params) throws MiddlewareException {
+	public static void setParameters(Object instance, JsonArray params) throws Exception {
 		Class<?> clazz = instance.getClass();
-		JsonObject paramObject = null;
-		JsonElement paramValue = null;
-		String paramName = "";
-		Method setter = null;
-		try {
-			for (JsonElement paramElement : params) {
-				paramObject = paramElement.getAsJsonObject();
-				paramName = paramObject.get("name").getAsString();
-				paramValue = paramObject.get("value");
-				setter = findSetterMethod(clazz, paramName, paramValue);
-				setter.invoke(instance, convertValue(setter.getParameterTypes()[0], paramValue));
-			}
-		} catch (Exception e) {
-			if (setter != null) {
-				throw new UnsupportedParameterTypeException(paramName, paramValue.toString(), setter.getParameterTypes()[0].toString());
-			} else {
-				throw new InvalidParameterException(paramName);
-			}
+		for (JsonElement paramElement : params) {
+			JsonObject paramObject = paramElement.getAsJsonObject();
+			String paramName = paramObject.get("name").getAsString();
+			JsonElement paramValue = paramObject.get("value");
+			Method setter = findSetterMethod(clazz, paramName, paramValue);
+			setter.invoke(instance, convertValue(setter.getParameterTypes()[0], paramValue));
 		}
 	}
 
 	public static Method findSetterMethod(Class<?> clazz, String paramName, JsonElement paramValue)
-			throws InvalidParameterException {
+			throws NoSuchMethodException {
 		String methodName = "set" + StringUtils.capitalize(paramName);
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().equals(methodName) && method.getParameterCount() == 1) {
 				return method;
 			}
 		}
-		throw new InvalidParameterException(paramName);
+		throw new NoSuchMethodException("No suitable setter found for " + paramName);
 	}
 
-	public static Object convertValue(Class<?> targetType, JsonElement value) throws UnsupportedOperationException, NumberFormatException {
+	public static Object convertValue(Class<?> targetType, JsonElement value) {
 		if (targetType == int.class || targetType == Integer.class) {
 			return value.getAsInt();
 		} else if (targetType == boolean.class || targetType == Boolean.class) {

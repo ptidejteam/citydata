@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.ThreadInterruptedException;
 import com.google.gson.JsonArray;
 
 import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
@@ -68,7 +69,7 @@ public class MergeOperation extends AbstractOperation<String> implements IOperat
 			}
 
 		} catch (InterruptedException e) {
-			System.out.println(e.getMessage());
+			throw new ThreadInterruptedException("Thread was interrupted during execution." +e.getMessage());
 		}
 
 		return sourceList;

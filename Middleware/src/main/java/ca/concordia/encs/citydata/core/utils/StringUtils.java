@@ -6,6 +6,9 @@ import java.lang.reflect.Parameter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,4 +63,24 @@ public abstract class StringUtils {
 			return new JsonObject();
 		}
 	}
+
+	public static boolean isValidDate(String date) throws IllegalArgumentException {
+		try {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime.parse(date, formatter);
+			return true;
+		} catch (DateTimeParseException | NullPointerException e) {
+			return false;
+		}
+	}
+
+	public static LocalDateTime parseDate(String date) throws IllegalArgumentException {
+		try {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			return LocalDateTime.parse(date, formatter);
+		} catch (DateTimeParseException | NullPointerException e) {
+			return null;
+		}
+	}
+
 }

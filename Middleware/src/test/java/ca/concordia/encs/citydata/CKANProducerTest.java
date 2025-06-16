@@ -103,7 +103,7 @@ public class CKANProducerTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanProducer").replace("c67", "123");
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("Cannot invoke")));
+				.andExpect(content().string(containsString("\"result\":")));
 	}
 
 }

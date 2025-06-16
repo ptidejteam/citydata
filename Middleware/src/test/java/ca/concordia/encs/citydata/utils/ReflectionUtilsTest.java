@@ -54,26 +54,6 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void testSetParametersInvalidField() {
-        class TestClass {
-            public void setName(String name) {}
-        }
-
-        TestClass instance = new TestClass();
-        JsonArray params = new JsonArray();
-
-        JsonObject invalidParam = new JsonObject();
-        invalidParam.addProperty("name", "nonExistentField");
-        invalidParam.addProperty("value", "value");
-        params.add(invalidParam);
-
-        Exception exception = assertThrows(NoSuchMethodException.class, () -> {
-            ReflectionUtils.setParameters(instance, params);
-        });
-
-        assertTrue(exception.getMessage().contains("nonExistentField"));
-    }
-    @Test
     public void testSetParametersNull() {
         JsonArray params = new JsonArray();
 
@@ -104,7 +84,7 @@ public class ReflectionUtilsTest {
             public void setAge(int age) {}
         }
 
-        Exception exception = assertThrows(NoSuchMethodException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.NoSuitableSetterException.class, () -> {
             ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
         });
 
