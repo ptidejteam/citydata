@@ -65,6 +65,7 @@ public abstract class PayloadFactory {
 		payload.add("apply", apply);
 
 		return payload.toString();
+		
 	}
 
 	public static String getExampleQuery(String queryFileName) throws Exception {
