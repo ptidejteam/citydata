@@ -69,7 +69,7 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	@Override
 	public void fetch() {
 		if (this.filePath == null || this.filePath.isEmpty()) {
-			throw new MiddlewareException.InvalidProducerParameterException(
+			throw new MiddlewareException.InvalidParameterException(
 					"Producer file path is missing or empty. Please set a valid file path.");
 		}
 		System.out.println("Unimplemented method! This method must be implemented by a subclass.");
@@ -184,11 +184,16 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			for (E element : this.result) {
 				jsonArray.add((JsonElement) element);
 			}
+			return jsonArray.toString();
 		} else {
 			JsonObject result = new JsonObject();
-			result.addProperty("result", this.result.toString());
+			if (this.result.size() == 1) {
+				result.addProperty("result", this.result.getFirst().toString());
+			} else {
+				result.addProperty("result", this.result.toString());
+			}
 			jsonArray.add(result);
+			return jsonArray.get(0).toString();
 		}
-		return jsonArray.toString();
 	}
 }

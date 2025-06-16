@@ -156,7 +156,7 @@ public class ApplyTest {
 		String nonExistentParam = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [ { \"name\": \"nonExistentParam\", \"value\": \"value\" } ] }";
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(nonExistentParam))
-				.andExpect(content().string(containsString("No suitable setter found for nonExistentParam")));
+				.andExpect(content().string(containsString("Producer or Operation parameter nonExistentParam was not found")));
 	}
 
 	// Test for missing params in Operation (valid case for operations that take no

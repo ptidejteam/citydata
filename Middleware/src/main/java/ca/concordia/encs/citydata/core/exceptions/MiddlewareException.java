@@ -11,33 +11,28 @@ public class MiddlewareException extends RuntimeException {
 		super(message);
 	}
 
+
 	public static class InvalidProducerException extends MiddlewareException {
 		public InvalidProducerException(String producerName) {
-			super("Invalid producer: " + producerName);
+			super("Producer " + producerName + " was not found. Please check whether the fully-qualified name is correct and try again.");
 		}
 	}
 
 	public static class InvalidOperationException extends MiddlewareException {
 		public InvalidOperationException(String operationName) {
-			super("Invalid operation: " + operationName);
+			super("Producer " + operationName + " was not found. Please check whether the fully-qualified name is correct and try again.");
 		}
 	}
 
-	public static class InvalidProducerParameterException extends MiddlewareException {
-		public InvalidProducerParameterException(String parameterName) {
-			super("Invalid producer parameter: " + parameterName);
-		}
-	}
-
-	public static class InvalidOperationParameterException extends MiddlewareException {
-		public InvalidOperationParameterException(String parameterName) {
-			super("Invalid operation parameter: " + parameterName);
+	public static class InvalidParameterException extends MiddlewareException {
+		public InvalidParameterException(String parameterName) {
+			super("Producer or Operation parameter " + parameterName + " was not found. Please check for typos and try again.");
 		}
 	}
 
 	public static class UnsupportedParameterTypeException extends MiddlewareException {
-		public UnsupportedParameterTypeException(String parameterType) {
-			super("Unsupported parameter type: " + parameterType);
+		public UnsupportedParameterTypeException(String parameterName, String parameterValue, String parameterTypeSupported) {
+			super("Parameter " + parameterName + " cannot accept value " + parameterValue + " as an input. Please input a value of type " + parameterTypeSupported + " instead.");
 		}
 	}
 

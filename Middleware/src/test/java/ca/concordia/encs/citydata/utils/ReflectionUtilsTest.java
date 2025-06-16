@@ -1,6 +1,8 @@
 package ca.concordia.encs.citydata.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,7 +39,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void testInstantiateClassInvalidClassName() {
-        Exception exception = assertThrows(ClassNotFoundException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("non.existent.ClassName");
         });
         assertEquals("non.existent.ClassName", exception.getMessage());
@@ -45,7 +47,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void testInstantiateClassAbstractClass() {
-        Exception exception = assertThrows(IllegalAccessException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("java.util.AbstractList");
         });
         assertTrue(exception.getMessage().contains("java.util.AbstractList"));
