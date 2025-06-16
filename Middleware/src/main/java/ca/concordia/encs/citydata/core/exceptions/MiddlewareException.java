@@ -47,6 +47,12 @@ public class MiddlewareException extends RuntimeException {
 		}
 	}
 
+	public static class DatasetNotFound extends MiddlewareException {
+		public DatasetNotFound(String message) {
+			super("Dataset not found: " + message);
+		}
+	}
+
 	public static class ReflectionOperationException extends MiddlewareException {
 		public ReflectionOperationException(String message, Throwable cause) {
 			super(message);
