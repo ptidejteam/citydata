@@ -3,6 +3,7 @@
  */
 package ca.concordia.encs.citydata.core.implementations;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -154,6 +155,7 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	 */
 	protected byte[] readFile() throws Exception {
 		Path path = Paths.get(this.filePath);
+		System.out.println(path.toAbsolutePath().toString());
 		return Files.readAllBytes(path);
 	}
 

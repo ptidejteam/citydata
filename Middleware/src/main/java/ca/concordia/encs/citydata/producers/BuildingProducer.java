@@ -13,7 +13,7 @@ public class BuildingProducer extends AbstractProducer<String> implements IProdu
 
 	public void setBuildingName(String buildingName) {
 		if (buildingName != null) {
-			jsonProducer = new JSONProducer("./docs/examples/data/" + buildingName + "_building.json", null);
+			jsonProducer = new JSONProducer("docs/examples/data/" + buildingName + "_building.json", null);
 		} else {
 			throw new InvalidParameterException("Please provide a building name to the producer.");
 		}
