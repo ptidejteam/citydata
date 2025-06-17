@@ -3,6 +3,7 @@
  */
 package ca.concordia.encs.citydata.core.implementations;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;

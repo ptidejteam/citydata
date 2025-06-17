@@ -3,6 +3,7 @@ package ca.concordia.encs.citydata.producers;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
@@ -98,7 +99,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 			JsonObject resourceAttributes = getResourceAttributes(metadataObject);
 			String resourceUrl = resourceAttributes.get("url").getAsString();
 			String mimetype = resourceAttributes.get("mimetype").getAsString();
-			Integer size = resourceAttributes.get("sizeInMb").getAsInt();
+			int size = resourceAttributes.get("sizeInMb").getAsInt();
 
 			// if the file is supported, download it and save to disk
 			if (isFileSupported(mimetype)) {
@@ -131,19 +132,17 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	public void fetch() {
 
 		if (this.resourceId != null) {
-
 			// before attempting to fetch, check if a file with this resource ID already
 			// exists in the disk
-			byte[] fileOnDisk = diskStore.get(this.resourceId);
-			if (fileOnDisk == null) {
+			byte[] file;
+			try {
+				file = diskStore.get(this.resourceId);
+			} catch (DataStoreFailureReadingException e) {
 				// if not, fetch from CKAN and save on disk
-				byte[] fileFromCkan = fetchFromCkan();
-				diskStore.set(this.resourceId, fileFromCkan);
-				intermediateResult.add(new String(fileFromCkan));
-			} else {
-				intermediateResult.add(new String(fileOnDisk));
+				file = fetchFromCkan();
+				diskStore.set(this.resourceId, file);
 			}
-
+			intermediateResult.add(new String(file));
 			this.result = this.intermediateResult;
 			this.applyOperation();
 		}

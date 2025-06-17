@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.producers;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -103,7 +104,7 @@ public class CKANProducerTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanProducer").replace("c67", "123");
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("\"result\":")));
+				.andExpect(content().string(containsString("Cannot invoke")));
 	}
 
 }
