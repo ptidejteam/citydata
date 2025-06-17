@@ -47,9 +47,49 @@ public class MiddlewareException extends RuntimeException {
 		}
 	}
 
+	public static class DatasetNotFound extends MiddlewareException {
+		public DatasetNotFound(String message) {
+			super("Dataset not found: " + message);
+		}
+	}
+
 	public static class ReflectionOperationException extends MiddlewareException {
 		public ReflectionOperationException(String message, Throwable cause) {
 			super(message);
 		}
 	}
+
+	public static class DataStoreException extends MiddlewareException {
+		public DataStoreException(String message) {
+			super("Data store error: " + message);
+		}
+	}
+	public static class DataStoreWritingFailureException extends MiddlewareException {
+		public DataStoreWritingFailureException(String message) {
+			super("Data store writing failure: " + message);
+		}
+	}
+	public static class DataStoreFailureReadingException extends MiddlewareException {
+		public DataStoreFailureReadingException(String message) {
+			super("Data store reading failure: " + message);
+		}
+	}
+
+	public static class DataStoreDeleteFailureException extends MiddlewareException {
+		public DataStoreDeleteFailureException(String message) {
+			super("Data store deletion failure: " + message);
+		}
+	}
+
+	public static class ThreadInterruptedException extends MiddlewareException {
+		public ThreadInterruptedException(String message) {
+			super(message);
+		}
+	}
+	public static class NoSuitableSetterException extends MiddlewareException {
+		public NoSuitableSetterException(String message) {
+			super(message);
+		}
+	}
+
 }

@@ -15,25 +15,20 @@
     },
     {
       "name": "clientId",
-      "value": 2
+      "value": 1
     }
   ],
   "apply": [
-    {
-      "name": "ca.concordia.encs.citydata.operations.MergeOperation",
+        {
+      "name": "ca.concordia.encs.citydata.operations.JsonArrayAverageOperation",
       "withParams": [
         {
-          "name": "targetProducer",
-          "value": "ca.concordia.encs.citydata.producers.GeometryProducer"
+          "name": "keyName",
+          "value": "consumptionKwh"
         },
         {
-          "name": "targetProducerParams",
-          "value": [
-            {
-              "name": "city",
-              "value": "montreal"
-            }
-          ]
+          "name": "roundingMethod",
+          "value": "none"
         }
       ]
     }

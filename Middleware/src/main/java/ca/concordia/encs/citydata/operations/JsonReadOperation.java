@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -87,7 +88,7 @@ public class JsonReadOperation extends AbstractOperation<JsonObject> implements 
 							// this means the current object is either a primitive or null
 							break;
 						}
-					} catch (Exception e) {
+					} catch (MiddlewareException e) {
 						this.handlePathNotFound(key);
 						break;
 					}
