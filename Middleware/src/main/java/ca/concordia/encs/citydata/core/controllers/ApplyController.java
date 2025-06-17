@@ -139,11 +139,4 @@ public class ApplyController {
         }
     }
 
-	@RequestMapping(value = "/ping", method = RequestMethod.GET)
-	public ResponseEntity<String> ping() {
-		Date timeObject = Calendar.getInstance().getTime();
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
-		return ResponseEntity.status(HttpStatus.OK).body("pong at " + timeStamp);
-	}
-
 }
