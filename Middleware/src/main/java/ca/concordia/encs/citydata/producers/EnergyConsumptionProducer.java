@@ -15,7 +15,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<String> implemen
 	public void setCity(String city) {
 		this.city = city;
 		if (this.city != null) {
-			csvProducer = new CSVProducer("./src/test/data/" + this.city + "_energy_consumption.csv", null);
+			csvProducer = new CSVProducer("./docs/examples/data/" + this.city + "_energy_consumption.csv", null);
 		} else {
 			throw new InvalidParameterException("Please provide a city name to the producer.");
 		}

@@ -3,7 +3,7 @@
   "withParams": [
     {
       "name": "buildingName",
-      "value": "varennes"
+      "value": "mock"
     }
   ],
   "apply": [

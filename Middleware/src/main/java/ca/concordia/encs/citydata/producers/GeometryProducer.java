@@ -15,7 +15,7 @@ public class GeometryProducer extends AbstractProducer<String> implements IProdu
 	public void setCity(String city) {
 		this.city = city;
 		if (this.city != null) {
-			jsonProducer = new JSONProducer("./src/test/data/" + this.city + "_geometries.json", null);
+			jsonProducer = new JSONProducer("./docs/examples/data/" + this.city + "_geometries.json", null);
 		} else {
 			throw new InvalidParameterException("Please provide a city name to the producer.");
 		}
