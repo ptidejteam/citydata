@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "add2204a-2ea3-4a55-a6a4-799b4c7f5ee6",
-		"name": "Middleware",
+		"name": "CITYdata",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38433140"
 	},
@@ -78,41 +78,13 @@
 			"name": "Apply",
 			"item": [
 				{
-					"name": "apply/sync (StringProducer)",
+					"name": "apply/sync",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"use\": \"ca.concordia.encs.citydata.producers.StringProducer\",\n    \"withParams\": [\n        {\n            \"name\": \"generationProcess\",\n            \"value\": \"random\"\n        },\n        {\n            \"name\": \"stringLength\",\n            \"value\": 50\n        }\n    ],\n    \"apply\": [\n        {\n            \"name\": \"ca.concordia.encs.citydata.operations.StringReplaceOperation\",\n            \"withParams\": [\n                {\n                    \"name\": \"searchFor\",\n                    \"value\": \"a\"\n                },\n                {\n                    \"name\": \"replaceBy\",\n                    \"value\": \"==HELLO==\"\n                }\n            ]\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/apply/sync",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"apply",
-								"sync"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "apply/sync (EnergyConsumptionProducer)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"use\": \"ca.concordia.encs.citydata.producers.EnergyConsumptionProducer\",\n    \"withParams\": [\n        {\n            \"name\": \"city\",\n            \"value\": \"montreal\"\n        }\n    ],\n    \"apply\": [\n        {\n            \"name\": \"ca.concordia.encs.citydata.operations.StringFilterOperation\",\n            \"withParams\": [\n                {\n                    \"name\": \"filterBy\",\n                    \"value\": \"09:45:00\"\n                }\n            ]\n        }\n    ]\n}",
+							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -140,7 +112,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"use\": \"ca.concordia.encs.citydata.producers.StringProducer\",\n    \"withParams\": [\n        {\n            \"name\": \"generationProcess\",\n            \"value\": \"gabriel\"\n        }\n    ],\n    \"apply\": [\n        {\n            \"name\": \"ca.concordia.encs.citydata.operations.StringReplaceOperation\",\n            \"withParams\": [\n                {\n                    \"name\": \"searchFor\",\n                    \"value\": \"a\"\n                },\n                {\n                    \"name\": \"replaceBy\",\n                    \"value\": \"b\"\n                }\n            ]\n        },\n        {\n            \"name\": \"ca.concordia.encs.citydata.operations.StringReplaceOperation\",\n            \"withParams\": [\n                {\n                    \"name\": \"searchFor\",\n                    \"value\": \"l\"\n                },\n                {\n                    \"name\": \"replaceBy\",\n                    \"value\": \"k\"\n                }\n            ]\n        }\n    ]\n}",
+							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -162,6 +134,34 @@
 					"response": []
 				},
 				{
+					"name": "exists",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/exists/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"exists",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "apply/async/{runnerId}",
 					"request": {
 						"auth": {
@@ -170,7 +170,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/apply/async/51cb857f-0e11-432d-8674-b231fafd2f05",
+							"raw": "localhost:8080/apply/async/ece58fef-33a3-4c77-863c-a4853d9377e3",
 							"host": [
 								"localhost"
 							],
@@ -178,7 +178,7 @@
 							"path": [
 								"apply",
 								"async",
-								"51cb857f-0e11-432d-8674-b231fafd2f05"
+								"ece58fef-33a3-4c77-863c-a4853d9377e3"
 							]
 						}
 					},
@@ -222,6 +222,29 @@
 							"path": [
 								"apply",
 								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "report/producers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/report/producers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"report",
+								"producers"
 							]
 						}
 					},
