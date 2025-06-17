@@ -120,12 +120,16 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/apply/async",
+							"raw": "https://ngci.encs.concordia.ca/citydata/apply/async",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"ngci",
+								"encs",
+								"concordia",
+								"ca"
 							],
-							"port": "8080",
 							"path": [
+								"citydata",
 								"apply",
 								"async"
 							]
@@ -170,15 +174,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/apply/async/ece58fef-33a3-4c77-863c-a4853d9377e3",
+							"raw": "https://ngci.encs.concordia.ca/citydata/apply/async/88738236-9a90-449c-8c7b-7dde540b3efa",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"ngci",
+								"encs",
+								"concordia",
+								"ca"
 							],
-							"port": "8080",
 							"path": [
+								"citydata",
 								"apply",
 								"async",
-								"ece58fef-33a3-4c77-863c-a4853d9377e3"
+								"88738236-9a90-449c-8c7b-7dde540b3efa"
 							]
 						}
 					},
@@ -190,37 +198,18 @@
 			"name": "Other",
 			"item": [
 				{
-					"name": "helloworld",
+					"name": "health/ping",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/helloworld/",
+							"raw": "localhost:8080/health/ping",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"helloworld",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "apply/ping",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/apply/ping",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"apply",
+								"health",
 								"ping"
 							]
 						}
