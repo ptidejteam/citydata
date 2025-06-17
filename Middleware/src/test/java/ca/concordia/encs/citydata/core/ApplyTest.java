@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.core;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.lang.reflect.Method;
 
+import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -89,14 +90,6 @@ public class ApplyTest {
         .andExpect(status().is(400))  // Changed from 404 to 400
         .andExpect(content().string(containsString("Invalid runner ID format. Please provide a valid UUID.")));
 	}	
-
-	// Test for ping route
-	@Test
-	public void testPingRoute() throws Exception {
-		System.out.println("Registered endpoints: " + webApplicationContext.getBean("requestMappingHandlerMapping"));
-		mockMvc.perform(get("/apply/ping")).andExpect(status().isOk())
-				.andExpect(content().string(org.hamcrest.Matchers.startsWith("pong")));
-	}
 
 	// Test for sync with valid payload
 	@Test

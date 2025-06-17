@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class TestFireBase {
+public class FireBaseTest {
 
 	private static FirebaseDatabase database;
 	private static boolean skipTest = false;

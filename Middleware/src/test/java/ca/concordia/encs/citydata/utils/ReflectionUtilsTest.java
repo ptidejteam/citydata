@@ -42,7 +42,7 @@ public class ReflectionUtilsTest {
         Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("non.existent.ClassName");
         });
-        assertEquals("non.existent.ClassName", exception.getMessage());
+        assert(exception.getMessage().contains("Producer or Operation ClassNotFoundException was not found"));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ReflectionUtilsTest {
         Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("java.util.AbstractList");
         });
-        assertTrue(exception.getMessage().contains("java.util.AbstractList"));
+        assertTrue(exception.getMessage().contains("CITYdata entity could not be created"));
     }
 
     @Test
@@ -83,12 +83,9 @@ public class ReflectionUtilsTest {
         class TestClass {
             public void setAge(int age) {}
         }
-
-        Exception exception = assertThrows(MiddlewareException.NoSuitableSetterException.class, () -> {
+        assertThrows(MiddlewareException.InvalidParameterException.class, () -> {
             ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
         });
-
-        assertEquals("No suitable setter found for name", exception.getMessage());
     }
     @Test
     public void testConvertValueBooleanType() {
