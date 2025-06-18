@@ -12,10 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 
 /**
- *  This class contains test methods to validate the functionality of ReflectionUtils methods.
- *
- * Author: Rushin Makwana
- *Date: 2025-03-26
+ * This class contains test methods to validate the functionality of ReflectionUtils methods.
+ * @author Rushin Makwana
+ * @date 2025-03-26
  *
  */
 
@@ -34,7 +33,7 @@ public class ReflectionUtilsTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             ReflectionUtils.getRequiredField(jsonObject, "anyField");
         });
-        assertEquals("Error: Missing 'anyField' field", exception.getMessage());
+        assertEquals("Error: Missing required 'anyField' field", exception.getMessage());
     }
 
     @Test
@@ -74,7 +73,7 @@ public class ReflectionUtilsTest {
             public void setName(String name) {}
         }
 
-        Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
+        Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name");
         assertNotNull(method);
         assertEquals("setName", method.getName());
     }
@@ -84,7 +83,7 @@ public class ReflectionUtilsTest {
             public void setAge(int age) {}
         }
         assertThrows(MiddlewareException.InvalidParameterException.class, () -> {
-            ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
+            ReflectionUtils.findSetterMethod(TestClass.class, "name");
         });
     }
     @Test

@@ -80,7 +80,7 @@ public class RetrofitResultsTest {
 		mockMvc.perform(
 				post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
 				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("Please input a value of type")));
+				.andExpect(content().string(containsString("Expected keys 'name' and 'value'")));
 	}
 
 }

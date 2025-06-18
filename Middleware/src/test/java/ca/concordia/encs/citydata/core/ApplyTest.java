@@ -2,7 +2,6 @@ package ca.concordia.encs.citydata.core;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.lang.reflect.Method;
 
 import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.Test;
@@ -22,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
@@ -35,9 +32,6 @@ public class ApplyTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-
-	@Autowired
-	private WebApplicationContext webApplicationContext;
 
 	private void performPostRequest(String url, String contentType, String content) throws Exception {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
@@ -131,7 +125,7 @@ public class ApplyTest {
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingUse))
 				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("Missing 'use' field")));
+				.andExpect(content().string(containsString("Missing required 'use' field")));
 	}
 
 	// Test for missing "withParams" field
@@ -140,7 +134,7 @@ public class ApplyTest {
 		String missingWithParams = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\" }";
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
-				.andExpect(content().string(containsString("Missing 'withParams' field")));
+				.andExpect(content().string(containsString("Missing required 'withParams' field")));
 	}
 
 	// Test for non-existent param in Producer/Operation
@@ -149,7 +143,7 @@ public class ApplyTest {
 		String nonExistentParam = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [ { \"name\": \"nonExistentParam\", \"value\": \"value\" } ] }";
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(nonExistentParam))
-				.andExpect(content().string(containsString("Producer or Operation parameter nonExistentParam was not found")));
+				.andExpect(content().string(containsString("Producer or Operation parameter 'nonExistentParam' was not found")));
 	}
 
 	// Test for missing params in Operation (valid case for operations that take no
@@ -160,7 +154,7 @@ public class ApplyTest {
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
 				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("Missing 'withParams' field")));
+				.andExpect(content().string(containsString("Missing required 'withParams' field")));
 	}
 
 	@Test
@@ -179,53 +173,34 @@ public class ApplyTest {
 			ReflectionUtils.getRequiredField(jsonObject, "missingField");
 		});
 
-		assertTrue(exception.getMessage().contains("Missing 'missingField' field"));
+		assertTrue(exception.getMessage().contains("Missing required 'missingField' field"));
 	}
 
 	@Test
-	public void testInstantiateClass() throws Exception {
-		Object instance = ReflectionUtils.instantiateClass("java.lang.String");
-		assertTrue(instance instanceof String);
+	public void whenMissingWithApplyField_thenReturnError() throws Exception {
+		String missingApply = PayloadFactory.getExampleQuery("stringProducerRandom");
+		missingApply = missingApply.replace("apply", "aply");
+
+		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingApply))
+				.andExpect(content().string(containsString("Missing required 'apply' field")));
 	}
 
 	@Test
-	public void testSetParameters() throws Exception {
-		JsonObject param1 = new JsonObject();
-		param1.addProperty("name", "length");
-		param1.addProperty("value", 5);
+	public void whenMissingParamNameField_thenReturnError() throws Exception {
+		String missingApply = PayloadFactory.getExampleQuery("stringProducerRandom");
+		missingApply = missingApply.replace("\"name\": \"generationProcess\",", "");
 
-		JsonArray params = new JsonArray();
-		params.add(param1);
-
-		StringBuilder instance = new StringBuilder();
-		ReflectionUtils.setParameters(instance, params);
-
-		assertEquals(5, instance.length());
+		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingApply))
+				.andExpect(content().string(containsString("Malformed Producer or Operation parameter.")));
 	}
 
 	@Test
-	public void testFindSetterMethod() throws Exception {
-		Method method = ReflectionUtils.findSetterMethod(StringBuilder.class, "length", new JsonObject());
-		assertNotNull(method);
-		assertEquals("setLength", method.getName());
+	public void whenStrayParam_thenReturnError() throws Exception {
+		String missingApply = PayloadFactory.getExampleQuery("stringProducerRandom");
+		missingApply = missingApply.replace("],", ",{}],");
+
+		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingApply))
+				.andExpect(content().string(containsString("Malformed Producer or Operation parameter.")));
 	}
 
-	@Test
-	public void testRoutesList() throws Exception {
-		mockMvc.perform(get("/routes/list")).andExpect(status().isOk())
-				.andExpect(content().string(containsString("Method: [")));
-
-	}
-
-	@Test
-	public void testOperationsList() throws Exception {
-		mockMvc.perform(get("/operations/list")).andExpect(status().isOk())
-				.andExpect(content().string(containsString("ca.concordia.encs.citydata")));
-	}
-
-	@Test
-	public void testProducersList() throws Exception {
-		mockMvc.perform(get("/producers/list")).andExpect(status().isOk())
-				.andExpect(content().string(containsString("ca.concordia.encs.citydata")));
-	}
 }

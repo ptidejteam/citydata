@@ -11,19 +11,20 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidPro
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidOperationException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidParameterException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.UnsupportedParameterTypeException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.MalformedParameterException;
 
 /**
  * This class contains Reflection functions used throughout the code to
  * instantiate classes, methods and fields dynamically.
  *
- * @author: Rushin Makwana
- * @date: 2025-02-01
+ * @author Rushin Makwana
+ * @date 2025-02-01
  */
 public abstract class ReflectionUtils {
 
 	public static JsonElement getRequiredField(JsonObject jsonObject, String fieldName) {
 		if (!jsonObject.has(fieldName)) {
-			throw new IllegalArgumentException("Error: Missing '" + fieldName + "' field");
+			throw new IllegalArgumentException("Error: Missing required '" + fieldName + "' field");
 		}
 		return jsonObject.get(fieldName);
 	}
@@ -47,19 +48,20 @@ public abstract class ReflectionUtils {
 
 	public static void setParameters(Object instance, JsonArray params) throws MiddlewareException {
 		Class<?> clazz = instance.getClass();
-		JsonObject paramObject = null;
-		JsonElement paramValue = null;
+		int i = 0;
+		JsonElement paramValue = new JsonObject();
 		String paramName = "";
 		Method setter = null;
 		try {
-			for (JsonElement paramElement : params) {
-				paramObject = paramElement.getAsJsonObject();
-				paramName = paramObject.get("name").getAsString();
-				paramValue = paramObject.get("value");
+			for (i = 0; i < params.size(); i++) {
+				paramName = params.get(i).getAsJsonObject().get("name").getAsString();
+				paramValue = params.get(i).getAsJsonObject().get("value");
 				setter = findSetterMethod(clazz, paramName, paramValue);
 				setter.invoke(instance, convertValue(setter.getParameterTypes()[0], paramValue));
 			}
-		} catch (Exception e) {
+		} catch (NullPointerException | IllegalStateException e) {
+			throw new MalformedParameterException(params.get(i).toString());
+		}  catch (Exception e) {
 			if (setter != null) {
 				throw new UnsupportedParameterTypeException(paramName, paramValue.toString(), setter.getParameterTypes()[0].toString());
 			} else {
@@ -68,7 +70,7 @@ public abstract class ReflectionUtils {
 		}
 	}
 
-	public static Method findSetterMethod(Class<?> clazz, String paramName, JsonElement paramValue)
+	public static Method findSetterMethod(Class<?> clazz, String paramName)
 			throws InvalidParameterException {
 		String methodName = "set" + StringUtils.capitalize(paramName);
 		for (Method method : clazz.getMethods()) {
