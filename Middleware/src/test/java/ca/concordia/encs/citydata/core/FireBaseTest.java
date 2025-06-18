@@ -73,7 +73,7 @@ public class FireBaseTest {
 			try {
 				Thread.sleep(5000); // Adjust time as necessary
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 

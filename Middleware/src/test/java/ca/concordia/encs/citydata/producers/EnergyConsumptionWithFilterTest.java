@@ -82,7 +82,6 @@ public class EnergyConsumptionWithFilterTest {
 				runner.runSteps();
 			} catch (Exception e) {
 				System.err.println("Runner thread error: " + e.getMessage());
-				e.printStackTrace();
 			}
 		});
 

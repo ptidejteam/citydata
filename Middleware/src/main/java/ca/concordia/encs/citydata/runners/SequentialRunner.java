@@ -35,7 +35,7 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
 @Component
 public class SequentialRunner extends AbstractRunner implements IRunner {
 
-	private MongoDataStore mongoDataStore = MongoDataStore.getInstance();
+	private final MongoDataStore mongoDataStore = MongoDataStore.getInstance();
 	private JsonObject steps = null;
 	private int operationCounter = 0;
 
