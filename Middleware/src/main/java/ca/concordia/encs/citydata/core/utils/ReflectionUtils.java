@@ -56,7 +56,7 @@ public abstract class ReflectionUtils {
 			for (i = 0; i < params.size(); i++) {
 				paramName = params.get(i).getAsJsonObject().get("name").getAsString();
 				paramValue = params.get(i).getAsJsonObject().get("value");
-				setter = findSetterMethod(clazz, paramName, paramValue);
+				setter = findSetterMethod(clazz, paramName);
 				setter.invoke(instance, convertValue(setter.getParameterTypes()[0], paramValue));
 			}
 		} catch (NullPointerException | IllegalStateException e) {
