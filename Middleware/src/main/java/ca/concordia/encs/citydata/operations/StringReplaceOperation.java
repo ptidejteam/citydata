@@ -9,7 +9,9 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
  *
  * This operation searches for a sequence in a string, and replaces this
  * sequence with another one.
- * 
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-01-01
  */
 public class StringReplaceOperation extends AbstractOperation<String> implements IOperation<String> {
 

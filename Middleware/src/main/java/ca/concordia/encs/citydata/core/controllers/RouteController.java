@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-/* This java class is to print all available routes */
-
+/***
+ * This java class is to print all available routes
+ *
+ * @author Sikandar Ejaz
+ * @date 2025-01-01
+ */
 @RestController
 @RequestMapping("/routes")
 public class RouteController {

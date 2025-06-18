@@ -8,10 +8,10 @@ import java.util.Date;
  * @Date: 26/2/2024
  */
 public class ProducerUsageData {
-		private String user;
+		private final String user;
 		private Date timestamp;
-		private String requestBody;
-		private String producerName;
+		private final String requestBody;
+		private final String producerName;
 
 		public ProducerUsageData(String user, Date timestamp, String requestBody, String producerName) {
 			this.user = user;

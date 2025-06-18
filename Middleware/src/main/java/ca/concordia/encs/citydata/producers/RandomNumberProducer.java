@@ -10,7 +10,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 /**
  *
  * This Producer outputs random integers. For test only.
- * 
+ *
  * @author Gabriel C. Ullmann
  * @date 2025-05-28
  */
@@ -31,7 +31,7 @@ public class RandomNumberProducer extends AbstractProducer<Integer> implements I
 		try {
 			// if this is running for the first time, fetch
 			// otherwise, just apply next operation on top of previous result
-			if (this.result.isEmpty()) {
+			if (this.isEmpty()) {
 				Random random = new Random();
 				final ArrayList<Integer> randomNumbers = new ArrayList<Integer>();
 				for (int i = 0; i < this.listSize; i++) {
@@ -40,7 +40,7 @@ public class RandomNumberProducer extends AbstractProducer<Integer> implements I
 						Thread.sleep(this.generationDelay);
 					}
 				}
-				this.result = randomNumbers;
+				this.setResult(randomNumbers);
 			}
 			this.applyOperation();
 		} catch (InterruptedException e) {

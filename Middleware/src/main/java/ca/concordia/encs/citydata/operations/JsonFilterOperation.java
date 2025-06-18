@@ -9,6 +9,9 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 
 /**
  * This operation filters an array of JsonObjects by a given key and value.
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-06-18
  */
 public class JsonFilterOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	String key;

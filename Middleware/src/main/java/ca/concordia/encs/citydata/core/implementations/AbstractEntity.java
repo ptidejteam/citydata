@@ -17,7 +17,7 @@ import ca.concordia.encs.citydata.core.contracts.IEntity;
  */
 public abstract class AbstractEntity implements IEntity {
 
-	private HashMap<String, Object> metadata = new HashMap<>();
+	private final HashMap<String, Object> metadata = new HashMap<>();
 
 	public AbstractEntity() {
 		UUID uniqueId = UUID.randomUUID();

@@ -12,6 +12,13 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 
+/**
+ * This operation reads from a JSON a given path (e.g., aKey1.child, something.info.name).
+ * Array acessors are also accepted (e.g., aKey[0], aKey[1])
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-06-18
+ */
 public class JsonReadOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	private String path = "";
 	private JsonElement currentObject;

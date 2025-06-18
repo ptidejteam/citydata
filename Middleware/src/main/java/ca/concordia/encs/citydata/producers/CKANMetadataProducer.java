@@ -11,9 +11,10 @@ import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.producers.base.JSONProducer;
 
-/*This producer can connect to a CKAN instance and fetch either dataset or resource metadata.
- * Author: Gabriel C. Ullmann 
- * Date: 2025-02-12
+/**
+ * This producer can connect to a CKAN instance and fetch either dataset or resource metadata.
+ * @author Gabriel C. Ullmann
+ * @date 2025-02-12
  */
 public class CKANMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
@@ -62,21 +63,22 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 
 			// all CKAN metadata routes are GET routes
 			RequestOptions requestOptions = new RequestOptions();
-			requestOptions.method = "GET";
+			requestOptions.setMethod("GET");
 
 			// delegate to JSON producer
 			this.jsonProducer = new JSONProducer(actionUrl, requestOptions);
-			this.jsonProducer.operation = this.jsonProducerOperation;
+			this.jsonProducer.setOperation(this.jsonProducerOperation);
 			this.jsonProducer.addObserver(this.runnerObserver);
 			this.jsonProducer.fetch();
 		} else {
 			JsonObject errorObject = new JsonObject();
 			errorObject.addProperty("error",
 					"No URL informed. Please use the 'url' parameter to specify a CKAN server URL.");
-			this.result = new ArrayList<>();
-			this.result.add(errorObject);
+			ArrayList<JsonObject> result = new ArrayList<>();
+			result.add(errorObject);
+			this.setResult(result);
 			super.addObserver(this.runnerObserver);
-			super.operation = this.jsonProducerOperation;
+			super.setOperation(this.jsonProducerOperation);
 			this.applyOperation();
 		}
 	}

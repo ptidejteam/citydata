@@ -40,7 +40,7 @@ public class ExistsTest {
 	@Test
 	void testQueryExists() throws Exception {
 	    // Use getExampleQuery to load a specific query from a JSON file
-	    String jsonPayload = PayloadFactory.getExampleQuery("stringProducerStaticWithParams");
+	    String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
 	    // creating a producer
 	    MvcResult syncResult = mockMvc

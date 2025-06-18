@@ -9,6 +9,9 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 
 /**
  * This operation filters an array of strings by a substring.
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-01-01
  */
 public class StringFilterOperation extends AbstractOperation<String> implements IOperation<String> {
 	private String filterBy;

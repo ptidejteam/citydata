@@ -14,18 +14,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.io.IOException;
+import ca.concordia.encs.citydata.core.utils.StringUtils;
 
 /**
  * This class tests various utility methods for string transformations and operations,
  * as well as methods for retrieving environment variables from system properties or a JSON file.
- *
  * Methods in this class are static and can be used without instantiating the class.
  *
- * Author: Rushin Makwana
- * Date: 2025-03-26
+ * @author Rushin Makwana
+ * @date 2025-03-26
  */
-
-import ca.concordia.encs.citydata.core.utils.StringUtils;
 
 public class StringUtilsTest {
 

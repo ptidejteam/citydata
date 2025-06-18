@@ -16,6 +16,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import static ca.concordia.encs.citydata.core.utils.Constants.ENV_PATH;
+
 /**
  * This class contains functions to perform transformations on strings.
  * 
@@ -23,8 +25,6 @@ import com.google.gson.JsonParser;
  * @date 2025-03-28
  */
 public abstract class StringUtils {
-
-	public static final Path ENV_PATH = Paths.get("env.json").toAbsolutePath();
 
 	public static String capitalize(String str) {
 		return str == null || str.isEmpty() ? str : str.substring(0, 1).toUpperCase() + str.substring(1);

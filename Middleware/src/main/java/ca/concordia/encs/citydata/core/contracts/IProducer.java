@@ -8,7 +8,9 @@ import java.util.ArrayList;
  *
  * The Producer entity is responsible for: - Fetching data - Applying a
  * operation on the result - Notify observers when both tasks are done
- * 
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2024-12-01
  */
 
 public interface IProducer<E> {

@@ -13,8 +13,8 @@ import ca.concordia.encs.citydata.core.contracts.IProducer;
 import com.google.gson.JsonParser;
 /***
  * This is the Producer class for Firebase, which fetches data from Firebase
- * @Author: Rushin Makwana
- * @Date: 7th Feb 2024
+ * @author Rushin Makwana
+ * @date 7th Feb 2024
  */
 public class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 

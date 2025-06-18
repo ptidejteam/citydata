@@ -19,7 +19,7 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
  */
 public abstract class AbstractOperation<E> extends AbstractEntity implements IOperation<E> {
 
-	private Set<IRunner> runners = new HashSet<>();
+	private final Set<IRunner> runners = new HashSet<>();
 
 	public AbstractOperation() {
 		this.setMetadata("role", "operation");

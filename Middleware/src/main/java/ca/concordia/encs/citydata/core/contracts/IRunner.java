@@ -9,7 +9,9 @@ package ca.concordia.encs.citydata.core.contracts;
  * where O2 will be applied in the result of O1 - Storing outputs on the
  * DataStore so they can be retrieved by the requester, either immediately
  * (synchronously) or asynchronously
- * 
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2024-12-01
  */
 public interface IRunner {
 

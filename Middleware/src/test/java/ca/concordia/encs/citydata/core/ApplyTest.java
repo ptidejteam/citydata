@@ -150,7 +150,7 @@ public class ApplyTest {
 	// params)
 	@Test
 	public void whenMissingParamsForOperation_thenReturnError() throws Exception {
-		String missingParamsForOperation = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [ { \"name\": \"generationProcess\", \"value\": \"random\" } ], \"apply\": [ { \"name\": \"ca.concordia.encs.citydata.operations.JsonFilterOperation\" } ] }";
+		String missingParamsForOperation = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", \"withParams\": [  ], \"apply\": [ { \"name\": \"ca.concordia.encs.citydata.operations.JsonFilterOperation\" } ] }";
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
 				.andExpect(status().isInternalServerError())
@@ -188,7 +188,7 @@ public class ApplyTest {
 	@Test
 	public void whenMissingParamNameField_thenReturnError() throws Exception {
 		String missingApply = PayloadFactory.getExampleQuery("stringProducerRandom");
-		missingApply = missingApply.replace("\"name\": \"generationProcess\",", "");
+		missingApply = missingApply.replace("\"name\": \"stringLength\",", "");
 
 		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingApply))
 				.andExpect(content().string(containsString("Malformed Producer or Operation parameter.")));
