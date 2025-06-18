@@ -97,10 +97,9 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 
 	@Override
 	public void notifyObservers() {
-		for (final Iterator<IRunner> iterator = this.runners.iterator(); iterator.hasNext();) {
-			final IRunner runner = iterator.next();
-			runner.newDataAvailable(this);
-		}
+        for (final IRunner runner : this.runners) {
+            runner.newDataAvailable(this);
+        }
 	}
 
 	@Override
@@ -124,7 +123,7 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	/**
 	 * Fetch file via HTTP GET or POST
 	 */
-	protected byte[] doHTTPRequest() throws Exception {
+	private byte[] doHTTPRequest() throws Exception {
 		HttpRequest request;
 		BodyPublisher requestBody;
 		URI endpointURI = new URI(this.filePath);
@@ -175,7 +174,7 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	/**
 	 * Fetch file from filesystem
 	 */
-	protected byte[] readFile() throws Exception {
+	private byte[] readFile() throws Exception {
 		Path path = Paths.get(this.filePath);
 		return Files.readAllBytes(path);
 	}
