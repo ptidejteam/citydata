@@ -1,8 +1,5 @@
 package ca.concordia.encs.citydata.core.controllers;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -26,7 +23,7 @@ import ca.concordia.encs.citydata.runners.SequentialRunner;
  * This class manages all requests sent to the /apply route
  * 
  * @author Gabriel C. Ullmann
- * @date 2024-12-01
+ * @since 2024-12-01
  */
 @RestController
 @RequestMapping("/apply")
@@ -39,10 +36,10 @@ public class ApplyController {
 		HttpStatus responseCode = HttpStatus.OK;
 
 		try {
-			JsonObject stepsObject = JsonParser.parseString(steps).getAsJsonObject();
-			SequentialRunner deckard = new SequentialRunner(stepsObject);
+			final JsonObject stepsObject = JsonParser.parseString(steps).getAsJsonObject();
+			final SequentialRunner deckard = new SequentialRunner(stepsObject);
 			runnerId = deckard.getId();
-			Thread runnerTask = new Thread() {
+			final Thread runnerTask = new Thread() {
 				public void run() {
 					try {
 						deckard.runSteps();
@@ -51,7 +48,7 @@ public class ApplyController {
 						}
 					} catch (Exception e) {
 						deckard.setAsDone();
-						InMemoryDataStore store = InMemoryDataStore.getInstance();
+						final InMemoryDataStore store = InMemoryDataStore.getInstance();
 						store.set(deckard.getId(), new ExceptionProducer(e));
 					}
 				}
@@ -59,7 +56,7 @@ public class ApplyController {
 			runnerTask.start();
 			runnerTask.join();
 		} catch (IllegalStateException | JsonParseException e) {
-			String detailedMessage = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+			final String detailedMessage = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
 			errorMessage = "Your query is not a valid JSON file. Details: " + detailedMessage;
 			responseCode = HttpStatus.BAD_REQUEST;
 		} catch (Exception e) {
@@ -74,8 +71,8 @@ public class ApplyController {
 		}
 
 		// else, return the data
-		InMemoryDataStore store = InMemoryDataStore.getInstance();
-		IProducer<?> resultProducer = store.get(runnerId);
+		final InMemoryDataStore store = InMemoryDataStore.getInstance();
+		final IProducer<?> resultProducer = store.get(runnerId);
 
 		// if the thread, which cannot throw exceptions, produces an ExceptionProducer,
 		// return an error code

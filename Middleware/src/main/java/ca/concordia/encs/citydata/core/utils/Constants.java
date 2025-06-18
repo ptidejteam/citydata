@@ -7,7 +7,7 @@ import java.nio.file.Paths;
  * This is the interface for the storing all constants
  * 
  * @author Rushin Makwana
- * @date 2025-02-07
+ * @since 2025-02-07
  */
 public interface Constants {
 	public static final Path ENV_PATH = Paths.get("env.json").toAbsolutePath();

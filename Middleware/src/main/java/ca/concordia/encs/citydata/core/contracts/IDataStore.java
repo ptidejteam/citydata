@@ -14,7 +14,7 @@ import java.util.UUID;
  * and default methods to still handle String IDs, set, get, delete
  *
  * @author Gabriel C. Ullmann, Minette Zongo
- * @date 2025-06-18
+ * @since 2025-06-18
  */
 public interface IDataStore<E> {
 

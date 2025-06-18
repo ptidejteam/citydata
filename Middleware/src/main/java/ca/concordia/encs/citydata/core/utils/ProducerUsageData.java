@@ -4,14 +4,14 @@ import java.util.Date;
 
 /***
  * This class is the helper method for generating report for producer call information.
- * @Author: Rushin Makwana
- * @Date: 26/2/2024
+ * @author Rushin Makwana
+ * @since 2024-02-26
  */
 public class ProducerUsageData {
 		private final String user;
-		private Date timestamp;
 		private final String requestBody;
 		private final String producerName;
+	    private Date timestamp;
 
 		public ProducerUsageData(String user, Date timestamp, String requestBody, String producerName) {
 			this.user = user;

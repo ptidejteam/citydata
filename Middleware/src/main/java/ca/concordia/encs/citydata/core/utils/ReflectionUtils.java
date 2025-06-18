@@ -18,7 +18,7 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.MalformedP
  * instantiate classes, methods and fields dynamically.
  *
  * @author Rushin Makwana
- * @date 2025-02-01
+ * @since 2025-02-01
  */
 public abstract class ReflectionUtils {
 
@@ -31,7 +31,7 @@ public abstract class ReflectionUtils {
 
 	public static Object instantiateClass(String className) throws MiddlewareException {
 		try {
-			Class<?> clazz = Class.forName(className);
+			final Class<?> clazz = Class.forName(className);
 			return clazz.getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException | NoSuchMethodException e) {
 			if (className.contains("Operation") || className.contains("operation")) {
@@ -47,11 +47,12 @@ public abstract class ReflectionUtils {
 	}
 
 	public static void setParameters(Object instance, JsonArray params) throws MiddlewareException {
-		Class<?> clazz = instance.getClass();
 		int i = 0;
 		JsonElement paramValue = new JsonObject();
 		String paramName = "";
 		Method setter = null;
+		final Class<?> clazz = instance.getClass();
+
 		try {
 			for (i = 0; i < params.size(); i++) {
 				paramName = params.get(i).getAsJsonObject().get("name").getAsString();
@@ -72,7 +73,7 @@ public abstract class ReflectionUtils {
 
 	public static Method findSetterMethod(Class<?> clazz, String paramName)
 			throws InvalidParameterException {
-		String methodName = "set" + StringUtils.capitalize(paramName);
+		final String methodName = "set" + StringUtils.capitalize(paramName);
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().equals(methodName) && method.getParameterCount() == 1) {
 				return method;

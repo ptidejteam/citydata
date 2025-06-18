@@ -17,12 +17,12 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
  * Array acessors are also accepted (e.g., aKey[0], aKey[1])
  *
  * @author Gabriel C. Ullmann
- * @date 2025-06-18
+ * @since 2025-06-18
  */
 public class JsonReadOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	private String path = "";
 	private JsonElement currentObject;
-	final Pattern containsArrayAccess = Pattern.compile("(.+)\\[(\\d+)\\]");
+	private final Pattern containsArrayAccess = Pattern.compile("(.+)\\[(\\d+)\\]");
 
 	public void setPath(String path) {
 		this.path = path;
@@ -50,8 +50,8 @@ public class JsonReadOperation extends AbstractOperation<JsonObject> implements 
 					"The key \"" + key + "\" cannot be found. You can try one of the following keys instead: "
 							+ this.currentObject.getAsJsonObject().keySet().toString());
 		} else {
-			String lastKnowGoodObject = this.currentObject.toString();
-			String excerpt = lastKnowGoodObject.length() > 50 ? lastKnowGoodObject.substring(0, 50) + "..."
+			final String lastKnowGoodObject = this.currentObject.toString();
+			final String excerpt = lastKnowGoodObject.length() > 50 ? lastKnowGoodObject.substring(0, 50) + "..."
 					: lastKnowGoodObject;
 			errorWrapper.addProperty("error", "The key \"" + key + "\" cannot be found in: " + excerpt);
 		}

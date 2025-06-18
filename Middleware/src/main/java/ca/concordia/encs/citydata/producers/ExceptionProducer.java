@@ -11,12 +11,12 @@ import ca.concordia.encs.citydata.core.contracts.IProducer;
  * run() method within a Thread)
  *
  * @author Gabriel C. Ullmann
- * @date 2025-01-01
+ * @since 2025-01-01
  */
 public class ExceptionProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public ExceptionProducer(Exception e) {
-		ArrayList<String> result = new ArrayList<>();
+		final ArrayList<String> result = new ArrayList<>();
 		result.add(e.getMessage());
 		this.setResult(result);
 	}

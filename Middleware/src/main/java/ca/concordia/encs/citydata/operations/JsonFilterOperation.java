@@ -11,7 +11,7 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
  * This operation filters an array of JsonObjects by a given key and value.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-06-18
+ * @since 2025-06-18
  */
 public class JsonFilterOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	String key;
@@ -32,7 +32,7 @@ public class JsonFilterOperation extends AbstractOperation<JsonObject> implement
 
 	@Override
 	public ArrayList<JsonObject> apply(ArrayList<JsonObject> inputs) {
-		ArrayList<JsonObject> filteredList = new ArrayList<>();
+		final ArrayList<JsonObject> filteredList = new ArrayList<>();
 		for (JsonObject jsonObject : inputs) {
 			if (key != null && jsonObject.has(key)) {
 				String objectValue = jsonObject.get(key).getAsString();

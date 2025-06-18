@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  * This java class is to print all available routes
  *
  * @author Sikandar Ejaz
- * @date 2025-01-01
+ * @since 2025-01-01
  */
 @RestController
 @RequestMapping("/routes")
@@ -29,18 +29,18 @@ public class RouteController {
 
 	@GetMapping("/list")
 	public List<String> listAllRoutes() {
-		List<String> routes = new ArrayList<>();
+		final List<String> routes = new ArrayList<>();
 
 		handlerMapping.getHandlerMethods().forEach((requestMappingInfo, handlerMethod) -> {
-			String methodInfo = handlerMethod.getMethod().toString();
+			final String methodInfo = handlerMethod.getMethod().toString();
 
-			List<String> paths = requestMappingInfo.getDirectPaths() != null
+			final List<String> paths = requestMappingInfo.getDirectPaths() != null
 					? requestMappingInfo.getDirectPaths().stream().toList()
 					: requestMappingInfo.getPatternsCondition() != null
 							? requestMappingInfo.getPatternsCondition().getPatterns().stream().toList()
 							: List.of("[No Route Patterns]");
 
-			String methods = requestMappingInfo.getMethodsCondition() != null
+			final String methods = requestMappingInfo.getMethodsCondition() != null
 					? requestMappingInfo.getMethodsCondition().toString()
 					: "[No Methods Condition]";
 

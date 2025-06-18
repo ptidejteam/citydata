@@ -11,7 +11,7 @@ package ca.concordia.encs.citydata.core.contracts;
  * (synchronously) or asynchronously
  *
  * @author Gabriel C. Ullmann
- * @date 2024-12-01
+ * @since 2024-12-01
  */
 public interface IRunner {
 

@@ -7,7 +7,7 @@ import java.util.HashMap;
  * the AbstractProducer to fetch files via HTTP.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-03-28
+ * @since 2025-03-28
  */
 public class RequestOptions {
 	private String method;

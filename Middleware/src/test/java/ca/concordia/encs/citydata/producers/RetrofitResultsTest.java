@@ -22,6 +22,12 @@ import com.google.gson.JsonParser;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
+/**
+ * Test: Hub building retrofit results Producer
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-06-18
+ */
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

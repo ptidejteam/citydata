@@ -10,7 +10,7 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
  * TODO: use it to avoid NullPointerException in Producers
  *
  * @author Gabriel C. Ullmann
- * @date 2025-06-18
+ * @since 2025-06-18
  */
 public class NullOperation extends AbstractOperation<Object> implements IOperation<Object> {
 

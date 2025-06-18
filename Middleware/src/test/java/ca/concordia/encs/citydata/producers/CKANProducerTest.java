@@ -21,11 +21,12 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/* CKANProducer tests
- * Author: Gabriel C. Ullmann
- * Date: 2025-02-12
+/**
+ * CKANProducer tests
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-02-12
  */
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

@@ -18,15 +18,12 @@ import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/*
- * Tests added for MergeOperation 
- * Author: Sikandar Ejaz 
- * Date: 4-8-2025
- * Last Update: 16-06-2025
- * Fixed errors in tests. 
- * 
+/**
+ * MergeOperation tests
+ *
+ * @author Sikandar Ejaz
+ * @since 2025-04-08
  */
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 public class MergeOperationTests {

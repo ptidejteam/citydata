@@ -15,7 +15,7 @@ import ca.concordia.encs.citydata.core.implementations.AbstractEntity;
  * running, all data is lost.
  * 
  * @author Gabriel C. Ullmann
- * @date 2024-12-01
+ * @since 2024-12-01
  */
 public class InMemoryDataStore extends AbstractEntity implements IDataStore<IProducer<?>> {
 
@@ -35,22 +35,22 @@ public class InMemoryDataStore extends AbstractEntity implements IDataStore<IPro
 
 	@Override
 	public void set(UUID key, IProducer<?> value) {
-        map.put(key, value);
+        this.map.put(key, value);
     }
 
 	@Override
     public IProducer<?> get(UUID key) {
-        return map.get(key);
+        return this.map.get(key);
     }
     
     @Override
     public Iterator<IProducer<?>> getValues() {
-        return map.values().iterator();
+        return this.map.values().iterator();
     }
     
     @Override
     public void delete(UUID key) {
-        map.remove(key);
+        this.map.remove(key);
     }
     
     public void truncate() {

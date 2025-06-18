@@ -8,7 +8,7 @@ import ca.concordia.encs.citydata.core.contracts.IRunner;
  * (possibility to mark Runner as done after work is finished)
  * 
  * @author Gabriel C. Ullmann
- * @date 2025-04-23
+ * @since 2025-04-23
  */
 public abstract class AbstractRunner extends AbstractEntity implements IRunner {
 

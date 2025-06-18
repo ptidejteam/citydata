@@ -18,6 +18,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * ExistsController routes test
+ *
+ * @author Rushin Makwana
+ * @since 2025-01-01
+ */
 public class FireBaseTest {
 
 	private static FirebaseDatabase database;

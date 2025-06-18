@@ -3,7 +3,7 @@ package ca.concordia.encs.citydata.core.exceptions;
 /**
  * This class contains definitions of custom exceptions
  * @author Sikandar Ejaz, Rushin D. Makwana, Gabriel C. Ullmann
- * @date 2025-06-17
+ * @since 2025-06-17
  */
 
 public class MiddlewareException extends RuntimeException {

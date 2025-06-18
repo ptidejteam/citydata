@@ -23,7 +23,7 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
  * are applying (e.g. MergeOperation).
  * 
  * @author Gabriel C. Ullmann
- * @date 2025-05-27
+ * @since 2025-05-27
  */
 public class SingleStepRunner extends AbstractRunner implements IRunner {
 
@@ -94,7 +94,7 @@ public class SingleStepRunner extends AbstractRunner implements IRunner {
 			System.out.println("Run completed!");
 		} catch (Exception e) {
 			// stop runner as soon as an exception is thrown to avoid infinite loops
-			InMemoryDataStore store = InMemoryDataStore.getInstance();
+			final InMemoryDataStore store = InMemoryDataStore.getInstance();
 			store.set(this.getMetadataString("id"), new ExceptionProducer(e));
 			this.setAsDone();
 		}
@@ -102,8 +102,8 @@ public class SingleStepRunner extends AbstractRunner implements IRunner {
 
 	@Override
 	public void storeResults(IProducer<?> producer) {
-		InMemoryDataStore store = InMemoryDataStore.getInstance();
-		String runnerId = this.getMetadata("id").toString();
+		final InMemoryDataStore store = InMemoryDataStore.getInstance();
+		final String runnerId = this.getMetadata("id").toString();
 		store.set(runnerId, producer);
 	}
 

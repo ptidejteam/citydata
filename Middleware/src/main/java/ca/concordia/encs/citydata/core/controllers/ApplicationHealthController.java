@@ -14,7 +14,7 @@ import java.util.Date;
  * This is the running checkpoint of the Spring Boot Application.
  * 
  * @author Minette Zongo
- * @date 2025-04-22
+ * @since 2025-04-22
  */
 
 @RestController
@@ -23,8 +23,8 @@ public class ApplicationHealthController {
 
 	@GetMapping("/ping")
 	public ResponseEntity<String> ping() {
-		Date timeObject = Calendar.getInstance().getTime();
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
+		final Date timeObject = Calendar.getInstance().getTime();
+		final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
 		return ResponseEntity.status(HttpStatus.OK).body("CITYdata running at " + timeStamp);
 	}
 
