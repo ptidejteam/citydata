@@ -17,7 +17,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * This operation merges two Producer results together.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-01-01
+ * @since 2025-01-01
  */
 public class MergeOperation extends AbstractOperation<String> implements IOperation<String> {
 
@@ -37,16 +37,15 @@ public class MergeOperation extends AbstractOperation<String> implements IOperat
 
 		// all keys are timestamps because timestamps are unique, and JSON cannot have
 		// duplicated keys
-		String timeStampFormat = "yyyy-MM-dd_HH:mm:ss";
-		Date timeObject = Calendar.getInstance().getTime();
-		String timeStampSource = new SimpleDateFormat(timeStampFormat).format(timeObject);
-
-		ArrayList<String> sourceList = new ArrayList<>();
+		final String timeStampFormat = "yyyy-MM-dd_HH:mm:ss";
+		final Date timeObject = Calendar.getInstance().getTime();
+		final String timeStampSource = new SimpleDateFormat(timeStampFormat).format(timeObject);
+		final ArrayList<String> sourceList = new ArrayList<>();
 		sourceList.add("{\"" + timeStampSource + "\": \"" + inputs + "\" }");
 
 		try {
-			SingleStepRunner deckard = new SingleStepRunner(targetProducer, targetProducerParams);
-			Thread runnerTask = new Thread() {
+			final SingleStepRunner deckard = new SingleStepRunner(targetProducer, targetProducerParams);
+			final Thread runnerTask = new Thread() {
 				public void run() {
 					try {
 						deckard.runSteps();
@@ -62,10 +61,10 @@ public class MergeOperation extends AbstractOperation<String> implements IOperat
 			runnerTask.start();
 			runnerTask.join();
 
-			String runnerId = deckard.getMetadata("id").toString();
-			InMemoryDataStore store = InMemoryDataStore.getInstance();
+			final String runnerId = deckard.getMetadata("id").toString();
+			final InMemoryDataStore store = InMemoryDataStore.getInstance();
 
-			ArrayList<String> targetList = (ArrayList<String>) store.get(runnerId).getResult();
+			final ArrayList<?> targetList =  store.get(runnerId).getResult();
 			if (targetList != null && targetList.size() > 0) {
 				String timeStampTarget = new SimpleDateFormat(timeStampFormat).format(timeObject);
 				sourceList.add("{\"" + timeStampTarget + "\": \"" + targetList + "\" }");

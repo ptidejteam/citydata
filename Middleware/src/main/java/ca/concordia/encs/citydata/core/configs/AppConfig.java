@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
  * This is the Spring Boot base configuration file.
  * 
  * @author Gabriel C. Ullmann, Sikandar Ejaz
- * @date 2025-01-01
+ * @since 2025-01-01
  */
 
 @Configuration

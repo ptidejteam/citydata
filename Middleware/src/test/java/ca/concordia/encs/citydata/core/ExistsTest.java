@@ -20,11 +20,12 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/* ExistsController tests
- * Author: Minette
- * Date: 2025-02-26
+/**
+ * ExistsController routes test
+ *
+ * @author Minette Zongo
+ * @since 2025-02-26
  */
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

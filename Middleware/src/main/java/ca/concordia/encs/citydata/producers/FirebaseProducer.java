@@ -14,7 +14,7 @@ import com.google.gson.JsonParser;
 /***
  * This is the Producer class for Firebase, which fetches data from Firebase
  * @author Rushin Makwana
- * @date 7th Feb 2024
+ * @since 7th Feb 2024
  */
 public class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
@@ -33,14 +33,14 @@ public class FirebaseProducer extends AbstractProducer<JsonObject> implements IP
 	public void fetch(){
 		final List<JsonObject> jsonObjects = new ArrayList<>();
 
-		DatabaseReference ref = FirebaseDatabase.getInstance().getReference(nodePath);
+		final DatabaseReference ref = FirebaseDatabase.getInstance().getReference(nodePath);
 
 		// Adding a ValueEventListener to fetch data
 		ref.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				// Retrieve JSON string from dataSnapshot
-				String result = dataSnapshot.getValue(String.class);
+				final String result = dataSnapshot.getValue(String.class);
 
 				if (result != null) {
 					// Convert JSON string to object

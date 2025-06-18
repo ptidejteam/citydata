@@ -11,7 +11,7 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
  * sequence with another one.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-01-01
+ * @since 2025-01-01
  */
 public class StringReplaceOperation extends AbstractOperation<String> implements IOperation<String> {
 
@@ -28,7 +28,7 @@ public class StringReplaceOperation extends AbstractOperation<String> implements
 
 	@Override
 	public ArrayList<String> apply(ArrayList<String> input) {
-		ArrayList<String> resultSet = new ArrayList<>();
+		final ArrayList<String> resultSet = new ArrayList<>();
 		for (String item : input) {
 			resultSet.add(item.replace(searchFor, replaceBy));
 		}

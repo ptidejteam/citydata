@@ -37,9 +37,8 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  *
  * 
  * @author Minette Zongo M., Gabriel C. Ullmann
- * @date 2025-04-29
+ * @since 2025-04-29
  */
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

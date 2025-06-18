@@ -8,7 +8,7 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 /**
  * This operation computes the average (arithmetic mean) of a list of Integer
  * @author Gabriel C. Ullmann
- * @date 2025-06-17
+ * @since 2025-06-17
  */
 public class AverageOperation extends AbstractOperation<Integer> implements IOperation<Integer> {
 
@@ -20,15 +20,15 @@ public class AverageOperation extends AbstractOperation<Integer> implements IOpe
 
 	@Override
 	public ArrayList<Integer> apply(ArrayList<Integer> inputs) {
-		ArrayList<Integer> result = new ArrayList<>();
-		float inputSize = inputs.size();
+		final ArrayList<Integer> result = new ArrayList<>();
+		final float inputSize = inputs.size();
 		int roundedAverage = 0;
 
 		if (inputSize > 0) {
 			// compute the average
 			final int[] sum = { 0 };
 			inputs.forEach(num -> sum[0] += num);
-			float floatAverage = sum[0] / inputSize;
+			final float floatAverage = sum[0] / inputSize;
 
 			// round the result (because we must return same type as input)
 			if (roundingMethod.equalsIgnoreCase("floor")) {

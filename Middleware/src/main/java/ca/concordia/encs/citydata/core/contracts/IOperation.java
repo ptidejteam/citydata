@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * ArrayList of a type - Notify observers when the transformation is completed
  *
  * @author Gabriel C. Ullmann
- * @date 2024-12-01
+ * @since 2024-12-01
  */
 public interface IOperation<E> {
 

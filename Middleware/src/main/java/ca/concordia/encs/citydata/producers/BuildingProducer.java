@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
 /**
  * This Producer outputs metadata about a building, such as floors, zones and sensors.
  * @author Gabriel C. Ullmann
- * @date 2025-05-28
+ * @since 2025-05-28
  */
 public class BuildingProducer extends AbstractProducer<String> implements IProducer<String> {
 	private JSONProducer jsonProducer;

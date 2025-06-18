@@ -21,7 +21,7 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
  * This class has all the routes for the report generation
  * 
  * @author Rushin Makwana
- * @date 2024-02-26
+ * @since 2024-02-26
  */
 @RestController
 @RequestMapping("/report")
@@ -31,19 +31,19 @@ public class ReportController {
 
 	@RequestMapping(value = "/producers", method = RequestMethod.GET)
 	public ResponseEntity<List<Map<String, String>>> report() {
-		List<Map<String, String>> report = new ArrayList<>();
-		List<ProducerUsageData> callInfoList = mongoDataStore.findAll();
-		Map<String, Integer> producerCountMap = new HashMap<>();
-		Map<String, Date> lastRequestDateMap = new HashMap<>();
+		final List<Map<String, String>> report = new ArrayList<>();
+		final List<ProducerUsageData> callInfoList = mongoDataStore.findAll();
+		final Map<String, Integer> producerCountMap = new HashMap<>();
+		final Map<String, Date> lastRequestDateMap = new HashMap<>();
 
 		for (ProducerUsageData callInfo : callInfoList) {
-			String producerName = callInfo.getProducerName();
+			final String producerName = callInfo.getProducerName();
 			producerCountMap.put(producerName, producerCountMap.getOrDefault(producerName, 0) + 1);
 			lastRequestDateMap.put(producerName, callInfo.getTimestamp());
 		}
 
 		producerCountMap.forEach((producerName, count) -> {
-			Map<String, String> reportEntry = new HashMap<>();
+			final Map<String, String> reportEntry = new HashMap<>();
 			reportEntry.put("query", producerName);
 			reportEntry.put("count", String.valueOf(count));
 			reportEntry.put("lastRequestDate",

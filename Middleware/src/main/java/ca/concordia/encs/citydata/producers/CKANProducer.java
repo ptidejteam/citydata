@@ -17,7 +17,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 /**
  * This producer can connect to a CKAN instance and fetch a resource.
  * @author Gabriel C. Ullmann
- * @date 2025-02-12
+ * @since 2025-02-12
  */
 public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
 
@@ -41,9 +41,9 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private ArrayList<JsonObject> getMetadataObject(AbstractRunner aRunner) {
-		InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
-		String runnerId = aRunner.getMetadata("id").toString();
-		IProducer<?> storeResult = memoryStore.get(runnerId);
+		final InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
+		final String runnerId = aRunner.getMetadata("id").toString();
+		final IProducer<?> storeResult = memoryStore.get(runnerId);
 		if (storeResult != null) {
 			return (ArrayList<JsonObject>) memoryStore.get(runnerId).getResult();
 		}
@@ -51,10 +51,10 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private JsonObject getResourceAttributes(ArrayList<JsonObject> metadataObject) {
-		JsonObject metadataResults = metadataObject.size() > 0 ? metadataObject.get(0).get("result").getAsJsonObject()
+		final JsonObject metadataResults = metadataObject.size() > 0 ? metadataObject.get(0).get("result").getAsJsonObject()
 				: null;
 
-		JsonObject attributesObject = new JsonObject();
+		final JsonObject attributesObject = new JsonObject();
 		attributesObject.addProperty("sizeInMb", metadataResults.get("size").getAsInt() / 1000000);
 		attributesObject.addProperty("mimetype", metadataResults.get("mimetype").getAsString());
 		attributesObject.addProperty("url", metadataResults.get("url").getAsString());
@@ -63,7 +63,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private boolean isFileSupported(String mimetype) {
-		List<String> supportedFormats = List.of("csv", "json", "xml", "txt", "text", "xls");
+		final List<String> supportedFormats = List.of("csv", "json", "xml", "txt", "text", "xls");
 		for (String supportedFormat : supportedFormats) {
 			if (mimetype.contains(supportedFormat)) {
 				return true;
@@ -75,11 +75,11 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	private byte[] fetchFromCkan() {
 		try {
 			// fetch resource metadata first
-			CKANMetadataProducer metadataProducer = new CKANMetadataProducer();
+			final CKANMetadataProducer metadataProducer = new CKANMetadataProducer();
 			metadataProducer.setUrl(this.url);
 			metadataProducer.setResourceId(this.resourceId);
-			SingleStepRunner deckard = new SingleStepRunner(metadataProducer);
-			Thread runnerTask = new Thread() {
+			final SingleStepRunner deckard = new SingleStepRunner(metadataProducer);
+			final Thread runnerTask = new Thread() {
 				public void run() {
 					try {
 						deckard.runSteps();
@@ -96,11 +96,11 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 			runnerTask.start();
 			runnerTask.join();
 
-			ArrayList<JsonObject> metadataObject = getMetadataObject(deckard);
-			JsonObject resourceAttributes = getResourceAttributes(metadataObject);
-			String resourceUrl = resourceAttributes.get("url").getAsString();
-			String mimetype = resourceAttributes.get("mimetype").getAsString();
-			int size = resourceAttributes.get("sizeInMb").getAsInt();
+			final ArrayList<JsonObject> metadataObject = getMetadataObject(deckard);
+			final JsonObject resourceAttributes = getResourceAttributes(metadataObject);
+			final String resourceUrl = resourceAttributes.get("url").getAsString();
+			final String mimetype = resourceAttributes.get("mimetype").getAsString();
+			final int size = resourceAttributes.get("sizeInMb").getAsInt();
 
 			// if the file is supported, download it and save to disk
 			if (isFileSupported(mimetype)) {
@@ -110,7 +110,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 									+ "If you wish to download the resource, please open this link in your browser: "
 									+ resourceAttributes.get("url") + " .");
 				}
-				RequestOptions requestOptions = new RequestOptions();
+				final RequestOptions requestOptions = new RequestOptions();
 				requestOptions.setMethod("GET");
 				this.setFilePath(resourceUrl);
 				this.setFileOptions(requestOptions); ;
@@ -121,7 +121,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 						+ " .");
 			}
 		} catch (InterruptedException e) {
-			ArrayList<String> errorMessageList = new ArrayList<>();
+			final ArrayList<String> errorMessageList = new ArrayList<>();
 			errorMessageList.add(e.getMessage());
 			this.setResult(errorMessageList);
 		}

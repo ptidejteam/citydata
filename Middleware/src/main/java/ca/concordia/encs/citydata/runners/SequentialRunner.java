@@ -30,7 +30,7 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
  * then proceeds to the next Operation until all operations are completed.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-05-27
+ * @since 2025-05-27
  */
 @Component
 public class SequentialRunner extends AbstractRunner implements IRunner {
@@ -53,19 +53,19 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 
 		// start by extracting Producers, Operations and their params from the query
 		System.out.println("Run started!");
-		String producerName = ReflectionUtils.getRequiredField(this.steps, "use").getAsString();
-		JsonArray producerParams = ReflectionUtils.getRequiredField(this.steps, "withParams").getAsJsonArray();
+		final String producerName = ReflectionUtils.getRequiredField(this.steps, "use").getAsString();
+		final JsonArray producerParams = ReflectionUtils.getRequiredField(this.steps, "withParams").getAsJsonArray();
 
 		// instantiate a new Producer instance and set its params
-		Object producerInstance = ReflectionUtils.instantiateClass(producerName);
+		final Object producerInstance = ReflectionUtils.instantiateClass(producerName);
 		ReflectionUtils.setParameters(producerInstance, producerParams);
 
 		// set query to producer so we can check it later against other queries
-		Method setMetadataMethod = producerInstance.getClass().getMethod("setMetadata", String.class, Object.class);
+		final Method setMetadataMethod = producerInstance.getClass().getMethod("setMetadata", String.class, Object.class);
 		setMetadataMethod.invoke(producerInstance, "query", this.steps);
 
 		// add this Runner as an observer of the Producer instance
-		Method addObserverMethod = producerInstance.getClass().getMethod("addObserver", IRunner.class);
+		final Method addObserverMethod = producerInstance.getClass().getMethod("addObserver", IRunner.class);
 		addObserverMethod.invoke(producerInstance, this);
 
 		// if there are operations, apply the first one
@@ -80,24 +80,23 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 		 * get list of operations and choose which one to execute next based on the
 		 * sequential operation counter
 		 */
-		JsonArray operationsToApply = ReflectionUtils.getRequiredField(this.steps, "apply").getAsJsonArray();
-		int totalOperations = operationsToApply.size();
+		final JsonArray operationsToApply = ReflectionUtils.getRequiredField(this.steps, "apply").getAsJsonArray();
+		final int totalOperations = operationsToApply.size();
 		if (producer != null && totalOperations > 0) {
 
-			JsonObject currentOperation = operationsToApply.get(this.operationCounter).getAsJsonObject();
+			final JsonObject currentOperation = operationsToApply.get(this.operationCounter).getAsJsonObject();
 
 			// instantiate current operation
-			String operationName = ReflectionUtils.getRequiredField(currentOperation, "name").getAsString();
-			Object operationInstance = ReflectionUtils.instantiateClass(operationName);
+			final String operationName = ReflectionUtils.getRequiredField(currentOperation, "name").getAsString();
+			final Object operationInstance = ReflectionUtils.instantiateClass(operationName);
 
 			// extract operation parameters and set them
-			JsonArray operationParams = ReflectionUtils.getRequiredField(currentOperation, "withParams")
+			final JsonArray operationParams = ReflectionUtils.getRequiredField(currentOperation, "withParams")
 					.getAsJsonArray();
 			ReflectionUtils.setParameters(operationInstance, operationParams);
 
 			// set operation to producer
-			Method setOperationMethod = producer.getClass().getMethod("setOperation", IOperation.class);
-
+			final Method setOperationMethod = producer.getClass().getMethod("setOperation", IOperation.class);
 			setOperationMethod.invoke(producer, operationInstance);
 
 			// trigger data fetching, which will in turn apply the operation
@@ -118,7 +117,7 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 
 		try {
 			// but is there really a next one? if not, stop
-			JsonArray operationsToApply = ReflectionUtils.getRequiredField(this.steps, "apply").getAsJsonArray();
+			final JsonArray operationsToApply = ReflectionUtils.getRequiredField(this.steps, "apply").getAsJsonArray();
 			if (this.operationCounter >= operationsToApply.size()) {
 				this.storeResults(producer);
 				this.setAsDone();
@@ -130,7 +129,7 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 			}
 		} catch (Exception e) {
 			// stop runner as soon as an exception is thrown to avoid infinite loops
-			InMemoryDataStore store = InMemoryDataStore.getInstance();
+			final InMemoryDataStore store = InMemoryDataStore.getInstance();
 			store.set(this.getId(), new ExceptionProducer(e));
 			this.setAsDone();
 		}
@@ -148,33 +147,33 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 
 		// the task is done, register a timestamp in the producer so we can keep track
 		// of when it is done
-		Method setMetadataMethod = producer.getClass().getMethod("setMetadata", String.class, Object.class);
-		Date timeObject = Calendar.getInstance().getTime();
-		String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
+		final Method setMetadataMethod = producer.getClass().getMethod("setMetadata", String.class, Object.class);
+		final Date timeObject = Calendar.getInstance().getTime();
+		final String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timeObject);
 		setMetadataMethod.invoke(producer, "timestamp", timestamp);
 
 		// store producer in the datastore
-		InMemoryDataStore store = InMemoryDataStore.getInstance();
-		UUID runnerId = this.getId();
+		final InMemoryDataStore store = InMemoryDataStore.getInstance();
+		final UUID runnerId = this.getId();
         store.set(runnerId, producer);
 
-		String producerName = this.steps.get("use").getAsString();
+		final String producerName = this.steps.get("use").getAsString();
 		this.storeProducerCallInfo(runnerId, this.steps.toString(), producerName);
 	}
 
 	private void storeProducerCallInfo(UUID runnerId, String requestBody, String producerName) {
-		ProducerUsageData callInfo = new ProducerUsageData("anonymous", new Date(), requestBody, producerName);
+		final ProducerUsageData callInfo = new ProducerUsageData("anonymous", new Date(), requestBody, producerName);
 		/*
 		 * If Spring does not find a MongoDB connection string in its properties, this
 		 * variable will be null. Otherwise, it will contain a value, which means a
 		 * connection to MongoDB is available.
 		 */
 		if (mongoDataStore != null && mongoDataStore.hasConnection()) {
-			List<ProducerUsageData> callInfoList = mongoDataStore.findByProducerName(producerName);
+			final List<ProducerUsageData> callInfoList = mongoDataStore.findByProducerName(producerName);
 			if (callInfoList.isEmpty()) {
 				mongoDataStore.save(callInfo);
 			} else {
-				ProducerUsageData existingCallInfo = callInfoList.get(0);
+				final ProducerUsageData existingCallInfo = callInfoList.get(0);
 				existingCallInfo.setTimestamp(new Date());
 				mongoDataStore.save(existingCallInfo);
 			}

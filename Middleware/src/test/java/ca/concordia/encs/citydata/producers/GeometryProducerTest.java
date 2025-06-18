@@ -1,10 +1,5 @@
 package ca.concordia.encs.citydata.producers;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,10 +22,8 @@ import ca.concordia.encs.citydata.PayloadFactory;
  * Tests the API endpoint with the merge operation between EnergyConsumption and Geometry producers
  * 
  * @author Minette Zongo M.
- * @date 2025-04-29
+ * @since 2025-04-29
  */
-
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

@@ -21,7 +21,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * this API in your environment variables.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-04-04
+ * @since 2025-04-04
  */
 public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
@@ -62,7 +62,7 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 
 	private RequestOptions getStartOptions() {
 
-		RequestOptions startOptions = new RequestOptions();
+		final RequestOptions startOptions = new RequestOptions();
 		startOptions.setIsReturnHeaders(true);
 		startOptions.addToHeaders("Application-Uuid", HUB_APPLICATION_UUID);
 		startOptions.addToHeaders("Username", HUB_USERNAME);
@@ -74,7 +74,7 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 	}
 
 	private RequestOptions getRetrofitOptions(JsonObject startResponseHeaders) {
-		RequestOptions retrofitOptions = new RequestOptions();
+		final RequestOptions retrofitOptions = new RequestOptions();
 		retrofitOptions.setRequestBody(getBody());
 		retrofitOptions.addToHeaders("token", startResponseHeaders.get("token").getAsString());
 		retrofitOptions.addToHeaders("session-id", startResponseHeaders.get("session_id").getAsString());
@@ -118,8 +118,8 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 
 			}
 		} catch (InterruptedException e) {
-			ArrayList<JsonObject> errorMessageList = new ArrayList<>();
-			JsonObject errorMessage = new JsonObject();
+			final ArrayList<JsonObject> errorMessageList = new ArrayList<>();
+			final JsonObject errorMessage = new JsonObject();
 			errorMessage.addProperty("error", e.getMessage());
 			errorMessageList.add(errorMessage);
 			this.setResult(errorMessageList);
@@ -134,10 +134,10 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 
 		if (this.buildingIds != null && !buildingIds.isEmpty()) {
 			// start: get session token
-			JsonObject startResponseHeaders = this.startHubSession();
+			final JsonObject startResponseHeaders = this.startHubSession();
 
 			// get retrofit result
-			RequestOptions requestOptions = this.getRetrofitOptions(startResponseHeaders);
+			final RequestOptions requestOptions = this.getRetrofitOptions(startResponseHeaders);
 			this.jsonProducer = new JSONProducer(HUB_RETROFIT_URL, requestOptions);
 			this.jsonProducer.setOperation(this.jsonProducerOperation);
 			this.jsonProducer.addObserver(this.runnerObserver);
@@ -145,7 +145,7 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 		} else {
 			errorObject.addProperty("error",
 					"No buildingIds informed. Please use the 'buildingIds' parameter to specify buildingIds.");
-			ArrayList<JsonObject> result = new ArrayList<>();
+			final ArrayList<JsonObject> result = new ArrayList<>();
 			result.add(errorObject);
 			this.setResult(result);
 			super.setOperation(this.jsonProducerOperation);

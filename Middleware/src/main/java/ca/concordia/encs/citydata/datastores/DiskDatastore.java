@@ -16,7 +16,7 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.*;
  * A DataStore that persists information in the disk.
  *
  * @author Gabriel C. Ullmann
- * @date 2025-02-19
+ * @since 2025-02-19
  */
 public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> {
 
@@ -29,7 +29,7 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 	private DiskDatastore() {
 		this.setMetadata("role", "datastore");
 
-		File baseFolder = new File(baseFolderPath);
+		final File baseFolder = new File(baseFolderPath);
 		if (!baseFolder.exists()) {
 			if (baseFolder.mkdirs()) {
 				this.setMetadata("absoluteBasePath", baseFolder.getAbsolutePath());
@@ -50,7 +50,7 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 
 	@Override
 	public void set(String key, byte[] value) {
-		String path = baseFolderPath + key + filePrefix;
+		final String path = baseFolderPath + key + filePrefix;
 		try (FileOutputStream fos = new FileOutputStream(path)) {
 			fos.write(value);
 			System.out.println("Data saved successfully!");
@@ -66,7 +66,7 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 
 	@Override
 	public byte[] get(String key) {
-		Path filePath = Path.of(baseFolderPath + key + filePrefix);
+		final Path filePath = Path.of(baseFolderPath + key + filePrefix);
 		try {
 			return Files.readAllBytes(filePath);
 		} catch (IOException e) {
@@ -87,7 +87,7 @@ public class DiskDatastore extends AbstractEntity implements IDataStore<byte[]> 
 
 	@Override
 	public void delete(String key) {
-		Path filePath = Path.of(baseFolderPath + key + filePrefix);
+		final Path filePath = Path.of(baseFolderPath + key + filePrefix);
 		try {
 			Files.delete(filePath);
 		} catch (IOException e) {

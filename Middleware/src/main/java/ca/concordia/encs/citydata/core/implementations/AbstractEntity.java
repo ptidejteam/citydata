@@ -13,14 +13,14 @@ import ca.concordia.encs.citydata.core.contracts.IEntity;
  * 
  * 
  * @author Gabriel C. Ullmann
- * @date 2025-04-23
+ * @since 2025-04-23
  */
 public abstract class AbstractEntity implements IEntity {
 
 	private final HashMap<String, Object> metadata = new HashMap<>();
 
 	public AbstractEntity() {
-		UUID uniqueId = UUID.randomUUID();
+		final UUID uniqueId = UUID.randomUUID();
 		// Storing as UUID instead of uniqueId.toString()
 		this.setMetadata("id", uniqueId);
 	}
@@ -35,7 +35,7 @@ public abstract class AbstractEntity implements IEntity {
 	
 	// Here we get the entity's UUID 
     public UUID getId() {
-        Object id = metadata.get("id");
+        final Object id = metadata.get("id");
         if (id instanceof UUID) {
             return (UUID) id;
         } else if (id instanceof String) {

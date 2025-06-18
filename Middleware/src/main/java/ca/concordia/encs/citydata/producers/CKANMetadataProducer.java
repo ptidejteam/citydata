@@ -14,7 +14,7 @@ import ca.concordia.encs.citydata.producers.base.JSONProducer;
 /**
  * This producer can connect to a CKAN instance and fetch either dataset or resource metadata.
  * @author Gabriel C. Ullmann
- * @date 2025-02-12
+ * @since 2025-02-12
  */
 public class CKANMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
@@ -71,10 +71,10 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 			this.jsonProducer.addObserver(this.runnerObserver);
 			this.jsonProducer.fetch();
 		} else {
-			JsonObject errorObject = new JsonObject();
+			final JsonObject errorObject = new JsonObject();
 			errorObject.addProperty("error",
 					"No URL informed. Please use the 'url' parameter to specify a CKAN server URL.");
-			ArrayList<JsonObject> result = new ArrayList<>();
+			final ArrayList<JsonObject> result = new ArrayList<>();
 			result.add(errorObject);
 			this.setResult(result);
 			super.addObserver(this.runnerObserver);

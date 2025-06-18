@@ -25,6 +25,12 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 
+/**
+ * Apply routes test
+ *
+ * @author Gabriel C. Ullmann, Sikandar Ejaz
+ * @since 2025-06-18
+ */
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

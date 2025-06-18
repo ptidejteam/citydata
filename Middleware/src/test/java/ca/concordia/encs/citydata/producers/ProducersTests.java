@@ -7,11 +7,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/* This java class is to test randomNumberProducer and occupancyProducer
- * Author: Sikandar Ejaz
- * Date: 2-8-2025
+/**
+ * This java class is to test randomNumberProducer and occupancyProducer
+ *
+ * @author Sikandar Ejaz
+ * @since 2025-02-08
  */
-
 class ProducersTests {
 
 	private RandomNumberProducer randomNumberProducer;

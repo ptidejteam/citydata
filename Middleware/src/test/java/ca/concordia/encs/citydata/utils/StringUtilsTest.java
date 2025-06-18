@@ -22,7 +22,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * Methods in this class are static and can be used without instantiating the class.
  *
  * @author Rushin Makwana
- * @date 2025-03-26
+ * @since 2025-03-26
  */
 
 public class StringUtilsTest {

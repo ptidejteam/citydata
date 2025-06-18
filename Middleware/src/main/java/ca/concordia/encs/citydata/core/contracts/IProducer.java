@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * operation on the result - Notify observers when both tasks are done
  *
  * @author Gabriel C. Ullmann
- * @date 2024-12-01
+ * @since 2024-12-01
  */
 
 public interface IProducer<E> {
