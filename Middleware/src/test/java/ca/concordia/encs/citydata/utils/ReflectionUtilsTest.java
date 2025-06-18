@@ -12,10 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 
 /**
- *  This class contains test methods to validate the functionality of ReflectionUtils methods.
- *
- * Author: Rushin Makwana
- *Date: 2025-03-26
+ * This class contains test methods to validate the functionality of ReflectionUtils methods.
+ * @author Rushin Makwana
+ * @date 2025-03-26
  *
  */
 
@@ -34,23 +33,23 @@ public class ReflectionUtilsTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             ReflectionUtils.getRequiredField(jsonObject, "anyField");
         });
-        assertEquals("Error: Missing 'anyField' field", exception.getMessage());
+        assertEquals("Error: Missing required 'anyField' field", exception.getMessage());
     }
 
     @Test
     public void testInstantiateClassInvalidClassName() {
-        Exception exception = assertThrows(ClassNotFoundException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("non.existent.ClassName");
         });
-        assertEquals("non.existent.ClassName", exception.getMessage());
+        assert(exception.getMessage().contains("Producer or Operation ClassNotFoundException was not found"));
     }
 
     @Test
     public void testInstantiateClassAbstractClass() {
-        Exception exception = assertThrows(IllegalAccessException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("java.util.AbstractList");
         });
-        assertTrue(exception.getMessage().contains("java.util.AbstractList"));
+        assertTrue(exception.getMessage().contains("CITYdata entity could not be created"));
     }
 
     @Test
@@ -74,7 +73,7 @@ public class ReflectionUtilsTest {
             public void setName(String name) {}
         }
 
-        Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
+        Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name");
         assertNotNull(method);
         assertEquals("setName", method.getName());
     }
@@ -83,12 +82,9 @@ public class ReflectionUtilsTest {
         class TestClass {
             public void setAge(int age) {}
         }
-
-        Exception exception = assertThrows(MiddlewareException.NoSuitableSetterException.class, () -> {
-            ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
+        assertThrows(MiddlewareException.InvalidParameterException.class, () -> {
+            ReflectionUtils.findSetterMethod(TestClass.class, "name");
         });
-
-        assertEquals("No suitable setter found for name", exception.getMessage());
     }
     @Test
     public void testConvertValueBooleanType() {

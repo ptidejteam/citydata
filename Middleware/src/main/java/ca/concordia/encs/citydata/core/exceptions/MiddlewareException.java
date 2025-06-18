@@ -1,8 +1,9 @@
 package ca.concordia.encs.citydata.core.exceptions;
 
-/* This java class contains definitions of custom exceptions
- * @author: Sikandar Ejaz, Rushin D. Makwana
- * @date: 2025-08-02
+/**
+ * This java class contains definitions of custom exceptions
+ * @author Sikandar Ejaz, Rushin D. Makwana, Gabriel C. Ullmann
+ * @date 2025-06-17
  */
 
 public class MiddlewareException extends RuntimeException {
@@ -11,33 +12,34 @@ public class MiddlewareException extends RuntimeException {
 		super(message);
 	}
 
+
 	public static class InvalidProducerException extends MiddlewareException {
 		public InvalidProducerException(String producerName) {
-			super("Invalid producer: " + producerName);
+			super("Producer " + producerName + " was not found. Please check whether the fully-qualified name is correct and try again.");
 		}
 	}
 
 	public static class InvalidOperationException extends MiddlewareException {
 		public InvalidOperationException(String operationName) {
-			super("Invalid operation: " + operationName);
+			super("Producer '" + operationName + "' was not found. Please check whether the fully-qualified name is correct and try again.");
 		}
 	}
 
-	public static class InvalidProducerParameterException extends MiddlewareException {
-		public InvalidProducerParameterException(String parameterName) {
-			super("Invalid producer parameter: " + parameterName);
+	public static class MalformedParameterException extends MiddlewareException {
+		public MalformedParameterException(String parameterJsonString) {
+			super("Malformed Producer or Operation parameter. Expected keys 'name' and 'value', found: " + parameterJsonString);
 		}
 	}
 
-	public static class InvalidOperationParameterException extends MiddlewareException {
-		public InvalidOperationParameterException(String parameterName) {
-			super("Invalid operation parameter: " + parameterName);
+	public static class InvalidParameterException extends MiddlewareException {
+		public InvalidParameterException(String parameterName) {
+			super("Producer or Operation parameter '" + parameterName + "' was not found. Please make sure you input names and values correctly for every parameter.");
 		}
 	}
 
 	public static class UnsupportedParameterTypeException extends MiddlewareException {
-		public UnsupportedParameterTypeException(String parameterType) {
-			super("Unsupported parameter type: " + parameterType);
+		public UnsupportedParameterTypeException(String parameterName, String parameterValue, String parameterTypeSupported) {
+			super("Parameter '" + parameterName + "' does not accept value '" + parameterValue + "' as an input. Please input a value of type " + parameterTypeSupported + " instead.");
 		}
 	}
 
@@ -53,22 +55,12 @@ public class MiddlewareException extends RuntimeException {
 		}
 	}
 
-	public static class ReflectionOperationException extends MiddlewareException {
-		public ReflectionOperationException(String message, Throwable cause) {
-			super(message);
-		}
-	}
-
-	public static class DataStoreException extends MiddlewareException {
-		public DataStoreException(String message) {
-			super("Data store error: " + message);
-		}
-	}
 	public static class DataStoreWritingFailureException extends MiddlewareException {
 		public DataStoreWritingFailureException(String message) {
 			super("Data store writing failure: " + message);
 		}
 	}
+
 	public static class DataStoreFailureReadingException extends MiddlewareException {
 		public DataStoreFailureReadingException(String message) {
 			super("Data store reading failure: " + message);
@@ -83,11 +75,6 @@ public class MiddlewareException extends RuntimeException {
 
 	public static class ThreadInterruptedException extends MiddlewareException {
 		public ThreadInterruptedException(String message) {
-			super(message);
-		}
-	}
-	public static class NoSuitableSetterException extends MiddlewareException {
-		public NoSuitableSetterException(String message) {
 			super(message);
 		}
 	}
