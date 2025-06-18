@@ -9,6 +9,9 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This producer can load CSV from a file or remotely via an HTTP request.
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2024-12-01
  */
 public class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
 

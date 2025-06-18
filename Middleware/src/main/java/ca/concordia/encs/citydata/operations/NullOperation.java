@@ -7,6 +7,8 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 
 /**
  * Placeholder operation
+ * TODO: use it to avoid NullPointerException in Producers
+ *
  * @author Gabriel C. Ullmann
  * @date 2025-06-18
  */

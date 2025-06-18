@@ -15,6 +15,9 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /**
  * This operation merges two Producer results together.
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-01-01
  */
 public class MergeOperation extends AbstractOperation<String> implements IOperation<String> {
 

@@ -12,6 +12,9 @@ import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
  * This operation computes the average (arithmetic mean) of a JsonArray,
  * retrieving the numerical values from a given key in each element in the
  * JsonArray
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-06-18
  */
 public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> implements IOperation<JsonArray> {
 

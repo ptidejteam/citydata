@@ -18,8 +18,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
-import ca.concordia.encs.citydata.operations.NullOperation;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -28,7 +26,6 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidOperationException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DatasetNotFound;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 

@@ -15,14 +15,15 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.producers.ExceptionProducer;
 
-/* This Runner executes a single Producer with no Operations. 
+/**
+ * This Runner executes a single Producer with no Operations.
  * It can be used for tests when you want to quickly inspect the output of 
  * a given Producer with parameters. This Runner is also used by Operations 
  * that need to spawn other Producers as part of the transformation they 
  * are applying (e.g. MergeOperation).
  * 
- * Author: Gabriel C. Ullmann 
- * Date: 2025-05-27
+ * @author Gabriel C. Ullmann
+ * @date 2025-05-27
  */
 public class SingleStepRunner extends AbstractRunner implements IRunner {
 

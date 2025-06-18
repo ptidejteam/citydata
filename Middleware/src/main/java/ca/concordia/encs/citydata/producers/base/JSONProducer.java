@@ -12,6 +12,9 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This producer can load JSON from a file or remotely via an HTTP request.
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2024-12-01
  */
 public class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 

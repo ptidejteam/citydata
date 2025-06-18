@@ -8,6 +8,12 @@ import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 
+/**
+ * This Producer outputs GeoJSON geometries for a given city.
+ *
+ * @author Gabriel C. Ullmann
+ * @date 2025-05-28
+ */
 public class GeometryProducer extends AbstractProducer<String> implements IProducer<String> {
 	private String city;
 	private JSONProducer jsonProducer;

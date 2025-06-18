@@ -11,9 +11,10 @@ import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 import ca.concordia.encs.citydata.producers.base.JSONProducer;
 
-/*This producer can connect to a CKAN instance and fetch either dataset or resource metadata.
- * Author: Gabriel C. Ullmann
- * Date: 2025-02-12
+/**
+ * This producer can connect to a CKAN instance and fetch either dataset or resource metadata.
+ * @author Gabriel C. Ullmann
+ * @date 2025-02-12
  */
 public class CKANMetadataProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 

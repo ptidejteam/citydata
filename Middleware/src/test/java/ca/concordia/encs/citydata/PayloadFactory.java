@@ -7,7 +7,11 @@ import java.nio.file.Path;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-// A class that produces mock request payloads, for example, JSON queries to use with /apply/sync
+/**
+ * A class that produces mock request payloads, for example, JSON queries to use with /apply/sync or /apply/async
+ * @author Gabriel C. Ullmann
+ * @date 2025-06-18
+ */
 public abstract class PayloadFactory {
 
 	public static String getBasicQuery() {
