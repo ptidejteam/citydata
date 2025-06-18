@@ -13,8 +13,8 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 public class CSVProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public CSVProducer(String filePath, RequestOptions fileOptions) {
-		this.filePath = filePath;
-		this.fileOptions = fileOptions;
+		this.setFilePath(filePath);
+		this.setFileOptions(fileOptions);
 	}
 
 	// I added the error handling to ensure I actually read my local file
@@ -26,7 +26,7 @@ public class CSVProducer extends AbstractProducer<String> implements IProducer<S
 		// split CSV string by line, add lines to the list
 		final ArrayList<String> csvLines = new ArrayList<String>();
 		csvLines.addAll(Arrays.asList(csvString.split(System.lineSeparator())));
-		this.result = csvLines;
+		this.setResult(csvLines);
 		this.applyOperation();
 	}
 

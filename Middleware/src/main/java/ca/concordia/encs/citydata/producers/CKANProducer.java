@@ -22,8 +22,8 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 
 	private String url;
 	private String resourceId;
-	private DiskDatastore diskStore = DiskDatastore.getInstance();
-	private ArrayList<String> intermediateResult = new ArrayList<>();
+	private final DiskDatastore diskStore = DiskDatastore.getInstance();
+	private final ArrayList<String> intermediateResult = new ArrayList<>();
 
 	public void setUrl(String url) {
 		if (url != null) {
@@ -110,9 +110,9 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 									+ resourceAttributes.get("url") + " .");
 				}
 				RequestOptions requestOptions = new RequestOptions();
-				requestOptions.method = "GET";
-				this.filePath = resourceUrl;
-				this.fileOptions = requestOptions;
+				requestOptions.setMethod("GET");
+				this.setFilePath(resourceUrl);
+				this.setFileOptions(requestOptions); ;
 				return this.fetchFromPath();
 			} else {
 				intermediateResult.add("Sorry, the " + mimetype + " type is not currently supported by this producer. "
@@ -122,7 +122,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 		} catch (InterruptedException e) {
 			ArrayList<String> errorMessageList = new ArrayList<>();
 			errorMessageList.add(e.getMessage());
-			this.result = errorMessageList;
+			this.setResult(errorMessageList);
 		}
 
 		return new byte[0];
@@ -142,8 +142,8 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 				file = fetchFromCkan();
 				diskStore.set(this.resourceId, file);
 			}
-			intermediateResult.add(new String(file));
-			this.result = this.intermediateResult;
+			this.intermediateResult.add(new String(file));
+			this.setResult(this.intermediateResult);
 			this.applyOperation();
 		}
 

@@ -1,9 +1,8 @@
 /**
- * 
+ *
  */
 package ca.concordia.encs.citydata.core.implementations;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -16,12 +15,11 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
+import ca.concordia.encs.citydata.operations.NullOperation;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -30,24 +28,53 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
-import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.InvalidOperationException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DatasetNotFound;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  *
  * This implements features common to all Producers, such as reading data from
  * files and URLs and notifying runners
- * 
+ *
  * @author Gabriel C. Ullmann
  * @date 2025-05-27
  */
 public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
 
-	protected String filePath;
-	protected RequestOptions fileOptions;
-	public IOperation<E> operation;
-	private Set<IRunner> runners = new HashSet<>();
-	protected ArrayList<E> result = new ArrayList<>();
+	private String filePath;
+	private RequestOptions fileOptions;
+	private IOperation<E> operation;
+	private final Set<IRunner> runners = new HashSet<>();
+	private ArrayList<E> result = new ArrayList<>();
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public RequestOptions getFileOptions() {
+		return fileOptions;
+	}
+
+	public void setFileOptions(RequestOptions fileOptions) {
+		this.fileOptions = fileOptions;
+	}
+
+	public IOperation<E> getOperation() {
+		return operation;
+	}
+
+	public Set<IRunner> getRunners() {
+		return runners;
+	}
+
+	public void setResult(ArrayList<E> result) {
+		this.result = result;
+	}
 
 	public AbstractProducer() {
 		this.setMetadata("role", "producer");
@@ -60,18 +87,13 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 
 	@Override
 	public void setOperation(IOperation operation) {
-		if (operation == null) {
-			throw new MiddlewareException.InvalidOperationException(
-					"Operation cannot be null. Please provide a valid operation.");
-		}
 		this.operation = operation;
 	}
 
 	@Override
 	public void fetch() {
 		if (this.filePath == null || this.filePath.isEmpty()) {
-			throw new MiddlewareException.InvalidParameterException(
-					"Producer file path is missing or empty. Please set a valid file path.");
+			throw new DatasetNotFound(this.filePath);
 		}
 		System.out.println("Unimplemented method! This method must be implemented by a subclass.");
 	}
@@ -98,6 +120,10 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		return this.result;
 	}
 
+	public boolean isEmpty() {
+		return this.result == null || this.result.isEmpty();
+	}
+
 	/**
 	 * Fetch file via HTTP GET or POST
 	 */
@@ -112,38 +138,37 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		// effects (e.g. a producer changing data in the API)
 		// for now, I kept support to PUT and POST because they are needed for Hub API
 		// auth
-		switch (this.fileOptions.method) {
-		case "HEAD":
-
-			break;
-		case "GET":
-			requestBuilder.GET();
-			break;
-		case "POST":
-			requestBody = BodyPublishers.ofString(this.fileOptions.requestBody);
-			requestBuilder.POST(requestBody);
-			break;
-		case "PUT":
-			requestBody = BodyPublishers.ofString(this.fileOptions.requestBody);
-			requestBuilder.PUT(requestBody);
-			break;
-		default:
-			throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.method);
+		switch (this.fileOptions.getMethod()) {
+			case "HEAD":
+				break;
+			case "GET":
+				requestBuilder.GET();
+				break;
+			case "POST":
+				requestBody = BodyPublishers.ofString(this.fileOptions.getRequestBody());
+				requestBuilder.POST(requestBody);
+				break;
+			case "PUT":
+				requestBody = BodyPublishers.ofString(this.fileOptions.getRequestBody());
+				requestBuilder.PUT(requestBody);
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
 		}
 
 		// add headers to builder, if any
-		if (this.fileOptions.headers != null && !this.fileOptions.headers.isEmpty()) {
-			for (Entry<String, String> header : this.fileOptions.headers.entrySet()) {
+		HashMap<String, String> listOfHeaders = this.fileOptions.getHeaders();
+		if (!listOfHeaders.isEmpty()) {
+			for (Entry<String, String> header : listOfHeaders.entrySet()) {
 				requestBuilder.header(header.getKey(), header.getValue());
 			}
 		}
-		System.out.println(this.fileOptions.headers);
 		request = requestBuilder.build();
 
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.statusCode());
 
-		if (this.fileOptions.returnHeaders) {
+		if (this.fileOptions.isReturnHeaders()) {
 			Gson gson = new Gson();
 			return gson.toJson(response.headers().map()).getBytes();
 		}
@@ -171,9 +196,12 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("File not found: " + this.filePath, e);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot read file: " + this.filePath, e);
+			throw new RuntimeException("Cannot read file: " + this.filePath + ". " +
+					"The file may be corrupted or inaccessible to CITYdata right now.");
+		} catch (OutOfMemoryError e) {
+			throw new RuntimeException("There is not enough memory to load file: " + this.filePath);
 		} catch (Exception e) {
-			throw new RuntimeException("An error occured while fetching the data: ", e);
+			throw new RuntimeException("An error occurred while fetching the data: " + e.getMessage());
 		}
 
 	}
@@ -185,16 +213,11 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			for (E element : this.result) {
 				jsonArray.add((JsonElement) element);
 			}
-			return jsonArray.toString();
 		} else {
 			JsonObject result = new JsonObject();
-			if (this.result.size() == 1) {
-				result.addProperty("result", this.result.getFirst().toString());
-			} else {
-				result.addProperty("result", this.result.toString());
-			}
+			result.addProperty("result", this.result.toString());
 			jsonArray.add(result);
-			return jsonArray.get(0).toString();
 		}
+		return jsonArray.toString();
 	}
 }

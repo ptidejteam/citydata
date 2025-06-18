@@ -16,8 +16,8 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 public class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	public JSONProducer(String filePath, RequestOptions fileOptions) {
-		this.filePath = filePath;
-		this.fileOptions = fileOptions;
+		this.setFilePath(filePath);
+		this.setFileOptions(fileOptions);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class JSONProducer extends AbstractProducer<JsonObject> implements IProdu
 		}
 
 		jsonOutput.add(outputJsonObject);
-		this.result = jsonOutput;
+		this.setResult(jsonOutput);
 		this.applyOperation();
 	}
 

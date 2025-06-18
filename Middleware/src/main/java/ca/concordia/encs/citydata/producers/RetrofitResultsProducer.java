@@ -19,7 +19,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 /**
  * This producer fetches data from the HUB API. Credentials are needed to access
  * this API in your environment variables.
- * 
+ *
  * @author Gabriel C. Ullmann
  * @date 2025-04-04
  */
@@ -63,25 +63,25 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 	private RequestOptions getStartOptions() {
 
 		RequestOptions startOptions = new RequestOptions();
-		startOptions.returnHeaders = true;
+		startOptions.setIsReturnHeaders(true);
 		startOptions.addToHeaders("Application-Uuid", HUB_APPLICATION_UUID);
 		startOptions.addToHeaders("Username", HUB_USERNAME);
 		startOptions.addToHeaders("Password", HUB_PASSWORD);
 		startOptions.addToHeaders("accept", "application/json");
 		startOptions.addToHeaders("content-type", "application/json");
-		startOptions.method = "PUT";
+		startOptions.setMethod("PUT");
 		return startOptions;
 	}
 
 	private RequestOptions getRetrofitOptions(JsonObject startResponseHeaders) {
 		RequestOptions retrofitOptions = new RequestOptions();
-		retrofitOptions.requestBody = getBody();
+		retrofitOptions.setRequestBody(getBody());
 		retrofitOptions.addToHeaders("token", startResponseHeaders.get("token").getAsString());
 		retrofitOptions.addToHeaders("session-id", startResponseHeaders.get("session_id").getAsString());
 		retrofitOptions.addToHeaders("Application-Uuid", HUB_APPLICATION_UUID);
 		retrofitOptions.addToHeaders("accept", "application/json");
 		retrofitOptions.addToHeaders("content-type", "application/json");
-		retrofitOptions.method = "POST";
+		retrofitOptions.setMethod("POST");
 		return retrofitOptions;
 	}
 
@@ -112,7 +112,7 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 			if (storeResult != null) {
 				final ArrayList<JsonObject> retrofitResults = (ArrayList<JsonObject>) memoryStore.get(runnerId)
 						.getResult();
-				if (retrofitResults != null && retrofitResults.size() > 0) {
+				if (retrofitResults != null && !retrofitResults.isEmpty()) {
 					return retrofitResults.get(0);
 				}
 
@@ -122,7 +122,7 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 			JsonObject errorMessage = new JsonObject();
 			errorMessage.addProperty("error", e.getMessage());
 			errorMessageList.add(errorMessage);
-			this.result = errorMessageList;
+			this.setResult(errorMessageList);
 		}
 		return new JsonObject();
 	}
@@ -132,23 +132,24 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 
 		final JsonObject errorObject = new JsonObject();
 
-		if (this.buildingIds != null && buildingIds.size() > 0) {
+		if (this.buildingIds != null && !buildingIds.isEmpty()) {
 			// start: get session token
 			JsonObject startResponseHeaders = this.startHubSession();
 
 			// get retrofit result
 			RequestOptions requestOptions = this.getRetrofitOptions(startResponseHeaders);
 			this.jsonProducer = new JSONProducer(HUB_RETROFIT_URL, requestOptions);
-			this.jsonProducer.operation = this.jsonProducerOperation;
+			this.jsonProducer.setOperation(this.jsonProducerOperation);
 			this.jsonProducer.addObserver(this.runnerObserver);
 			this.jsonProducer.fetch();
 		} else {
 			errorObject.addProperty("error",
 					"No buildingIds informed. Please use the 'buildingIds' parameter to specify buildingIds.");
-			this.result = new ArrayList<>();
-			this.result.add(errorObject);
+			ArrayList<JsonObject> result = new ArrayList<>();
+			result.add(errorObject);
+			this.setResult(result);
+			super.setOperation(this.jsonProducerOperation);
 			super.addObserver(this.runnerObserver);
-			super.operation = this.jsonProducerOperation;
 		}
 
 		this.applyOperation();

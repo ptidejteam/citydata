@@ -9,6 +9,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -24,7 +25,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * This Producer provide energy consumption data read from a Parquet file which
  * must be provided by the CityData instance. If no file is found, this producer
  * will return an message telling the user no data is available.
- * 
+ *
  * @author Gabriel C. Ullmann, Minette Zongo
  * @date 2025-05-28
  */
@@ -146,7 +147,9 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 			resultRow.addProperty("error", e.getMessage());
 			resultsArray.add(resultRow);
 		} finally {
-			this.result.add(resultsArray);
+			ArrayList<JsonArray> updatedResult = this.getResult();
+			updatedResult.add(resultsArray);
+			this.setResult(updatedResult);
 			this.applyOperation();
 		}
 	}

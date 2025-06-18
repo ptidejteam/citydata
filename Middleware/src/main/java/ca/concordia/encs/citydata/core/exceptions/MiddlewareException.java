@@ -21,7 +21,7 @@ public class MiddlewareException extends RuntimeException {
 
 	public static class InvalidOperationException extends MiddlewareException {
 		public InvalidOperationException(String operationName) {
-			super("Producer '" + operationName + "' was not found. Please check whether the fully-qualified name is correct and try again.");
+			super("Operation '" + operationName + "' was not found. Please check whether the fully-qualified name is correct and try again.");
 		}
 	}
 
@@ -51,7 +51,7 @@ public class MiddlewareException extends RuntimeException {
 
 	public static class DatasetNotFound extends MiddlewareException {
 		public DatasetNotFound(String message) {
-			super("Dataset not found: " + message);
+			super("Producer cannot fetch data because the requested data source was not found: " + message);
 		}
 	}
 

@@ -23,7 +23,7 @@ public class GeometryProducer extends AbstractProducer<String> implements IProdu
 
 	@Override
 	public void setOperation(IOperation operation) {
-		this.jsonProducer.operation = operation;
+		this.jsonProducer.setOperation(operation);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class ExceptionProducer extends AbstractProducer<String> implements IProd
 	public ExceptionProducer(Exception e) {
 		ArrayList<String> result = new ArrayList<>();
 		result.add(e.getMessage());
-		this.result = result;
+		this.setResult(result);
 	}
 
 	@Override
