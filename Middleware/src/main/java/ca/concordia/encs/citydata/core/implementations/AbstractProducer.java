@@ -1,7 +1,6 @@
 package ca.concordia.encs.citydata.core.implementations;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -31,7 +30,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  * This implements features common to all Producers, such as reading data from
  * files and URLs and notifying runners
  *
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Rushin D. Makwana
  * @since 2025-05-27
  */
 public abstract class AbstractProducer<E> extends AbstractEntity implements IProducer<E> {
@@ -120,85 +119,75 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 	/**
 	 * Fetch file via HTTP GET or POST
 	 */
-	private byte[] doHTTPRequest() throws Exception {
-		final HttpRequest request;
-		final BodyPublisher requestBody;
-		final URI endpointURI = new URI(this.filePath);
-		final Builder requestBuilder = HttpRequest.newBuilder().uri(endpointURI);
-        final HttpResponse<String> response;
-        try (HttpClient client = HttpClient.newHttpClient()) {
-			/*
+	private void doHTTPRequest(OutputStream outputStream) throws Exception {
+		URI endpointURI = new URI(this.filePath);
+		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(endpointURI);
+		/*
 			*  TODO: we should support idempotent HTTP methods only to avoid unexpected side effects
 			*  (e.g. a producer changing data in the API)
 			*  for now, I kept support to PUT and POST because they are needed for Hub API auth
-			*/
-            switch (this.fileOptions.getMethod()) {
-                case "HEAD":
-                    break;
-                case "GET":
-                    requestBuilder.GET();
-                    break;
-                case "POST":
-                    requestBody = BodyPublishers.ofString(this.fileOptions.getRequestBody());
-                    requestBuilder.POST(requestBody);
-                    break;
-                case "PUT":
-                    requestBody = BodyPublishers.ofString(this.fileOptions.getRequestBody());
-                    requestBuilder.PUT(requestBody);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
-            }
-
-            // add headers to builder, if any
-            final HashMap<String, String> listOfHeaders = this.fileOptions.getHeaders();
-            if (!listOfHeaders.isEmpty()) {
-                for (Entry<String, String> header : listOfHeaders.entrySet()) {
-                    requestBuilder.header(header.getKey(), header.getValue());
-                }
-            }
-            request = requestBuilder.build();
-
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        }
-        System.out.println(response.statusCode());
-
-		if (this.fileOptions.isReturnHeaders()) {
-			final Gson gson = new Gson();
-			return gson.toJson(response.headers().map()).getBytes();
+				*/
+		switch (this.fileOptions.getMethod()) {
+			case "HEAD":
+				break;
+			case "GET":
+				requestBuilder.GET();
+				break;
+			case "POST":
+				requestBuilder.POST(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
+				break;
+			case "PUT":
+				requestBuilder.PUT(BodyPublishers.ofString(this.fileOptions.getRequestBody()));
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported method: " + this.fileOptions.getMethod());
 		}
-		return response.body().getBytes();
+
+		if (!this.fileOptions.getHeaders().isEmpty()) {
+			this.fileOptions.getHeaders().forEach(requestBuilder::header);
+		}
+
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<InputStream> response = client.send(
+					requestBuilder.build(),
+					HttpResponse.BodyHandlers.ofInputStream()
+			);
+
+			if (this.fileOptions.isReturnHeaders()) {
+				try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
+					new Gson().toJson(response.headers().map(), writer);
+				}
+			} else {
+				response.body().transferTo(outputStream);
+			}
+		}
 	}
 
 	/**
 	 * Fetch file from filesystem
 	 */
-	private byte[] readFile() throws Exception {
-		final Path path = Paths.get(this.filePath);
-		return Files.readAllBytes(path);
+	private void readFile(OutputStream outputStream) throws IOException {
+		Path path = Paths.get(this.filePath);
+		Files.copy(path, outputStream);
 	}
 
-	protected byte[] fetchFromPath() {
+	protected void fetchFromPath(OutputStream outputStream) {
 		try {
 			// If the file path is a URL and there are RequestOptions
 			if (this.filePath != null && this.filePath.contains("://") && this.fileOptions != null) {
-				return this.doHTTPRequest();
+				doHTTPRequest(outputStream);
+			} else {
+				// Fetch from the filesystem
+				readFile(outputStream);
 			}
-
-			// else, fetch from the filesystem
-			return this.readFile();
-
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("File not found: " + this.filePath, e);
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot read file: " + this.filePath + ". " +
 					"The file may be corrupted or inaccessible to CITYdata right now.");
-		} catch (OutOfMemoryError e) {
-			throw new RuntimeException("There is not enough memory to load file: " + this.filePath);
 		} catch (Exception e) {
 			throw new RuntimeException("An error occurred while fetching the data: " + e.getMessage());
 		}
-
 	}
 
 	@Override
@@ -214,5 +203,13 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 			jsonArray.add(result);
 		}
 		return jsonArray.toString();
+	}
+	protected byte[] fetchFromPath() {
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+			fetchFromPath(outputStream); // Call the updated method
+			return outputStream.toByteArray(); // Return the data as a byte array
+		} catch (IOException e) {
+			throw new RuntimeException("Error fetching data", e);
+		}
 	}
 }
