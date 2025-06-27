@@ -9,13 +9,16 @@ import ca.concordia.encs.citydata.core.contracts.IProducer;
  * This producer was created for the sole purpose of returning Exceptions when
  * it is not possible to throw them in Runners (e.g. when it is enclosed in a
  * run() method within a Thread)
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-01-01
  */
 public class ExceptionProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	public ExceptionProducer(Exception e) {
-		ArrayList<String> result = new ArrayList<>();
+		final ArrayList<String> result = new ArrayList<>();
 		result.add(e.getMessage());
-		this.result = result;
+		this.setResult(result);
 	}
 
 	@Override

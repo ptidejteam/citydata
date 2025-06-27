@@ -12,8 +12,8 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
 /***
  * This is the Spring Boot application entry point.
  * 
- * @author Gabriel C. Ullmann, Sikandar Ejaz, Rushin Makwana
- * @date 2025-01-01
+ * @author Gabriel C. Ullmann, Sikandar Ejaz, Rushin Makwana, Minette Zongo
+ * @since 2025-01-01
  */
 
 @SpringBootApplication
@@ -22,13 +22,13 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
 public class Application {
 
 	// initialize all datastore for later use
-	InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
-	DiskDatastore diskStore = DiskDatastore.getInstance();
-	MongoDataStore mongoDataStore = MongoDataStore.getInstance();
+	final InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
+	final DiskDatastore diskStore = DiskDatastore.getInstance();
+	final MongoDataStore mongoDataStore = MongoDataStore.getInstance();
 
 	public static void main(String[] args) {
-		ApplicationContext context = SpringApplication.run(Application.class, args);
-		MongoDataStore mongoDataStore = context.getBean(MongoDataStore.class);
+		final ApplicationContext context = SpringApplication.run(Application.class, args);
+		final MongoDataStore mongoDataStore = context.getBean(MongoDataStore.class);
 	}
 
 }

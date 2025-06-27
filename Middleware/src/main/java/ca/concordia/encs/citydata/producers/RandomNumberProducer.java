@@ -3,15 +3,16 @@ package ca.concordia.encs.citydata.producers;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
 /**
  *
  * This Producer outputs random integers. For test only.
- * 
+ *
  * @author Gabriel C. Ullmann
- * @date 2025-05-28
+ * @since 2025-05-28
  */
 public class RandomNumberProducer extends AbstractProducer<Integer> implements IProducer<Integer> {
 	private int listSize;
@@ -30,8 +31,8 @@ public class RandomNumberProducer extends AbstractProducer<Integer> implements I
 		try {
 			// if this is running for the first time, fetch
 			// otherwise, just apply next operation on top of previous result
-			if (this.result.isEmpty()) {
-				Random random = new Random();
+			if (this.isEmpty()) {
+				final Random random = new Random();
 				final ArrayList<Integer> randomNumbers = new ArrayList<Integer>();
 				for (int i = 0; i < this.listSize; i++) {
 					randomNumbers.add(random.nextInt(100));
@@ -39,11 +40,12 @@ public class RandomNumberProducer extends AbstractProducer<Integer> implements I
 						Thread.sleep(this.generationDelay);
 					}
 				}
-				this.result = randomNumbers;
+				this.setResult(randomNumbers);
 			}
 			this.applyOperation();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			throw new MiddlewareException.ThreadInterruptedException(
+					"Thread was interrupted while generating random numbers: " + e.getMessage());
 		}
 	}
 }

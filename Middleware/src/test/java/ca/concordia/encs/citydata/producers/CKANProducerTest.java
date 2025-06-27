@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.producers;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,11 +21,12 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/* CKANProducer tests
- * Author: Gabriel C. Ullmann
- * Date: 2025-02-12
+/**
+ * CKANProducer tests
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-02-12
  */
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

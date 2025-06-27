@@ -17,12 +17,13 @@ import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 
-/* This route check whether a the input query is already related to one of the producers stored 
+/**
+ * This route check whether a the input query is already related to one of the producers stored
  * in the middleware's DataStore. If so, it returns the list of producers with that match the query,
  * along with their generation timestamps.
  * 
- * Author: Minette
- * Date: 21-02-2025
+ * @author Minette
+ * @since 21-02-2025
  */
 
 @RestController
