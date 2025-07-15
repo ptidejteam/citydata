@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -16,15 +14,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import static ca.concordia.encs.citydata.core.utils.Constants.ENV_PATH;
+
 /**
  * This class contains functions to perform transformations on strings.
  * 
  * @author Rushin Makwana and Gabriel C. Ullmann
- * @date 2025-03-28
+ * @since 2025-03-28
  */
 public abstract class StringUtils {
-
-	public static final Path ENV_PATH = Paths.get("env.json").toAbsolutePath();
 
 	public static String capitalize(String str) {
 		return str == null || str.isEmpty() ? str : str.substring(0, 1).toUpperCase() + str.substring(1);
@@ -35,9 +33,8 @@ public abstract class StringUtils {
 		for (Method method : methods) {
 			final Parameter[] params = method.getParameters();
 			final String methodName = method.getName();
-			if (methodName != "setMetadata" && methodName.startsWith("set") && params.length > 0) {
-				String paramName = method.getName().replace("set", "");
-				paramName = paramName.substring(0, 1).toLowerCase() + paramName.substring(1, paramName.length());
+			if (isUserAccessibleSetter(methodName, params)) {
+				final String paramName = extractParamNameFromSetterMethod(methodName);
 				descriptions.add(paramName + " (" + params[0].getType().getSimpleName() + ")");
 			}
 		}
@@ -64,16 +61,6 @@ public abstract class StringUtils {
 		}
 	}
 
-	public static boolean isValidDate(String date) throws IllegalArgumentException {
-		try {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-			LocalDateTime.parse(date, formatter);
-			return true;
-		} catch (DateTimeParseException | NullPointerException e) {
-			return false;
-		}
-	}
-
 	public static LocalDateTime parseDate(String date) throws IllegalArgumentException {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -81,6 +68,15 @@ public abstract class StringUtils {
 		} catch (DateTimeParseException | NullPointerException e) {
 			return null;
 		}
+	}
+
+	private static boolean isUserAccessibleSetter(String methodName, Parameter[] params){
+		return methodName != null && methodName.startsWith("set") && !methodName.equals("setMetadata") && params.length > 0;
+	}
+
+	private static String extractParamNameFromSetterMethod(String setterMethodName) {
+		final String setterName = setterMethodName.replace("set", "");
+		return setterName.substring(0, 1).toLowerCase() + setterName.substring(1);
 	}
 
 }

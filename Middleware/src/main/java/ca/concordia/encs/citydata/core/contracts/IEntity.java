@@ -8,7 +8,7 @@ import java.util.Set;
  * have the capacity of holding metadata about themselves.
  * 
  * @author Gabriel C. Ullmann
- * @date 2025-04-23
+ * @since 2025-04-23
  * 
  */
 public interface IEntity {

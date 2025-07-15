@@ -12,6 +12,9 @@ import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
  * This operation computes the average (arithmetic mean) of a JsonArray,
  * retrieving the numerical values from a given key in each element in the
  * JsonArray
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-06-18
  */
 public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> implements IOperation<JsonArray> {
 
@@ -28,9 +31,9 @@ public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> impl
 
 	@Override
 	public ArrayList<JsonArray> apply(ArrayList<JsonArray> inputs) {
-		ArrayList<JsonArray> results = new ArrayList<>();
+		final ArrayList<JsonArray> results = new ArrayList<>();
 		Number roundedAverage = 0;
-		Float floatAverage = 0.0f;
+		float floatAverage = 0.0f;
 
 		// compute the average
 		for (JsonArray list : inputs) {
@@ -40,7 +43,7 @@ public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> impl
 			floatAverage = floatAverage / list.size();
 
 			// choose whether (and how) to round the result
-			JsonArray resultingAverage = new JsonArray();
+			final JsonArray resultingAverage = new JsonArray();
 			if (roundingMethod.equalsIgnoreCase("floor")) {
 				roundedAverage = (int) Math.floor(floatAverage);
 			} else if (roundingMethod.equalsIgnoreCase("ceil")) {

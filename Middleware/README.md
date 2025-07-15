@@ -6,10 +6,10 @@
 
 
 
-The CityData middleware allows users to fetch, transform, and process data from various sources using Producers and Operations.
+The CITYdata middleware allows users to fetch, transform, and process data from various sources using Producers and Operations.
 
 ## What is it?
-CityData is a part of the [TOOLS4CITIES](https://www.concordia.ca/research/cities-institute/initiatives/tools4cities.html) tool suite. It is a middleware that enables users to perform operations on data from different sources via the use of the following abstractions:
+CITYdata is a part of the [TOOLS4CITIES](https://www.concordia.ca/research/cities-institute/initiatives/tools4cities.html) tool suite. It is a middleware that enables users to perform operations on data from different sources via the use of the following abstractions:
 
 - Producer: connects to data sources and fetches data
 - Operation: describes transformations to be performed on producer outputs (data)
@@ -22,13 +22,17 @@ You can see a more detailed breakdown of responsibilities for the middleware [he
 ## What do I need?
 
 - Java 21
-- Eclipse 2024-06 (4.32.0)
-- Maven version 3.7.x (embedded in Eclipse)
+- Maven version 3.7.x
 - Postman (optional)
+
+To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYdata development team members use either Eclipse 2024-06 (4.32.0) or IntelliJ IDEA 2024.3.4.1.
 
 ## How do I set it up?
 
+- Install Java and Maven in your operating system
 - Open the terminal and check Java installation by typing "java --version". If Java is set up correctly, you should see the Java version printed on the terminal.
+
+### Eclipse
 - Open Eclipse. On the left-side menu, select Import > Maven > Existing Maven Projects.
 - Select project directory: tools4cities-middleware.
 - Click "Finish" and wait for the project to load.
@@ -36,8 +40,11 @@ You can see a more detailed breakdown of responsibilities for the middleware [he
 - Right-click again and select: Run As > maven install
 - Right-click again and select: Run As > maven test
 
-Alternatively, if you have mvn set up in the command line, you can also run:
+### IntelliJ
+- Please follow the steps described [here](https://www.jetbrains.com/help/idea/import-project-from-eclipse-page-1.html).
 
+### Command line
+If you have mvn set up in the command line, go to the Middleware folder and run the following commands:
 ```bash
 mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false
 mvn clean
@@ -45,12 +52,17 @@ mvn validate
 mvn install
 ```
 
+As a result of the compilation, Maven will generate a JAR file. You can run it as follows:
+```bash
+java -jar ./target/Middleware-0.0.1-SNAPSHOT.jar --server.port=8080
+```
+
 ## How do I use it?
 
-- This middleware is a REST API which receives queries as input and generates data as output.
-- A query is a JSON file where you specify which data you want, and which transformations you wish to apply to the data. You can see query examples in the folder /docs/examples.
-- You can call the middleware routes using either Postman or via code using your favourite programming language. For example, you can use the requests package in [Python](https://www.geeksforgeeks.org/get-post-requests-using-python/) or the fetch API in [JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch).
-- If you are familiar with Postman, you can also find a Postman collection in the folder /docs/examples.
+- CITYdata is a REST API which receives queries as input and generates data as output.
+- A query is a JSON file where you specify which data you want and which transformations you wish to apply to the data. You can see query examples in the folder /docs/examples.
+- You can call CITYdata routes using your favourite programming language. For example, you can use the requests package in [Python](https://www.geeksforgeeks.org/get-post-requests-using-python/) or the fetch API in [JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch).
+- If you are familiar with Postman, you can use our Postman collection [here](https://github.com/ptidejteam/citydata/blob/master/Middleware/docs/citydata_collection.json) to send your queries, no need to write code.
 
 The following routes are available:
 
@@ -64,7 +76,7 @@ The following routes are available:
 | GET        | /apply/ping             | Returns pong (this is great to test if the middleware is running 😊)                          |                                  |
 | POST       | /exists                 | Returns a list of prime Producers which match the given query                                | A JSON query in the request body |
 
-For now, the amount of Producers, Operations and parameters is quite limited, but we intend to expand it in the future and also document it better. Your suggestions are more than welcome!
+For now, the number of Producers, Operations and parameters is quite limited, but we intend to expand it in the future and also document it better. Your suggestions are more than welcome!
 
 ## Who do I talk to?
 

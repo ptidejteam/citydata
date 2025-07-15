@@ -10,8 +10,11 @@ import java.util.UUID;
  * method) - Delete records in a key/value database (delete method)
  * 
  * 
- * Refactoring made: changed the method's signature to use UUIDs instead of Strings and default methods to still handle
- * String IDs, set, get, delete
+ * Refactoring made: changed the method's signature to use UUIDs instead of Strings
+ * and default methods to still handle String IDs, set, get, delete
+ *
+ * @author Gabriel C. Ullmann, Minette Zongo
+ * @since 2025-06-18
  */
 public interface IDataStore<E> {
 

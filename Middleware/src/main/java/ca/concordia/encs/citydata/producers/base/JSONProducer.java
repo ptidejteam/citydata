@@ -12,19 +12,22 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
 
 /**
  * This producer can load JSON from a file or remotely via an HTTP request.
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2024-12-01
  */
 public class JSONProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	public JSONProducer(String filePath, RequestOptions fileOptions) {
-		this.filePath = filePath;
-		this.fileOptions = fileOptions;
+		this.setFilePath(filePath);
+		this.setFileOptions(fileOptions);
 	}
 
 	@Override
 	public void fetch() {
 
 		final ArrayList<JsonObject> jsonOutput = new ArrayList<JsonObject>();
-		String inputJson = new String(this.fetchFromPath());
+		final String inputJson = new String(this.fetchFromPath());
 
 		// convert JSON string to object
 		final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
@@ -37,7 +40,7 @@ public class JSONProducer extends AbstractProducer<JsonObject> implements IProdu
 		}
 
 		jsonOutput.add(outputJsonObject);
-		this.result = jsonOutput;
+		this.setResult(jsonOutput);
 		this.applyOperation();
 	}
 

@@ -1,0 +1,188 @@
+{
+    "building": {
+        "construction_year": 2010,
+        "height": {
+            "value": 49.67,
+            "unit": "meters"
+        },
+        "floor_area": {
+            "value": 114.12,
+            "unit": "square meters"
+        },
+        "internal_mass": {
+            "value": 461999.19,
+            "unit": "kilograms"
+        },
+        "address": {
+            "city": "Montreal",
+            "street": "9999 Saint-Laurent Blvd",
+            "state": "QC",
+            "zip_code": "ZZ1 ZZ1",
+            "country": "Canada",
+            "coordinates": {
+                "latitude": 45.503527,
+                "longitude": -73.587165
+            },
+            "north_orientation": 70.16
+        },
+        "meter": {
+            "type": "Electricity",
+            "manufacturer": "Example Meters Inc.",
+            "data_frequency": 1234,
+            "unit": "kilowatts per hour",
+            "measure_mode": "automatic"
+        },
+        "building_type": "industrial",
+        "floors": [
+            {
+                "area": {
+                    "value": 110.33,
+                    "unit": "meters"
+                },
+                "floor_type": "basement",
+                "description": "Base floor",
+                "open_spaces": [
+                    {
+                        "name": "Space A",
+                        "space_type": "office",
+                        "area": {
+                            "value": 374.94,
+                            "unit": "square feet"
+                        },
+                        "sensors": [],
+                        "adjacent_spaces": []
+                    },
+                    {
+                        "name": "Space B",
+                        "space_type": "hall",
+                        "area": {
+                            "value": 98.99,
+                            "unit": "square feet"
+                        },
+                        "sensors": [],
+                        "adjacent_spaces": []
+                    }
+                ],
+                "rooms": [
+                    {
+                        "name": "Room 123",
+                        "room_type": "storage",
+                        "area": {
+                            "value": 131.67,
+                            "unit": "square feet"
+                        },
+                        "sensors": [
+                            {
+                                "name": "Zone B",
+                                "log_type": "Polling",
+                                "measure": "temperature",
+                                "measure_range": {
+                                    "minimum": 2.99,
+                                    "maximum": 3.11
+                                },
+                                "input_voltage_range": {
+                                    "minimum": 7.52,
+                                    "maximum": 4.38,
+                                    "unit": "volts"
+                                },
+                                "output_voltage_range": {
+                                    "minimum": 5.34,
+                                    "maximum": 9.1,
+                                    "unit": "volts"
+                                },
+                                "input_current_range": {
+                                    "minimum": 2.14,
+                                    "maximum": 0.24,
+                                    "unit": "milliAmpere"
+                                },
+                                "output_current_range": {
+                                    "minimum": 8.94,
+                                    "maximum": 7.2,
+                                    "unit": "milliAmpere"
+                                },
+                                "unit": "degree Fahrenheit",
+                                "data_frequency": 1000
+                            },
+                            {
+                                "name": "Zone B",
+                                "log_type": "Polling",
+                                "measure": "humidity",
+                                "measure_range": {},
+                                "output_current_range": {
+                                    "minimum": 8.65,
+                                    "maximum": 9.36,
+                                    "unit": "milliAmpere"
+                                },
+                                "unit": "relative humidty",
+                                "data_frequency": 1000
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "area": {
+                    "value": 229.94,
+                    "unit": "meters"
+                },
+                "floor_type": "ground",
+                "description": "First floor",
+                "open_spaces": [
+                    {
+                        "name": "Zone A",
+                        "space_type": "reception",
+                        "area": {
+                            "value": 157.06,
+                            "unit": "square feet"
+                        },
+                        "sensors": [],
+                        "adjacent_spaces": []
+                    }
+                ],
+                "rooms": [
+                    {
+                        "name": "Office 1",
+                        "room_type": "office",
+                        "area": {
+                            "value": 87.36,
+                            "unit": "square feet"
+                        },
+                        "sensors": [
+                            {
+                                "name": "Temp Sensor",
+                                "log_type": "Polling",
+                                "measure": "temperature",
+                                "measure_range": {
+                                    "minimum": 4.25,
+                                    "maximum": 6.59
+                                },
+                                "input_voltage_range": {
+                                    "minimum": 1.89,
+                                    "maximum": 9.93,
+                                    "unit": "volts"
+                                },
+                                "output_voltage_range": {
+                                    "minimum": 2.04,
+                                    "maximum": 11.28,
+                                    "unit": "volts"
+                                },
+                                "input_current_range": {
+                                    "minimum": 0.21,
+                                    "maximum": 2.12,
+                                    "unit": "milliAmpere"
+                                },
+                                "output_current_range": {
+                                    "minimum": 0.44,
+                                    "maximum": 2.89,
+                                    "unit": "milliAmpere"
+                                },
+                                "unit": "degree Celsius",
+                                "data_frequency": 500
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

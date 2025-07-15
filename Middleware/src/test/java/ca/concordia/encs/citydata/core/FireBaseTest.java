@@ -18,7 +18,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class TestFireBase {
+/**
+ * ExistsController routes test
+ *
+ * @author Rushin Makwana
+ * @since 2025-01-01
+ */
+public class FireBaseTest {
 
 	private static FirebaseDatabase database;
 	private static boolean skipTest = false;
@@ -73,7 +79,7 @@ public class TestFireBase {
 			try {
 				Thread.sleep(5000); // Adjust time as necessary
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 			}
 		}
 

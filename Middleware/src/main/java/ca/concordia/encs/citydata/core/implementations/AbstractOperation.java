@@ -15,11 +15,11 @@ import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
  * This implements features common to all Operations, such as notifying Runners
  * 
  * @author Gabriel C. Ullmann
- * @date 2025-05-27
+ * @since 2025-05-27
  */
 public abstract class AbstractOperation<E> extends AbstractEntity implements IOperation<E> {
 
-	private Set<IRunner> runners = new HashSet<>();
+	private final Set<IRunner> runners = new HashSet<>();
 
 	public AbstractOperation() {
 		this.setMetadata("role", "operation");

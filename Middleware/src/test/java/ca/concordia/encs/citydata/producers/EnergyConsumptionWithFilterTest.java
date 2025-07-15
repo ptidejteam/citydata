@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.producers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -21,9 +21,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import ca.concordia.encs.citydata.PayloadFactory;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
-import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /***
@@ -37,9 +37,8 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  *
  * 
  * @author Minette Zongo M., Gabriel C. Ullmann
- * @date 2025-04-29
+ * @since 2025-04-29
  */
-
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
@@ -82,7 +81,6 @@ public class EnergyConsumptionWithFilterTest {
 				runner.runSteps();
 			} catch (Exception e) {
 				System.err.println("Runner thread error: " + e.getMessage());
-				e.printStackTrace();
 			}
 		});
 
