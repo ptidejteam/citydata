@@ -1,11 +1,10 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.operations;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ca.concordia.encs.citydata.core.configs.AppConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /***
  * Tests for MergeOperation
