@@ -18,7 +18,8 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "ca.concordia.encs.citydata.core.controllers",
-		"ca.concordia.encs.citydata.core.configs", "ca.concordia.encs.citydata.datastores" })
+		"ca.concordia.encs.citydata.core.configs", "ca.concordia.encs.citydata.datastores",
+		"ca.concordia.encs.citydata.security", "ca.concordia.encs.citydata.core.utils" })
 public class Application {
 
 	// initialize all datastore for later use
@@ -29,6 +30,7 @@ public class Application {
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(Application.class, args);
 		MongoDataStore mongoDataStore = context.getBean(MongoDataStore.class);
+
 	}
 
 }
