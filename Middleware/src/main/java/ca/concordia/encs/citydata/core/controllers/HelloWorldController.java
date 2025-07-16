@@ -28,9 +28,4 @@ public class HelloWorldController {
 	public String name(@PathVariable String name) {
 		return "Hello " + name;
 	}
-
-	@GetMapping("/hello")
-	public String sayHelloWorld() {
-		return "Hello, authenticated user!";
-	}
 }
