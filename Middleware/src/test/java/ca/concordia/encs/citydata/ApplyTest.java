@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.google.gson.JsonArray;
@@ -81,14 +83,14 @@ public class ApplyTest {
 				.andExpect(content().string(containsString("Sorry, your request result is not ready yet.")));
 	}
 
-	// Test for invalid runner ID Need to fix -- I (Minette) fixed it, changed 404 to 400 in the status and updated expected message
+	// Test for invalid runner ID Need to fix -- I (Minette) fixed it, changed 404
+	// to 400 in the status and updated expected message
 	@Test
 	public void whenInvalidRunnerId_thenReturnNotReadyMessage() throws Exception {
 		String invalidRunnerId = "nonexistent-runner-id";
-		mockMvc.perform(get("/apply/async/" + invalidRunnerId))
-        .andExpect(status().is(400))  // Changed from 404 to 400
-        .andExpect(content().string(containsString("Invalid runner ID format. Please provide a valid UUID.")));
-	}	
+		mockMvc.perform(get("/apply/async/" + invalidRunnerId)).andExpect(status().is(400)) // Changed from 404 to 400
+				.andExpect(content().string(containsString("Invalid runner ID format. Please provide a valid UUID.")));
+	}
 
 	// Test for ping route
 	@Test
@@ -141,13 +143,24 @@ public class ApplyTest {
 				.andExpect(content().string(containsString("Missing 'use' field")));
 	}
 
+	private String token;
+
 	// Test for missing "withParams" field
 	@Test
 	public void whenMissingWithParamsField_thenReturnError() throws Exception {
-		String missingWithParams = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\" }";
+		final String missingWithParams = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\" }";
 
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
-				.andExpect(content().string(containsString("Missing 'withParams' field")));
+		mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).param("user", "admin")
+				.param("password", "admin")).andDo(new ResultHandler() {
+					@Override
+					public void handle(MvcResult result) throws Exception {
+						ApplyTest.this.token = result.getResponse().getContentAsString();
+					}
+				});
+
+		// TODO: tests not passing, please check documentation to find out how to pass headers
+		mockMvc.perform(post("/apply/sync").headers("token", this.token).contentType(MediaType.APPLICATION_JSON)
+				.content(missingWithParams)).andExpect(content().string(containsString("Missing 'withParams' field")));
 	}
 
 	// Test for non-existent param in Producer/Operation
