@@ -24,10 +24,15 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * Date: 2025-02-26
  */
 
+/* Last Update: 18-07-2025 
+Author Sikandar Ejaz 
+Fixed failing tests after implementing Authentication
+*/
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ExistsTest {
+public class ExistsTest extends BaseIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -43,7 +48,8 @@ public class ExistsTest {
 
 	    // creating a producer
 	    MvcResult syncResult = mockMvc
-	        .perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 	        .andExpect(status().isOk()).andReturn();
 
 	    // Get the response but don't try to parse it as a UUID
@@ -54,7 +60,8 @@ public class ExistsTest {
 	    
 	    // Check if the query exists
 	    MvcResult existsResult = mockMvc
-	        .perform(post("/exists/").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 	        .andExpect(status().isOk()).andReturn();
 
 	    String responseContent = existsResult.getResponse().getContentAsString();
@@ -67,7 +74,8 @@ public class ExistsTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerListDatasets");
 
 		MvcResult existsResult = mockMvc
-				.perform(post("/exists/").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isNotFound()).andReturn();
 
 		String responseContent = existsResult.getResponse().getContentAsString();
@@ -77,7 +85,8 @@ public class ExistsTest {
 	@Test
 	void testBrokenJsonQuery() throws Exception {
 		String jsonPayload = PayloadFactory.getInvalidJson();
-		mockMvc.perform(post("/exists/") // Changed from get to post to match my endpoint
+		mockMvc.perform(post("/exists/").header("Authorization", "Bearer " + getToken()) // Changed from get to post to
+																							// match my endpoint
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError());
 	}
@@ -87,14 +96,17 @@ public class ExistsTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
 		MvcResult existsResult = mockMvc
-				.perform(post("/exists/").contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andReturn();
+				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.andReturn();
 
 		String responseContent = existsResult.getResponse().getContentAsString();
 		int status = existsResult.getResponse().getStatus();
 
 		if (status == 404 || responseContent.equals("[]")) {
 			MvcResult syncResult = mockMvc
-					.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+					.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+							.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 					.andReturn();
 
 			int syncStatus = syncResult.getResponse().getStatus();

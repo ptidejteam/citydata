@@ -1,53 +1,90 @@
 package ca.concordia.encs.citydata.core.configs;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import ca.concordia.encs.citydata.security.JwtAuthenticationFilter;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+
+/*
+ * JWT Authentication Implementation
+ * Author: Sikandar Ejaz 
+ * Date: 18-07-2025
+ */
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final RsaKeyProperties rsaKeys;
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable()) // Disable CSRF for REST API
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/login").permitAll() // Public login
-																									// endpoint
-				.anyRequest().authenticated() // All other endpoints require authentication
-				).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-		return http.build();
-	}
-
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		return authConfig.getAuthenticationManager();
-	}
-
-	// Temporary in-memory user for testing (replace with your UserDetailsService)
-	@Bean
-	public UserDetailsService userDetailsService() {
-		var user = User.withUsername("user").password(passwordEncoder().encode("password")).roles("USER").build();
-		return new InMemoryUserDetailsManager(user);
+	public SecurityConfig(RsaKeyProperties rsaKeys) {
+		this.rsaKeys = rsaKeys;
 	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
+		UserDetails user = User.withUsername("admin").password(encoder.encode("password")).authorities("read").build();
+		return new InMemoryUserDetailsManager(user);
+	}
+
+	@Bean
+	public AuthenticationManager authManager(UserDetailsService userDetailsService, PasswordEncoder encoder) {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(encoder);
+		return new ProviderManager(authProvider);
+	}
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers("/token", "/helloworld", "producers/list")
+								.permitAll().anyRequest().authenticated())
+				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+	}
+
+	@Bean
+	public JwtDecoder jwtDecoder() {
+		return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+	}
+
+	@Bean
+	public JwtEncoder jwtEncoder() {
+		JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
+		JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+		return new NimbusJwtEncoder(jwks);
 	}
 }

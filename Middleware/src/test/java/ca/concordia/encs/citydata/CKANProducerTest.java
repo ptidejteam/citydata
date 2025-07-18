@@ -25,10 +25,16 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * Date: 2025-02-12
  */
 
+/*
+ * Last Update: 18-07-2025 
+ * Author Sikandar Ejaz 
+ * Fixed failing tests after implementing Authentication
+ */
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class CKANProducerTest {
+public class CKANProducerTest extends BaseIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -37,14 +43,16 @@ public class CKANProducerTest {
 	@Test
 	void testListDatasets() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerListDatasets");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("montreal-buildings")));
 	}
 
 	@Test
 	void testFetchDatasetMetadata() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerDataset");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("a948a9ed-9e79-46eb-9cf2-a1a3e56ac9b0")));
 	}
@@ -52,7 +60,8 @@ public class CKANProducerTest {
 	@Test
 	void testFetchResourceMetadata() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerResource");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("a948a9ed-9e79-46eb-9cf2-a1a3e56ac9b0")));
 	}
@@ -61,7 +70,8 @@ public class CKANProducerTest {
 	void testFetchNonExistingDatasetMetadata() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerDataset").replace("montreal-buildings",
 				"bogus-dataset");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("Not found")));
 	}
 
@@ -69,7 +79,8 @@ public class CKANProducerTest {
 	@Test
 	void testFetchResource() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanProducer");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("FeatureCollection")));
 	}
 
@@ -78,30 +89,27 @@ public class CKANProducerTest {
 		String runnerId = "";
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanProducerWithReplace");
 
-		// do async request
 		MvcResult asyncRequestResult = mockMvc
-				.perform(post("/apply/async").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/apply/async").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andReturn();
 
-		// Regular expression for extracting the runner ID
 		String text = asyncRequestResult.getResponse().getContentAsString();
 		String uuidRegex = "\\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\b";
-		Pattern pattern = Pattern.compile(uuidRegex);
-		Matcher matcher = pattern.matcher(text);
-
-		while (matcher.find()) {
+		Matcher matcher = Pattern.compile(uuidRegex).matcher(text);
+		if (matcher.find()) {
 			runnerId = matcher.group();
-			break;
 		}
 
-		mockMvc.perform(get("/apply/async/" + runnerId)).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MiddlewareCollection")));
+		mockMvc.perform(get("/apply/async/" + runnerId).header("Authorization", "Bearer " + getToken()))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("MiddlewareCollection")));
 	}
 
 	@Test
 	void testFetchNonExistingResource() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanProducer").replace("c67", "123");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().string(containsString("Cannot invoke")));
 	}

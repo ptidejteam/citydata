@@ -21,10 +21,16 @@ import com.google.gson.JsonParser;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
+/*
+ * Fixed failing tests after implementing Authentication
+ * Author: Sikandar Ejaz 
+ * Date: 18-07-2025
+ */
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class RetrofitResultsTest {
+public class RetrofitResultsTest extends BaseIntegrationTest {
 
 	private static String retrofitResultsProducer;
 	private static String retrofitResultsProducerReadPath;
@@ -76,10 +82,9 @@ public class RetrofitResultsTest {
 		JsonObject jsonPayloadObject = JsonParser.parseString(retrofitResultsProducer).getAsJsonObject();
 		jsonPayloadObject.get("withParams").getAsJsonArray().get(0).getAsJsonObject().addProperty("value", "");
 
-		mockMvc.perform(
-				post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().string(containsString("Not a JSON Array")));
 	}
-
 }
