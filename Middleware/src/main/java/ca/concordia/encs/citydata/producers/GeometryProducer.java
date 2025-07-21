@@ -15,19 +15,18 @@ import ca.concordia.encs.citydata.core.contracts.IRunner;
  * @since 2025-05-28
  */
 public class GeometryProducer extends AbstractProducer<String> implements IProducer<String> {
-	private String city;
-	private JSONProducer jsonProducer;
+    private JSONProducer jsonProducer;
 
 	public void setCity(String city) {
-		this.city = city;
-		if (this.city != null) {
-			jsonProducer = new JSONProducer("docs/examples/data/" + this.city + "_geometries.json", null);
+        if (city != null) {
+			jsonProducer = new JSONProducer("docs/examples/data/" + city + "_geometries.json", null);
 		} else {
 			throw new InvalidParameterException("Please provide a city name to the producer.");
 		}
 	}
 
-	@Override
+	@SuppressWarnings("rawtypes")
+    @Override
 	public void setOperation(IOperation operation) {
 		this.jsonProducer.setOperation(operation);
 	}

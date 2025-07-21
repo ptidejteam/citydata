@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.google.gson.JsonObject;
 
@@ -39,8 +38,8 @@ public class ApplyTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	private void performPostRequest(String url, String contentType, String content) throws Exception {
-		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
+	private void performPostRequest(String content) throws Exception {
+		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON_VALUE).content(content)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("result")));
 	}
 
@@ -95,7 +94,7 @@ public class ApplyTest {
 	@Test
 	public void testSync() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
-		performPostRequest("/apply/sync", MediaType.APPLICATION_JSON_VALUE, jsonPayload);
+		performPostRequest(jsonPayload);
 	}
 
 	// Test for sync with wrong media type access
@@ -175,9 +174,7 @@ public class ApplyTest {
 	public void testGetRequiredFieldMissing() {
 		JsonObject jsonObject = new JsonObject();
 
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			ReflectionUtils.getRequiredField(jsonObject, "missingField");
-		});
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> ReflectionUtils.getRequiredField(jsonObject, "missingField"));
 
 		assertTrue(exception.getMessage().contains("Missing required 'missingField' field"));
 	}

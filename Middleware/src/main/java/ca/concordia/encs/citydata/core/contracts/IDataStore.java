@@ -8,7 +8,7 @@ import java.util.UUID;
  * The DataStore entity is responsible for: - Create and Update records in a
  * key/value database (set method) - Read records from a key/value database (get
  * method) - Delete records in a key/value database (delete method)
- * 
+ * <p>
  * 
  * Refactoring made: changed the method's signature to use UUIDs instead of Strings
  * and default methods to still handle String IDs, set, get, delete

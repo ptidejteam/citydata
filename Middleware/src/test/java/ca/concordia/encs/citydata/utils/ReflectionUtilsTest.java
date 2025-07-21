@@ -30,25 +30,19 @@ public class ReflectionUtilsTest {
     @Test
     public void testGetRequiredFieldHandlesEmptyJsonObject() {
         JsonObject jsonObject = new JsonObject();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ReflectionUtils.getRequiredField(jsonObject, "anyField");
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ReflectionUtils.getRequiredField(jsonObject, "anyField"));
         assertEquals("Error: Missing required 'anyField' field", exception.getMessage());
     }
 
     @Test
     public void testInstantiateClassInvalidClassName() {
-        Exception exception = assertThrows(MiddlewareException.class, () -> {
-            ReflectionUtils.instantiateClass("non.existent.ClassName");
-        });
+        Exception exception = assertThrows(MiddlewareException.class, () -> ReflectionUtils.instantiateClass("non.existent.ClassName"));
         assert(exception.getMessage().contains("Producer or Operation ClassNotFoundException was not found"));
     }
 
     @Test
     public void testInstantiateClassAbstractClass() {
-        Exception exception = assertThrows(MiddlewareException.class, () -> {
-            ReflectionUtils.instantiateClass("java.util.AbstractList");
-        });
+        Exception exception = assertThrows(MiddlewareException.class, () -> ReflectionUtils.instantiateClass("java.util.AbstractList"));
         assertTrue(exception.getMessage().contains("CITYdata entity could not be created"));
     }
 
@@ -61,14 +55,12 @@ public class ReflectionUtilsTest {
         param.addProperty("value", "Rushin");
         params.add(param);
 
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            ReflectionUtils.setParameters(null, params);
-        });
+        Exception exception = assertThrows(NullPointerException.class, () -> ReflectionUtils.setParameters(null, params));
 
         assertEquals("Cannot invoke \"Object.getClass()\" because \"instance\" is null", exception.getMessage());
     }
     @Test
-    public void testFindSetterMethodReturnsValidSetter() throws Exception {
+    public void testFindSetterMethodReturnsValidSetter() {
         class TestClass {
             public void setName(String name) {}
         }
@@ -82,9 +74,7 @@ public class ReflectionUtilsTest {
         class TestClass {
             public void setAge(int age) {}
         }
-        assertThrows(MiddlewareException.InvalidParameterException.class, () -> {
-            ReflectionUtils.findSetterMethod(TestClass.class, "name");
-        });
+        assertThrows(MiddlewareException.InvalidParameterException.class, () -> ReflectionUtils.findSetterMethod(TestClass.class, "name"));
     }
     @Test
     public void testConvertValueBooleanType() {

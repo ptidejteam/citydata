@@ -3,7 +3,6 @@ package ca.concordia.encs.citydata.producers;
 import java.util.ArrayList;
 import java.util.Random;
 
-import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 
@@ -26,7 +25,7 @@ public class RandomStringProducer extends AbstractProducer<String> implements IP
 
 	@Override
 	public void fetch() {
-		int index = 0;
+		int index;
 		final ArrayList<String> resultingString = new ArrayList<>();
 		if (this.isEmpty()) {
 			final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

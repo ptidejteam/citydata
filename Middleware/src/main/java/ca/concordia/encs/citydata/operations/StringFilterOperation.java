@@ -17,7 +17,8 @@ public class StringFilterOperation extends AbstractOperation<String> implements 
 	private String filterBy;
 	private Boolean isExactlyEqual = false;
 
-	public void setFilterBy(String filterBy) {
+	@SuppressWarnings("unused")
+    public void setFilterBy(String filterBy) {
 		this.filterBy = filterBy;
 	}
 
@@ -27,13 +28,13 @@ public class StringFilterOperation extends AbstractOperation<String> implements 
 
 	@Override
 	public ArrayList<String> apply(ArrayList<String> inputs) {
-		List<String> filteredList = inputs;
+		List<String> filteredList;
 		if (!isExactlyEqual) {
-			filteredList = inputs.stream().filter(s -> s.toString().contains(filterBy)).collect(Collectors.toList());
+			filteredList = inputs.stream().filter(s -> s.contains(filterBy)).collect(Collectors.toList());
 		} else {
-			filteredList = inputs.stream().filter(s -> s.toString().equalsIgnoreCase(filterBy))
+			filteredList = inputs.stream().filter(s -> s.equalsIgnoreCase(filterBy))
 					.collect(Collectors.toList());
 		}
-		return new ArrayList<String>(filteredList);
+		return new ArrayList<>(filteredList);
 	}
 }

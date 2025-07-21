@@ -52,12 +52,14 @@ public class OptionalMongoConfig {
 
 	// Checks whether the MongoDB configurations should be applied or not
 	public static class MongoUriProvidedCondition implements Condition {
-		@Override
+		@SuppressWarnings("NullableProblems")
+        @Override
 		public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
 			String uri = null;
 			String isMongoEnabled = context.getEnvironment().getProperty("mongo.enabled");
 
-			if (isMongoEnabled.equalsIgnoreCase("true")) {
+            assert isMongoEnabled != null;
+            if (isMongoEnabled.equalsIgnoreCase("true")) {
 				uri = context.getEnvironment().getProperty("spring.data.mongodb.uri");
 			}
 

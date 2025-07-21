@@ -29,7 +29,7 @@ public class ListOperationsController {
 	public String listOperations() {
 		final JsonArray operationDetailsList = new JsonArray();
 		// Get the path to the package
-		final String projectRootPath = Paths.get("").toAbsolutePath().toString() + "/";
+		final String projectRootPath = Paths.get("").toAbsolutePath() + "/";
 		final String packagePath = projectRootPath + Constants.OPERATION_ROOT_PACKAGE;
 
 		try {

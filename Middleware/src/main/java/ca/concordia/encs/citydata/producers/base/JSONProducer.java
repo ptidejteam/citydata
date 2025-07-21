@@ -26,7 +26,7 @@ public class JSONProducer extends AbstractProducer<JsonObject> implements IProdu
 	@Override
 	public void fetch() {
 
-		final ArrayList<JsonObject> jsonOutput = new ArrayList<JsonObject>();
+		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
 		final String inputJson = new String(this.fetchFromPath());
 
 		// convert JSON string to object

@@ -18,7 +18,7 @@ import com.google.gson.JsonParser;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 
 /**
- * This route check whether a the input query is already related to one of the producers stored
+ * This route check whether the input query is already related to one of the producers stored
  * in the middleware's DataStore. If so, it returns the list of producers with that match the query,
  * along with their generation timestamps.
  * 
@@ -30,7 +30,8 @@ import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 @RequestMapping("/exists")
 public class ExistsController {
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity<String> sync(@RequestBody String query) {
 
 		try {

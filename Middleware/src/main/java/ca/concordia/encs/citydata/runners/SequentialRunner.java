@@ -36,7 +36,7 @@ import ca.concordia.encs.citydata.producers.ExceptionProducer;
 public class SequentialRunner extends AbstractRunner implements IRunner {
 
 	private final MongoDataStore mongoDataStore = MongoDataStore.getInstance();
-	private JsonObject steps = null;
+	private final JsonObject steps;
 	private int operationCounter = 0;
 
 	public SequentialRunner(JsonObject steps) {
@@ -74,7 +74,8 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 
 	}
 
-	@Override
+	@SuppressWarnings("JavaReflectionInvocation")
+    @Override
 	public void applyNextOperation(IProducer<?> producer) throws Exception {
 		/*
 		 * get list of operations and choose which one to execute next based on the
@@ -105,7 +106,8 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 			System.out.println("No operations to apply");
 		}
 
-		producer.fetch();
+        assert producer != null;
+        producer.fetch();
 
 	}
 
@@ -173,7 +175,7 @@ public class SequentialRunner extends AbstractRunner implements IRunner {
 			if (callInfoList.isEmpty()) {
 				mongoDataStore.save(callInfo);
 			} else {
-				final ProducerUsageData existingCallInfo = callInfoList.get(0);
+				final ProducerUsageData existingCallInfo = callInfoList.getFirst();
 				existingCallInfo.setTimestamp(new Date());
 				mongoDataStore.save(existingCallInfo);
 			}

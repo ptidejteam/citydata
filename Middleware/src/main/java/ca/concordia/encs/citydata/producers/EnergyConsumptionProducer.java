@@ -24,7 +24,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  *
  * This Producer provide energy consumption data read from a Parquet file which
  * must be provided by the CityData instance. If no file is found, this producer
- * will return an message telling the user no data is available.
+ * will return a message telling the user no data is available.
  *
  * @author Gabriel C. Ullmann, Minette Zongo
  * @since 2025-05-28

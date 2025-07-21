@@ -29,7 +29,7 @@ public class ListProducerController {
 	public String listProducers() {
 		final JsonArray producerDetailsList = new JsonArray();
 		// Get the path to the package
-		final String projectRootPath = Paths.get("").toAbsolutePath().toString() + "/";
+		final String projectRootPath = Paths.get("").toAbsolutePath() + "/";
 		final String packagePath = projectRootPath + Constants.PRODUCER_ROOT_PACKAGE;
 
 		try {

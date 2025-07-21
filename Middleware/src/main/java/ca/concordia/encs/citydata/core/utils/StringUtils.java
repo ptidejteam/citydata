@@ -43,7 +43,7 @@ public abstract class StringUtils {
 
 	public static String getEnvVariable(String variableKey) {
 		String value = System.getenv(variableKey);
-		if (value == null || value.length() == 0) {
+		if (value == null || value.isEmpty()) {
 			final JsonElement envVariables = StringUtils.getEnvVariables();
 			if (envVariables.getAsJsonObject() != null && envVariables.getAsJsonObject().get(variableKey) != null) {
 				value = envVariables.getAsJsonObject().get(variableKey).getAsString();
