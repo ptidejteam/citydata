@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  *
- * The Producer entity is responsible for: - Fetching data - Applying a
+ * The Producer entity is responsible for: - Fetching data - Applying
  * operation on the result - Notify observers when both tasks are done
  *
  * @author Gabriel C. Ullmann
