@@ -18,7 +18,8 @@ public interface IProducer<E> {
 	// 1 - prepare producer
 	void addObserver(final IRunner aRunner);
 
-	void setOperation(IOperation operation);
+	@SuppressWarnings("rawtypes")
+    void setOperation(IOperation operation);
 
 	// 2 - fetch data
 	void fetch() throws MiddlewareException;

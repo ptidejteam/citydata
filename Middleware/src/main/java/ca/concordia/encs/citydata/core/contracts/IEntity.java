@@ -13,11 +13,11 @@ import java.util.Set;
  */
 public interface IEntity {
 
-	public void setMetadata(String key, Object value);
+	void setMetadata(String key, Object value);
 
-	public Object getMetadata(String key);
+	Object getMetadata(String key);
 
-	public Set<String> getMetadataKeySet();
+	Set<String> getMetadataKeySet();
 
-	public String getMetadataString(String key);
+	String getMetadataString(String key);
 }

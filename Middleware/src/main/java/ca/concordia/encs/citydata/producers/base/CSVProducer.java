@@ -27,8 +27,7 @@ public class CSVProducer extends AbstractProducer<String> implements IProducer<S
 		final String csvString = new String(this.fetchFromPath());
 
 		// split CSV string by line, add lines to the list
-		final ArrayList<String> csvLines = new ArrayList<String>();
-		csvLines.addAll(Arrays.asList(csvString.split(System.lineSeparator())));
+        final ArrayList<String> csvLines = new ArrayList<>(Arrays.asList(csvString.split(System.lineSeparator())));
 		this.setResult(csvLines);
 		this.applyOperation();
 	}

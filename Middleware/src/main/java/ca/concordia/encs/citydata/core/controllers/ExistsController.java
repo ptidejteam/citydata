@@ -30,7 +30,8 @@ import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 @RequestMapping("/exists")
 public class ExistsController {
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseEntity<String> sync(@RequestBody String query) {
 
 		try {

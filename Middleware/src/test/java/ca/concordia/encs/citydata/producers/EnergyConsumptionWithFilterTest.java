@@ -29,7 +29,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 /***
  * This test validates the energy consumption data filtering through the API
  * endpoint and also directly through the producer component.
- * 
+ * <p>
  * 
  * 
  * Originally tested with a file with 2.556.132.960 records, time series from

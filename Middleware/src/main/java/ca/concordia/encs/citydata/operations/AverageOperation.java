@@ -36,7 +36,7 @@ public class AverageOperation extends AbstractOperation<Integer> implements IOpe
 			} else if (roundingMethod.equalsIgnoreCase("ceil")) {
 				roundedAverage = (int) Math.ceil(floatAverage);
 			} else {
-				roundedAverage = (int) Math.round(floatAverage);
+				roundedAverage = Math.round(floatAverage);
 			}
 		}
 

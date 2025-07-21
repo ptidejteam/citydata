@@ -26,14 +26,15 @@ public class RandomNumberProducer extends AbstractProducer<Integer> implements I
 		this.generationDelay = generationDelay;
 	}
 
-	@Override
+	@SuppressWarnings("BusyWait")
+    @Override
 	public void fetch() {
 		try {
 			// if this is running for the first time, fetch
 			// otherwise, just apply next operation on top of previous result
 			if (this.isEmpty()) {
 				final Random random = new Random();
-				final ArrayList<Integer> randomNumbers = new ArrayList<Integer>();
+				final ArrayList<Integer> randomNumbers = new ArrayList<>();
 				for (int i = 0; i < this.listSize; i++) {
 					randomNumbers.add(random.nextInt(100));
 					if (this.generationDelay > 0) {

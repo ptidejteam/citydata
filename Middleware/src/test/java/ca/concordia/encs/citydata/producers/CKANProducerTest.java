@@ -27,6 +27,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * @author Gabriel C. Ullmann
  * @since 2025-02-12
  */
+@SuppressWarnings("LoopStatementThatDoesntLoop")
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")

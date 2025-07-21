@@ -32,7 +32,7 @@ public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> impl
 	@Override
 	public ArrayList<JsonArray> apply(ArrayList<JsonArray> inputs) {
 		final ArrayList<JsonArray> results = new ArrayList<>();
-		Number roundedAverage = 0;
+		Number roundedAverage;
 		float floatAverage = 0.0f;
 
 		// compute the average
@@ -49,7 +49,7 @@ public class JsonArrayAverageOperation extends AbstractOperation<JsonArray> impl
 			} else if (roundingMethod.equalsIgnoreCase("ceil")) {
 				roundedAverage = (int) Math.ceil(floatAverage);
 			} else if (roundingMethod.equalsIgnoreCase("round")) {
-				roundedAverage = (int) Math.round(floatAverage);
+				roundedAverage = Math.round(floatAverage);
 			} else {
 				roundedAverage = floatAverage;
 			}

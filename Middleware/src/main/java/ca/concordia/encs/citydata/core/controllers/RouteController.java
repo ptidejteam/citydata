@@ -34,19 +34,25 @@ public class RouteController {
 		handlerMapping.getHandlerMethods().forEach((requestMappingInfo, handlerMethod) -> {
 			final String methodInfo = handlerMethod.getMethod().toString();
 
-			final List<String> paths = requestMappingInfo.getDirectPaths() != null
-					? requestMappingInfo.getDirectPaths().stream().toList()
-					: requestMappingInfo.getPatternsCondition() != null
-							? requestMappingInfo.getPatternsCondition().getPatterns().stream().toList()
-							: List.of("[No Route Patterns]");
+            requestMappingInfo.getDirectPaths();
+            final List<String> paths = requestMappingInfo.getDirectPaths().stream().toList(); // Simplified as Condition 'requestMappingInfo. getDirectPaths() != null' is always 'true' (Earlier -paths = requestMappingInfo.getDirectPaths() != null
+//					? requestMappingInfo.getDirectPaths().stream().toList()
+//					: requestMappingInfo.getPatternsCondition() != null
+//					? requestMappingInfo.getPatternsCondition().getPatterns().stream().toList()
+//					: List.of("[No Route Patterns]");
 
-			final String methods = requestMappingInfo.getMethodsCondition() != null
-					? requestMappingInfo.getMethodsCondition().toString()
-					: "[No Methods Condition]";
+			final String methods =
+					requestMappingInfo.getMethodsCondition().toString(); //
+			// Simplified as requestMappingInfo.getDirectPaths() != null was
+			// always true from paths = requestMappingInfo.getDirectPaths() != null
+			//					? requestMappingInfo.getDirectPaths().stream().toList()
+			//					: requestMappingInfo.getPatternsCondition() != null
+			//							? requestMappingInfo.getPatternsCondition().getPatterns().stream().toList()
+			//							: List.of("[No Route Patterns]");
 
 			paths.forEach(path -> {
 				// Exclude Spring Boot's default error routes
-				if (!path.equals("/error") && !path.startsWith("/error")) {
+				if (!path.startsWith("/error")) {
 					routes.add("Method: " + methods + " | Path: " + path + " | Handler: " + methodInfo);
 				}
 			});
