@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.operations;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +24,10 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * Date: 4-8-2025
  * Last Update: 16-06-2025
  * Fixed failing tests after implementing Authentication
+ * 
+ * Tests for MergeOperation
+ * * @author Sikandar Ejaz
+ * @since 2025-04-08
  */
 
 @SpringBootTest(classes = AppConfig.class)

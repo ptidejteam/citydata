@@ -1,10 +1,11 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.producers;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,12 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * Date: 18-07-2025
  */
 
+/**
+ * Test: Hub building retrofit results Producer
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-06-18
+ */
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
@@ -85,6 +92,6 @@ public class RetrofitResultsTest extends TestTokenGenerator {
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
 				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString("Not a JSON Array")));
+				.andExpect(content().string(containsString("Expected keys 'name' and 'value'")));
 	}
 }

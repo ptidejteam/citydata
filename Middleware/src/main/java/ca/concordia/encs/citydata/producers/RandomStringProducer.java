@@ -10,48 +10,34 @@ import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 /**
  *
  * This Producer outputs random strings. For test only.
- * 
+ *
  * @author Gabriel C. Ullmann, Minette Zongo
- * @date 2025-05-28
+ * @since 2025-05-28
  */
 public class RandomStringProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	private int stringLength = 10;
-	private String generationProcess;
-	private String inputString;
-
-	public void setInputString(String inputString) {
-		this.inputString = inputString;
-	}
 
 	public void setStringLength(Integer stringLength) {
-		if (stringLength != null) {
+		if (stringLength > 0 && stringLength < 999) {
 			this.stringLength = stringLength;
 		}
 	}
 
-	public void setGenerationProcess(String generationProcess) {
-		this.generationProcess = generationProcess;
-	}
-
-	@Override
-	public void setOperation(IOperation operation) {
-		this.operation = operation;
-	}
-
 	@Override
 	public void fetch() {
-		ArrayList<String> resultSet = new ArrayList<>();
-		if (this.result.isEmpty()) {
-			String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-			Random random = new Random();
-			StringBuilder randomString = new StringBuilder();
+		int index = 0;
+		final ArrayList<String> resultingString = new ArrayList<>();
+		if (this.isEmpty()) {
+			final String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			final Random random = new Random();
+			final StringBuilder randomString = new StringBuilder();
 			for (int i = 0; i < this.stringLength; i++) {
-				int index = random.nextInt(characters.length());
+				index = random.nextInt(characters.length());
 				randomString.append(characters.charAt(index));
 			}
-			resultSet.add(randomString.toString());
-			this.result = resultSet;
+			resultingString.add(randomString.toString());
+			this.setResult(resultingString);
 		}
 		this.applyOperation();
 	}

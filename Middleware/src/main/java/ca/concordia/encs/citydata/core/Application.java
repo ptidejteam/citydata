@@ -14,8 +14,8 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
 /***
  * This is the Spring Boot application entry point.
  * 
- * @author Gabriel C. Ullmann, Sikandar Ejaz, Rushin Makwana
- * @date 2025-01-01
+ * @author Gabriel C. Ullmann, Sikandar Ejaz, Rushin Makwana, Minette Zongo
+ * @since 2025-01-01
  */
 
 

@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.UUID;
 
+import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,9 +20,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/* ExistsController tests
- * Author: Minette
- * Date: 2025-02-26
+/**
+ * ExistsController routes test
+ *
+ * @author Minette Zongo
+ * @since 2025-02-26
  */
 
 /* Last Update: 18-07-2025 
@@ -44,7 +47,7 @@ public class ExistsTest extends TestTokenGenerator {
 	@Test
 	void testQueryExists() throws Exception {
 	    // Use getExampleQuery to load a specific query from a JSON file
-	    String jsonPayload = PayloadFactory.getExampleQuery("stringProducerStaticWithParams");
+	    String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
 	    // creating a producer
 	    MvcResult syncResult = mockMvc

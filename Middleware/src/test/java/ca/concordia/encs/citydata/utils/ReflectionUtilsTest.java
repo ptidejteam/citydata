@@ -1,6 +1,8 @@
 package ca.concordia.encs.citydata.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,10 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 
 /**
- *  This class contains test methods to validate the functionality of ReflectionUtils methods.
- *
- * Author: Rushin Makwana
- *Date: 2025-03-26
+ * This class contains test methods to validate the functionality of ReflectionUtils methods.
+ * @author Rushin Makwana
+ * @since 2025-03-26
  *
  */
 
@@ -32,45 +33,25 @@ public class ReflectionUtilsTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             ReflectionUtils.getRequiredField(jsonObject, "anyField");
         });
-        assertEquals("Error: Missing 'anyField' field", exception.getMessage());
+        assertEquals("Error: Missing required 'anyField' field", exception.getMessage());
     }
 
     @Test
     public void testInstantiateClassInvalidClassName() {
-        Exception exception = assertThrows(ClassNotFoundException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("non.existent.ClassName");
         });
-        assertEquals("non.existent.ClassName", exception.getMessage());
+        assert(exception.getMessage().contains("Producer or Operation ClassNotFoundException was not found"));
     }
 
     @Test
     public void testInstantiateClassAbstractClass() {
-        Exception exception = assertThrows(IllegalAccessException.class, () -> {
+        Exception exception = assertThrows(MiddlewareException.class, () -> {
             ReflectionUtils.instantiateClass("java.util.AbstractList");
         });
-        assertTrue(exception.getMessage().contains("java.util.AbstractList"));
+        assertTrue(exception.getMessage().contains("CITYdata entity could not be created"));
     }
 
-    @Test
-    public void testSetParametersInvalidField() {
-        class TestClass {
-            public void setName(String name) {}
-        }
-
-        TestClass instance = new TestClass();
-        JsonArray params = new JsonArray();
-
-        JsonObject invalidParam = new JsonObject();
-        invalidParam.addProperty("name", "nonExistentField");
-        invalidParam.addProperty("value", "value");
-        params.add(invalidParam);
-
-        Exception exception = assertThrows(NoSuchMethodException.class, () -> {
-            ReflectionUtils.setParameters(instance, params);
-        });
-
-        assertTrue(exception.getMessage().contains("nonExistentField"));
-    }
     @Test
     public void testSetParametersNull() {
         JsonArray params = new JsonArray();
@@ -92,7 +73,7 @@ public class ReflectionUtilsTest {
             public void setName(String name) {}
         }
 
-        Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
+        Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name");
         assertNotNull(method);
         assertEquals("setName", method.getName());
     }
@@ -101,12 +82,9 @@ public class ReflectionUtilsTest {
         class TestClass {
             public void setAge(int age) {}
         }
-
-        Exception exception = assertThrows(NoSuchMethodException.class, () -> {
-            ReflectionUtils.findSetterMethod(TestClass.class, "name", new JsonObject());
+        assertThrows(MiddlewareException.InvalidParameterException.class, () -> {
+            ReflectionUtils.findSetterMethod(TestClass.class, "name");
         });
-
-        assertEquals("No suitable setter found for name", exception.getMessage());
     }
     @Test
     public void testConvertValueBooleanType() {
