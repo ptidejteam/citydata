@@ -4,15 +4,12 @@ import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -171,7 +168,8 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		Files.copy(path, outputStream);
 	}
 
-	protected void fetchFromPath(OutputStream outputStream) {
+	protected OutputStream fetchFromPath() {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		try {
 			// If the file path is a URL and there are RequestOptions
 			if (this.filePath != null && this.filePath.contains("://") && this.fileOptions != null) {
@@ -188,6 +186,7 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		} catch (Exception e) {
 			throw new RuntimeException("An error occurred while fetching the data: " + e.getMessage());
 		}
+		return outputStream;
 	}
 
 	@Override
@@ -204,12 +203,5 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		}
 		return jsonArray.toString();
 	}
-	protected byte[] fetchFromPath() {
-		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-			fetchFromPath(outputStream); // Call the updated method
-			return outputStream.toByteArray(); // Return the data as a byte array
-		} catch (IOException e) {
-			throw new RuntimeException("Error fetching data", e);
-		}
-	}
+
 }
