@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
@@ -37,12 +38,18 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  *
  * 
  * @author Minette Zongo M., Gabriel C. Ullmann
- * @since 2025-04-29
+ * @date 2025-04-29
  */
+
+/*
+ * Last Update: 18-07-2025 Author Sikandar Ejaz Fixed failing tests after
+ * implementing Authentication
+ */
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class EnergyConsumptionWithFilterTest {
+public class EnergyConsumptionWithFilterTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -59,7 +66,8 @@ public class EnergyConsumptionWithFilterTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("energyConsumptionWithFilter");
 
 		MvcResult mvcResult = mockMvc
-				.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("clientId"))).andReturn();
 
 		String responseContent = mvcResult.getResponse().getContentAsString();
@@ -81,6 +89,7 @@ public class EnergyConsumptionWithFilterTest {
 				runner.runSteps();
 			} catch (Exception e) {
 				System.err.println("Runner thread error: " + e.getMessage());
+				e.printStackTrace();
 			}
 		});
 
@@ -101,7 +110,8 @@ public class EnergyConsumptionWithFilterTest {
 	@Test
 	public void testEnergyConsumptionWithAverage() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("energyConsumptionAverage");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("0.35069153"))).andReturn();
 
 	}
