@@ -22,8 +22,8 @@ import ca.concordia.encs.citydata.datastores.MongoDataStore;
  * is enabled and if a database connection string is found in the
  * application.properties file.
  * 
- * @author: Gabriel C. Ullmann, Rushin Makwana
- * @date: 2025-03-28
+ * @author Gabriel C. Ullmann, Rushin Makwana
+ * @since 2025-03-28
  */
 
 @Configuration

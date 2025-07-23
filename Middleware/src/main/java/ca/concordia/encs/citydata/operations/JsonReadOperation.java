@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,10 +12,17 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.implementations.AbstractOperation;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 
+/**
+ * This operation reads from a JSON a given path (e.g., aKey1.child, something.info.name).
+ * Array acessors are also accepted (e.g., aKey[0], aKey[1])
+ *
+ * @author Gabriel C. Ullmann
+ * @since 2025-06-18
+ */
 public class JsonReadOperation extends AbstractOperation<JsonObject> implements IOperation<JsonObject> {
 	private String path = "";
 	private JsonElement currentObject;
-	final Pattern containsArrayAccess = Pattern.compile("(.+)\\[(\\d+)\\]");;
+	private final Pattern containsArrayAccess = Pattern.compile("(.+)\\[(\\d+)\\]");
 
 	public void setPath(String path) {
 		this.path = path;
@@ -42,8 +50,8 @@ public class JsonReadOperation extends AbstractOperation<JsonObject> implements 
 					"The key \"" + key + "\" cannot be found. You can try one of the following keys instead: "
 							+ this.currentObject.getAsJsonObject().keySet().toString());
 		} else {
-			String lastKnowGoodObject = this.currentObject.toString();
-			String excerpt = lastKnowGoodObject.length() > 50 ? lastKnowGoodObject.substring(0, 50) + "..."
+			final String lastKnowGoodObject = this.currentObject.toString();
+			final String excerpt = lastKnowGoodObject.length() > 50 ? lastKnowGoodObject.substring(0, 50) + "..."
 					: lastKnowGoodObject;
 			errorWrapper.addProperty("error", "The key \"" + key + "\" cannot be found in: " + excerpt);
 		}
@@ -87,7 +95,7 @@ public class JsonReadOperation extends AbstractOperation<JsonObject> implements 
 							// this means the current object is either a primitive or null
 							break;
 						}
-					} catch (Exception e) {
+					} catch (MiddlewareException e) {
 						this.handlePathNotFound(key);
 						break;
 					}
@@ -99,7 +107,7 @@ public class JsonReadOperation extends AbstractOperation<JsonObject> implements 
 					matchingJsonObjects.add(this.currentObject.getAsJsonObject());
 				} else {
 					final JsonObject objectWrapper = new JsonObject();
-					objectWrapper.addProperty(pathParts[pathParts.length - 1], this.currentObject.toString());
+					objectWrapper.add(pathParts[pathParts.length - 1], this.currentObject);
 					matchingJsonObjects.add(objectWrapper);
 				}
 

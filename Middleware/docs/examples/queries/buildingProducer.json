@@ -1,0 +1,20 @@
+{
+  "use": "ca.concordia.encs.citydata.producers.BuildingProducer",
+  "withParams": [
+    {
+      "name": "buildingName",
+      "value": "mock"
+    }
+  ],
+  "apply": [
+    {
+      "name": "ca.concordia.encs.citydata.operations.JsonReadOperation",
+      "withParams": [
+        {
+          "name": "path",
+          "value": "building.floors[0].open_spaces"
+        }
+      ]
+    }
+  ]
+}

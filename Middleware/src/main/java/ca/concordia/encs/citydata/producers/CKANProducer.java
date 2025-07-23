@@ -1,8 +1,13 @@
 package ca.concordia.encs.citydata.producers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
@@ -13,16 +18,17 @@ import ca.concordia.encs.citydata.datastores.DiskDatastore;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
-/* This producer can connect to a CKAN instance and fetch a resource.
- * Author: Gabriel C. Ullmann 
- * Date: 2025-02-12
+/**
+ * This producer can connect to a CKAN instance and fetch a resource.
+ * @author Gabriel C. Ullmann, Rushin D. Makwana
+ * @since 2025-02-12
  */
 public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
 
 	private String url;
 	private String resourceId;
-	private DiskDatastore diskStore = DiskDatastore.getInstance();
-	private ArrayList<String> intermediateResult = new ArrayList<>();
+	private final DiskDatastore diskStore = DiskDatastore.getInstance();
+	private final ArrayList<String> intermediateResult = new ArrayList<>();
 
 	public void setUrl(String url) {
 		if (url != null) {
@@ -39,9 +45,9 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private ArrayList<JsonObject> getMetadataObject(AbstractRunner aRunner) {
-		InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
-		String runnerId = aRunner.getMetadata("id").toString();
-		IProducer<?> storeResult = memoryStore.get(runnerId);
+		final InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
+		final String runnerId = aRunner.getMetadata("id").toString();
+		final IProducer<?> storeResult = memoryStore.get(runnerId);
 		if (storeResult != null) {
 			return (ArrayList<JsonObject>) memoryStore.get(runnerId).getResult();
 		}
@@ -49,10 +55,10 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private JsonObject getResourceAttributes(ArrayList<JsonObject> metadataObject) {
-		JsonObject metadataResults = metadataObject.size() > 0 ? metadataObject.get(0).get("result").getAsJsonObject()
+		final JsonObject metadataResults = metadataObject.size() > 0 ? metadataObject.get(0).get("result").getAsJsonObject()
 				: null;
 
-		JsonObject attributesObject = new JsonObject();
+		final JsonObject attributesObject = new JsonObject();
 		attributesObject.addProperty("sizeInMb", metadataResults.get("size").getAsInt() / 1000000);
 		attributesObject.addProperty("mimetype", metadataResults.get("mimetype").getAsString());
 		attributesObject.addProperty("url", metadataResults.get("url").getAsString());
@@ -61,7 +67,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private boolean isFileSupported(String mimetype) {
-		List<String> supportedFormats = List.of("csv", "json", "xml", "txt", "text", "xls");
+		final List<String> supportedFormats = List.of("csv", "json", "xml", "txt", "text", "xls");
 		for (String supportedFormat : supportedFormats) {
 			if (mimetype.contains(supportedFormat)) {
 				return true;
@@ -70,14 +76,14 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 		return false;
 	}
 
-	private byte[] fetchFromCkan() {
+	private OutputStream fetchFromCkan() {
 		try {
 			// fetch resource metadata first
-			CKANMetadataProducer metadataProducer = new CKANMetadataProducer();
+			final CKANMetadataProducer metadataProducer = new CKANMetadataProducer();
 			metadataProducer.setUrl(this.url);
 			metadataProducer.setResourceId(this.resourceId);
-			SingleStepRunner deckard = new SingleStepRunner(metadataProducer);
-			Thread runnerTask = new Thread() {
+			final SingleStepRunner deckard = new SingleStepRunner(metadataProducer);
+			final Thread runnerTask = new Thread() {
 				public void run() {
 					try {
 						deckard.runSteps();
@@ -94,11 +100,11 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 			runnerTask.start();
 			runnerTask.join();
 
-			ArrayList<JsonObject> metadataObject = getMetadataObject(deckard);
-			JsonObject resourceAttributes = getResourceAttributes(metadataObject);
-			String resourceUrl = resourceAttributes.get("url").getAsString();
-			String mimetype = resourceAttributes.get("mimetype").getAsString();
-			Integer size = resourceAttributes.get("sizeInMb").getAsInt();
+			final ArrayList<JsonObject> metadataObject = getMetadataObject(deckard);
+			final JsonObject resourceAttributes = getResourceAttributes(metadataObject);
+			final String resourceUrl = resourceAttributes.get("url").getAsString();
+			final String mimetype = resourceAttributes.get("mimetype").getAsString();
+			final int size = resourceAttributes.get("sizeInMb").getAsInt();
 
 			// if the file is supported, download it and save to disk
 			if (isFileSupported(mimetype)) {
@@ -108,10 +114,10 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 									+ "If you wish to download the resource, please open this link in your browser: "
 									+ resourceAttributes.get("url") + " .");
 				}
-				RequestOptions requestOptions = new RequestOptions();
-				requestOptions.method = "GET";
-				this.filePath = resourceUrl;
-				this.fileOptions = requestOptions;
+				final RequestOptions requestOptions = new RequestOptions();
+				requestOptions.setMethod("GET");
+				this.setFilePath(resourceUrl);
+				this.setFileOptions(requestOptions); ;
 				return this.fetchFromPath();
 			} else {
 				intermediateResult.add("Sorry, the " + mimetype + " type is not currently supported by this producer. "
@@ -119,32 +125,33 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 						+ " .");
 			}
 		} catch (InterruptedException e) {
-			ArrayList<String> errorMessageList = new ArrayList<>();
+			final ArrayList<String> errorMessageList = new ArrayList<>();
 			errorMessageList.add(e.getMessage());
-			this.result = errorMessageList;
+			this.setResult(errorMessageList);
 		}
 
-		return new byte[0];
+		return new ByteArrayOutputStream();
 	}
 
 	@Override
 	public void fetch() {
 
 		if (this.resourceId != null) {
-
 			// before attempting to fetch, check if a file with this resource ID already
 			// exists in the disk
-			byte[] fileOnDisk = diskStore.get(this.resourceId);
-			if (fileOnDisk == null) {
+			OutputStream fileStream = null;
+			try {
+				fileStream = new ByteArrayOutputStream();
+				fileStream.write(diskStore.get(this.resourceId));
+			} catch (DataStoreFailureReadingException e) {
 				// if not, fetch from CKAN and save on disk
-				byte[] fileFromCkan = fetchFromCkan();
-				diskStore.set(this.resourceId, fileFromCkan);
-				intermediateResult.add(new String(fileFromCkan));
-			} else {
-				intermediateResult.add(new String(fileOnDisk));
+				fileStream = fetchFromCkan();
+				diskStore.set(this.resourceId, ((ByteArrayOutputStream) fileStream).toByteArray());
+			} catch (IOException e) {
+				throw new MiddlewareException.DatasetNotFound("Data Not Found");
 			}
-
-			this.result = this.intermediateResult;
+			this.intermediateResult.add(fileStream.toString());
+			this.setResult(this.intermediateResult);
 			this.applyOperation();
 		}
 

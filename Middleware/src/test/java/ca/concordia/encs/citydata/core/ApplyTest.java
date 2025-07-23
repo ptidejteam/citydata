@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.core;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +25,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 
@@ -249,7 +251,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 	@Test
 	public void testFindSetterMethod() throws Exception {
-		Method method = ReflectionUtils.findSetterMethod(StringBuilder.class, "length", new JsonObject());
+		Method method = ReflectionUtils.findSetterMethod(StringBuilder.class, "length");
 		assertNotNull(method);
 		assertEquals("setLength", method.getName());
 	}

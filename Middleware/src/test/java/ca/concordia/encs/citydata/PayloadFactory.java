@@ -1,13 +1,16 @@
 package ca.concordia.encs.citydata;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-// A class that produces mock request payloads, for example, JSON queries to use with /apply/sync
+/**
+ * A class that produces mock request payloads, for example, JSON queries to use with /apply/sync or /apply/async
+ * @author Gabriel C. Ullmann
+ * @since 2025-06-18
+ */
 public abstract class PayloadFactory {
 
 	public static String getBasicQuery() {
@@ -16,14 +19,9 @@ public abstract class PayloadFactory {
 
 		JsonArray withParams = new JsonArray();
 		JsonObject param1 = new JsonObject();
-		param1.addProperty("name", "generationProcess");
-		param1.addProperty("value", "random");
+		param1.addProperty("name", "stringLength");
+		param1.addProperty("value", "10");
 		withParams.add(param1);
-
-		JsonObject param2 = new JsonObject();
-		param2.addProperty("name", "stringLength");
-		param2.addProperty("value", 10);
-		withParams.add(param2);
 
 		payload.add("withParams", withParams);
 
@@ -69,12 +67,8 @@ public abstract class PayloadFactory {
 	}
 
 	public static String getExampleQuery(String queryFileName) throws Exception {
-		try {
-			Path filePath = Path.of("./docs/examples/queries/" + queryFileName + ".json");
-			return new String(Files.readAllBytes(filePath));
-		} catch (IOException e) {
-			throw e;
-		}
+		Path filePath = Path.of("./docs/examples/queries/" + queryFileName + ".json");
+		return new String(Files.readAllBytes(filePath));
 	}
 
 	public static String getInvalidJson() throws Exception {

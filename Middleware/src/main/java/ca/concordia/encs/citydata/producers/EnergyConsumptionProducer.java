@@ -9,6 +9,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -24,9 +25,9 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
  * This Producer provide energy consumption data read from a Parquet file which
  * must be provided by the CityData instance. If no file is found, this producer
  * will return an message telling the user no data is available.
- * 
+ *
  * @author Gabriel C. Ullmann, Minette Zongo
- * @date 2025-05-28
+ * @since 2025-05-28
  */
 public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> implements IProducer<JsonArray> {
 	private String city;
@@ -38,7 +39,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 	public void setCity(String city) {
 		this.city = city;
 		if (this.city != null) {
-			this.cityConsumptionDataset = "./src/test/data/" + this.city + "_energy_consumption.parquet";
+			this.cityConsumptionDataset = "docs/examples/data/" + this.city + "_energy_consumption.parquet";
 		} else {
 			throw new InvalidParameterException("Please provide a city name to the producer.");
 		}
@@ -57,35 +58,35 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 	}
 
 	private String buildQuery() {
-		Object[] arr = new Object[4];
-		String query = "SELECT Identifiant as clientId, dateinterval as timestamp, energieactivelivree_kwh as consumptionKwh FROM '%s' "
-				+ "WHERE Identifiant is not null";
+		final Object[] arr = new Object[4];
+		final String baseQuery = "SELECT Identifiant as clientId, dateinterval as timestamp, energieactivelivree_kwh as consumptionKwh FROM '%s'";
+		String preparedStmt = baseQuery + " WHERE Identifiant is not null";
 		arr[0] = this.cityConsumptionDataset.replace("\\", "\\\\");
 
 		if (this.startDatetime != null) {
 			arr[1] = this.startDatetime;
-			query += " AND dateinterval >= '%s'";
+			preparedStmt += " AND dateinterval >= '%s'";
 		}
 
 		if (this.endDatetime != null) {
 			arr[2] = this.endDatetime;
-			query += " AND dateinterval <= '%s'";
+			preparedStmt += " AND dateinterval <= '%s'";
 		}
 
 		if (this.clientId != null) {
 			arr[3] = this.clientId;
-			query += " AND Identifiant = %d";
+			preparedStmt += " AND Identifiant = %d";
 		}
 
-		return String.format(query, arr);
+		return String.format(preparedStmt, arr);
 	}
 
 	private void validateParams() {
-		int MAX_QUERY_DAYS = 30;
-		LocalDateTime localStartDate = StringUtils.parseDate(this.startDatetime);
-		LocalDateTime localEndDate = StringUtils.parseDate(this.endDatetime);
+		final int MAX_QUERY_DAYS = 30;
+		final LocalDateTime localStartDate = StringUtils.parseDate(this.startDatetime);
+		final LocalDateTime localEndDate = StringUtils.parseDate(this.endDatetime);
 
-		File f = new File(this.cityConsumptionDataset);
+		final File f = new File(this.cityConsumptionDataset);
 		if (!f.exists()) {
 			throw new DatasetNotFound(this.city);
 		}
@@ -107,7 +108,7 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 	@Override
 	public void fetch() {
 
-		JsonArray resultsArray = new JsonArray();
+		final JsonArray resultsArray = new JsonArray();
 		try {
 			// validate dates, throws exception if incorrect
 			this.validateParams();
@@ -142,11 +143,13 @@ public class EnergyConsumptionProducer extends AbstractProducer<JsonArray> imple
 			stmt.close();
 			conn.close();
 		} catch (SQLException | IllegalArgumentException | MiddlewareException e) {
-			JsonObject resultRow = new JsonObject();
+			final JsonObject resultRow = new JsonObject();
 			resultRow.addProperty("error", e.getMessage());
 			resultsArray.add(resultRow);
 		} finally {
-			this.result.add(resultsArray);
+			final ArrayList<JsonArray> updatedResult = this.getResult();
+			updatedResult.add(resultsArray);
+			this.setResult(updatedResult);
 			this.applyOperation();
 		}
 	}
