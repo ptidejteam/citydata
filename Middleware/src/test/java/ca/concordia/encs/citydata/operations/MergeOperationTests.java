@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /*

@@ -14,10 +14,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
-import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
-import ca.concordia.encs.citydata.producers.GeometryProducer;
 
 /*
  * Tests the API endpoint with the merge operation between EnergyConsumption and
