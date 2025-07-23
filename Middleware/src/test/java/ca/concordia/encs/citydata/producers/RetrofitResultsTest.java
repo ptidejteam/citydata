@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
+
+/*
+ * Fixed failing tests after implementing Authentication
+ * Author: Sikandar Ejaz 
+ * Date: 18-07-2025
+ */
 
 /**
  * Test: Hub building retrofit results Producer
@@ -31,7 +38,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class RetrofitResultsTest {
+public class RetrofitResultsTest extends TestTokenGenerator {
 
 	private static String retrofitResultsProducer;
 	private static String retrofitResultsProducerReadPath;
@@ -83,10 +90,9 @@ public class RetrofitResultsTest {
 		JsonObject jsonPayloadObject = JsonParser.parseString(retrofitResultsProducer).getAsJsonObject();
 		jsonPayloadObject.get("withParams").getAsJsonArray().get(0).getAsJsonObject().addProperty("value", "");
 
-		mockMvc.perform(
-				post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayloadObject.toString()))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().string(containsString("Expected keys 'name' and 'value'")));
 	}
-
 }
