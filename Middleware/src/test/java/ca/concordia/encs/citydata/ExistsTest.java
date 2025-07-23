@@ -32,7 +32,7 @@ Fixed failing tests after implementing Authentication
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ExistsTest extends BaseIntegrationTest {
+public class ExistsTest extends TestTokenGenerator {
 
 	@Autowired
 	private MockMvc mockMvc;

@@ -30,7 +30,7 @@ import ca.concordia.encs.citydata.core.utils.StringUtils;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class RetrofitResultsTest extends BaseIntegrationTest {
+public class RetrofitResultsTest extends TestTokenGenerator {
 
 	private static String retrofitResultsProducer;
 	private static String retrofitResultsProducerReadPath;

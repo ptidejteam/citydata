@@ -3,6 +3,7 @@ package ca.concordia.encs.citydata;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,12 +17,13 @@ import ca.concordia.encs.citydata.services.TokenService;
  * Date: 18-07-2025
  */
 
-public abstract class BaseIntegrationTest {
-
+@SpringBootTest
+public class TestTokenGenerator {
 	@Autowired
-	protected TokenService tokenService;
+	private TokenService tokenService;
 
-	protected String getToken() {
+
+	public String getToken() {
 		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 		Authentication auth = new UsernamePasswordAuthenticationToken("testuser", null, authorities);
 		return tokenService.generateToken(auth);

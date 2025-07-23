@@ -29,7 +29,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class MergeOperationTests extends BaseIntegrationTest {
+public class MergeOperationTests extends TestTokenGenerator {
 
 	@Autowired
 	private MockMvc mockMvc;

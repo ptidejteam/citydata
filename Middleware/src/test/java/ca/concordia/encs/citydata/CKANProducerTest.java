@@ -34,7 +34,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class CKANProducerTest extends BaseIntegrationTest {
+public class CKANProducerTest extends TestTokenGenerator {
 
 	@Autowired
 	private MockMvc mockMvc;

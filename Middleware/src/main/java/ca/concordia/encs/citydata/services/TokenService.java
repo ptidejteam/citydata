@@ -19,10 +19,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TokenService {
-
 	private final JwtEncoder encoder;
 
-	public TokenService(JwtEncoder encoder) {
+	public TokenService(final JwtEncoder encoder) {
 		this.encoder = encoder;
 	}
 

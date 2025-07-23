@@ -48,7 +48,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class EnergyConsumptionWithFilterTest extends BaseIntegrationTest {
+public class EnergyConsumptionWithFilterTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
