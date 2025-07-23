@@ -70,7 +70,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/token", "/helloworld", "producers/list")
+						auth -> auth.requestMatchers("/token", "/health/ping", "producers/list")
 								.permitAll().anyRequest().authenticated())
 				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
