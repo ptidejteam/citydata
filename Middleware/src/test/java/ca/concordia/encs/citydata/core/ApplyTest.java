@@ -118,13 +118,10 @@ public class ApplyTest extends TestTokenGenerator {
 	}
 
 	// Test for ping route
-
 	@Test
 	public void testPingRoute() throws Exception {
 		System.out.println("Registered endpoints: " + webApplicationContext.getBean("requestMappingHandlerMapping"));
-
-		mockMvc.perform(get("/apply/ping").header("Authorization", "Bearer " + getToken()))
-				.andExpect(status().is2xxSuccessful())
+		mockMvc.perform(get("/apply/ping")).andExpect(status().isOk())
 				.andExpect(content().string(org.hamcrest.Matchers.startsWith("pong")));
 	}
 
@@ -249,6 +246,7 @@ public class ApplyTest extends TestTokenGenerator {
 		jsonObject.addProperty("testField", "testValue");
 		assertEquals("testValue", ReflectionUtils.getRequiredField(jsonObject, "testField").getAsString());
 	}
+
 	@Test
 	public void testGetRequiredFieldMissing() {
 		JsonObject jsonObject = new JsonObject();
@@ -257,6 +255,7 @@ public class ApplyTest extends TestTokenGenerator {
 		});
 		assertTrue(exception.getMessage().contains("Missing 'missingField' field"));
 	}
+
 	@Test
 	public void testInstantiateClass() throws Exception {
 		Object instance = ReflectionUtils.instantiateClass("java.lang.String");
