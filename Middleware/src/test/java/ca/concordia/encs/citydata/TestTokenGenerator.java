@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import ca.concordia.encs.citydata.services.TokenService;
 
-/*
+/**
  * Added global token generation for running tests
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025

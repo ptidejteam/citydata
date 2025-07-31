@@ -31,7 +31,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
-/*
+/**
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025
@@ -42,6 +42,10 @@ import com.nimbusds.jose.proc.SecurityContext;
 public class SecurityConfig {
 
 	private final RsaKeyProperties rsaKeys;
+	public static final String DEFAULT_USERNAME = "citydata";
+	public static final String DEFAULT_PASSWORD = "citydata";
+
+	private String encodedDefaultPassword;
 
 	public SecurityConfig(RsaKeyProperties rsaKeys) {
 		this.rsaKeys = rsaKeys;
@@ -54,8 +58,15 @@ public class SecurityConfig {
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
-		UserDetails user = User.withUsername("admin").password(encoder.encode("password")).authorities("read").build();
+		this.encodedDefaultPassword = encoder.encode(DEFAULT_PASSWORD);
+		UserDetails user = User.withUsername(DEFAULT_USERNAME).password(encodedDefaultPassword).authorities("read")
+				.build();
 		return new InMemoryUserDetailsManager(user);
+
+	}
+
+	public String getEncodedDefaultPassword() {
+		return this.encodedDefaultPassword;
 	}
 
 	@Bean
@@ -71,7 +82,7 @@ public class SecurityConfig {
 		return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
 						auth -> auth
-								.requestMatchers("/token", "/health/ping", "producers/list", "/operations/list",
+								.requestMatchers("/authenticate", "/health/ping", "producers/list", "/operations/list",
 										"/routes/list")
 								.permitAll().anyRequest().authenticated())
 				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)

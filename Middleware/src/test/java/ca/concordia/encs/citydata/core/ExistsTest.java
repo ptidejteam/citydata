@@ -26,11 +26,10 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  *
  * @author Minette Zongo
  * @since 2025-02-26
- */
-
-/* Last Update: 18-07-2025 
-Author Sikandar Ejaz 
-Fixed failing tests after implementing Authentication
+ *  
+ * Last Update: 18-07-2025 
+ * Author Sikandar Ejaz 
+ * Fixed failing tests after implementing Authentication
 */
 
 @SpringBootTest(classes = AppConfig.class)
@@ -41,8 +40,7 @@ public class ExistsTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
-	// Store the runnerId as an instance variable so it can be used across test
-	// methods
+	// Store the runnerId as an instance variable so it can be used across test methods
 	private UUID runnerId;
 
 	@Test
@@ -89,8 +87,7 @@ public class ExistsTest extends TestTokenGenerator {
 	@Test
 	void testBrokenJsonQuery() throws Exception {
 		String jsonPayload = PayloadFactory.getInvalidJson();
-		mockMvc.perform(post("/exists/").header("Authorization", "Bearer " + getToken()) // Changed from get to post to
-																							// match my endpoint
+		mockMvc.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError());
 	}
