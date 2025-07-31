@@ -36,16 +36,14 @@ import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.services.TokenService;
 
 /**
- * Fixed failing tests after implementing Authentication
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
- */
-
-/**
  * Apply routes test
  *
  * @author Gabriel C. Ullmann, Sikandar Ejaz
  * @since 2025-06-18
+ * 
+ * Fixed failing tests after implementing Authentication
+ * Author: Sikandar Ejaz 
+ * Date: 18-07-2025
  */
 
 @SpringBootTest(classes = AppConfig.class)
@@ -66,6 +64,7 @@ public class ApplyTest extends TestTokenGenerator {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("result")));
 	}
+
 	// Test for valid steps
 	@Test
 	public void whenValidSteps_thenReturnSuccessMessage() throws Exception {
@@ -85,8 +84,8 @@ public class ApplyTest extends TestTokenGenerator {
 				.contentType(MediaType.APPLICATION_JSON).content(invalidSteps)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
 	}
-	// Test to check /apply/async with invalid and unexpected JSON input type --
-	// Need to fix
+
+	// Test to check /apply/async with invalid and unexpected JSON input type
 	@Test
 	public void whenInvalidReturnIdWrongMediaType() throws Exception {
 		final String invalidSteps = "invalid-json";
@@ -95,6 +94,7 @@ public class ApplyTest extends TestTokenGenerator {
 				.andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
 	}
+
 	// Test for GET /async/{runnerId} with a valid runner ID
 	@Test
 	public void whenValidRunnerId_thenReturnResultOrNotReadyMessage() throws Exception {
@@ -105,9 +105,7 @@ public class ApplyTest extends TestTokenGenerator {
 				.andExpect(content().string(containsString("Sorry, your request result is not ready yet.")));
 	}
 
-	// Test for invalid runner ID Need to fix -- I (Minette) fixed it, changed 404
-	// to 400 in the status and updated expected message
-
+	// Test for invalid runner ID Need to fix -- I (Minette) fixed it, changed 404 to 400 in the status and updated expected message
 	@Test
 	public void whenInvalidRunnerId_thenReturnNotReadyMessage() throws Exception {
 		String invalidRunnerId = "nonexistent-runner-id";
@@ -142,14 +140,7 @@ public class ApplyTest extends TestTokenGenerator {
 				.andExpect(status().isOk());
 	}
 
-	/*
-	 * @Test public void testSync() throws Exception { String jsonPayload =
-	 * PayloadFactory.getBasicQuery(); performPostRequest("/apply/sync",
-	 * MediaType.APPLICATION_JSON_VALUE, jsonPayload); }
-	 */
-
 	// Test for sync with wrong media type access
-
 	@Test
 	public void testSyncWrongMediaTypeAccess() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
@@ -158,7 +149,6 @@ public class ApplyTest extends TestTokenGenerator {
 	}
 
 	// Test for sync with wrong media type
-
 	@Test
 	public void testSyncWrongMediaType() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
@@ -167,7 +157,6 @@ public class ApplyTest extends TestTokenGenerator {
 	}
 
 	// Test for broken JSON query
-
 	@Test
 	public void whenBrokenJsonQuery_thenReturnError() throws Exception {
 		String brokenJson = "{ \"use\": \"ca.concordia.encs.citydata.producers.RandomStringProducer\", "
@@ -177,6 +166,7 @@ public class ApplyTest extends TestTokenGenerator {
 				.contentType(MediaType.APPLICATION_JSON).content(brokenJson)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("Your query is not a valid JSON file.")));
 	}
+
 	// Test for missing "use" field
 	@Test
 	public void whenMissingUseField_thenReturnError() throws Exception {
@@ -188,7 +178,6 @@ public class ApplyTest extends TestTokenGenerator {
 				.andExpect(
 						content().string(containsString("[{\"result\":\"[Error: Missing required 'use' field]\"}]")));
 	}
-
 
 	// Test for missing "withParams" field
 	@Test
@@ -202,7 +191,6 @@ public class ApplyTest extends TestTokenGenerator {
 						.string(containsString("[{\"result\":\"[Error: Missing required 'withParams' field]\"}]")));
 	}
 
-
 	// Test for non-existent param in Producer/Operation
 	@Test
 	public void whenNonExistentParam_thenReturnError() throws Exception {
@@ -214,9 +202,7 @@ public class ApplyTest extends TestTokenGenerator {
 						"[{\"result\":\"[Producer or Operation parameter 'nonExistentParam' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
 	}
 
-	// Test for missing params in Operation (valid case for operations that take no
-	// params)
-
+	// Test for missing params in Operation (valid case for operations that take no params)
 	@Test
 	public void whenMissingParamsForOperation_thenReturnError() throws Exception {
 		String missingParamsForOperation = """
@@ -241,6 +227,7 @@ public class ApplyTest extends TestTokenGenerator {
 				.andExpect(content().string(containsString(
 						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
 	}
+
 	@Test
 	public void testGetRequiredField() {
 		JsonObject jsonObject = new JsonObject();
@@ -264,6 +251,7 @@ public class ApplyTest extends TestTokenGenerator {
 		Object instance = ReflectionUtils.instantiateClass("java.lang.String");
 		assertTrue(instance instanceof String);
 	}
+
 	@Test
 	public void testSetParameters() throws Exception {
 		JsonObject param1 = new JsonObject();
@@ -275,6 +263,7 @@ public class ApplyTest extends TestTokenGenerator {
 		ReflectionUtils.setParameters(instance, params);
 		assertEquals(5, instance.length());
 	}
+
 	@Test
 	public void testFindSetterMethod() throws Exception {
 		Method method = ReflectionUtils.findSetterMethod(StringBuilder.class, "length");
@@ -295,7 +284,6 @@ public class ApplyTest extends TestTokenGenerator {
 		mockMvc.perform(get("/routes/list").header("Authorization", "Bearer " + token)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("Method: [")));
 	}
-
 
 	@Test
 	public void testOperationsList() throws Exception {
