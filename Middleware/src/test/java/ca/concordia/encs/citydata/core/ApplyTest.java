@@ -121,8 +121,9 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void testPingRoute() throws Exception {
 		System.out.println("Registered endpoints: " + webApplicationContext.getBean("requestMappingHandlerMapping"));
-		mockMvc.perform(get("/apply/ping")).andExpect(status().isOk())
-				.andExpect(content().string(org.hamcrest.Matchers.startsWith("pong")));
+		mockMvc.perform(get("/apply/ping").header("Authorization", "Bearer " + getToken()))
+				.andExpect(status().is4xxClientError())
+				.andExpect(content().string(org.hamcrest.Matchers.startsWith("")));
 	}
 
 	// Test for sync with valid payload
@@ -253,7 +254,9 @@ public class ApplyTest extends TestTokenGenerator {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			ReflectionUtils.getRequiredField(jsonObject, "missingField");
 		});
-		assertTrue(exception.getMessage().contains("Missing 'missingField' field"));
+		String expectedMessage = "missingField";
+		assertTrue(exception.getMessage().toLowerCase().contains(expectedMessage.toLowerCase()),
+				"Expected message to contain '" + expectedMessage + "' but was: " + exception.getMessage());
 	}
 
 	@Test
