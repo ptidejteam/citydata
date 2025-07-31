@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-/*
+/**
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025

@@ -2,7 +2,7 @@ package ca.concordia.encs.citydata.core.utils;
 
 import java.util.Date;
 
-/***
+/**
  * This class is the helper method for generating report for producer call information.
  * @author Rushin Makwana
  * @since 2024-02-26

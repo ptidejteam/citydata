@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.nimbusds.jose.jwk.RSAKey;
 
-/*
+/**
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025

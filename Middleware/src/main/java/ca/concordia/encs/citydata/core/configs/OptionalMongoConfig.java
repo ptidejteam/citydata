@@ -15,7 +15,7 @@ import com.mongodb.client.MongoClients;
 
 import ca.concordia.encs.citydata.datastores.MongoDataStore;
 
-/***
+/**
  * This is the Spring Boot configuration file which contains configuration
  * related to MongoDB. This will run on every application startup, just like
  * AppConfig.java, but the mongoTemplate method will only be NOT NULL if MongoDB

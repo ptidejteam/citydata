@@ -35,7 +35,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.services.TokenService;
 
-/*
+/**
  * Fixed failing tests after implementing Authentication
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025

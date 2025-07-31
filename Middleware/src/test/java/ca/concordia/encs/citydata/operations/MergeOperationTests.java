@@ -20,16 +20,17 @@ import ca.concordia.encs.citydata.PayloadFactory;
 import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/*
+/**
+ * Tests for MergeOperation
+ * @author Sikandar Ejaz
+ * @since 08-04-2025
+ * 
  * Tests added for MergeOperation 
  * Author: Sikandar Ejaz 
- * Date: 4-8-2025
+ * Date: 08-04-2025
+ * 
  * Last Update: 16-06-2025
  * Fixed failing tests after implementing Authentication
- * 
- * Tests for MergeOperation
- * * @author Sikandar Ejaz
- * @since 2025-04-08
  */
 
 @SpringBootTest(classes = AppConfig.class)

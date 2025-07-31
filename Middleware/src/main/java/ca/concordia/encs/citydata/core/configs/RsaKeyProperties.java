@@ -6,7 +6,7 @@ import java.security.interfaces.RSAPublicKey;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/*
+/**
  * JWT Authentication Implementation
  * Author: Sikandar Ejaz 
  * Date: 18-07-2025
