@@ -7,34 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Authentication",
-			"item": [
-				{
-					"name": "token",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/token",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"token",
-							]
-						}
-					},
-					"response": []
-				},				
-			]
-		},
-		{
-			"name": "Discovery",
+			"name": "1. Discovery",
 			"item": [
 				{
 					"name": "routes/list",
@@ -45,12 +18,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/routes/list",
-							"protocol": "http",
+							"raw": "{{baseURL}}/routes/list",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"routes",
 								"list"
@@ -65,12 +36,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/operations/list",
-							"protocol": "http",
+							"raw": "{{baseURL}}/operations/list",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"operations",
 								"list"
@@ -85,12 +54,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/producers/list",
-							"protocol": "http",
+							"raw": "{{baseURL}}/producers/list",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"producers",
 								"list"
@@ -102,13 +69,66 @@
 			]
 		},
 		{
-			"name": "Apply",
+			"name": "2. Auth",
+			"item": [
+				{
+					"name": "authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const token = pm.response.text();",
+									"pm.environment.set(\"token\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"citydata\",\n    \"password\": \"citydata\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/authenticate",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Apply",
 			"item": [
 				{
 					"name": "apply/sync",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
@@ -119,11 +139,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/apply/sync",
+							"raw": "{{baseURL}}/apply/sync",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"apply",
 								"sync"
@@ -136,7 +155,13 @@
 					"name": "apply/async",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
@@ -147,16 +172,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://ngci.encs.concordia.ca/citydata/apply/async",
-							"protocol": "https",
+							"raw": "{{baseURL}}/apply/async",
 							"host": [
-								"ngci",
-								"encs",
-								"concordia",
-								"ca"
+								"{{baseURL}}"
 							],
 							"path": [
-								"citydata",
 								"apply",
 								"async"
 							]
@@ -168,7 +188,13 @@
 					"name": "exists",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"use\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\",\n  \"withParams\": [\n    {\n      \"name\": \"listSize\",\n      \"value\": 5\n    }\n  ],\n  \"apply\": [\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.AverageOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"roundingMethod\",\n          \"value\": \"floor\"\n        }\n      ]\n    },\n    {\n      \"name\": \"ca.concordia.encs.citydata.operations.MergeOperation\",\n      \"withParams\": [\n        {\n          \"name\": \"targetProducer\",\n          \"value\": \"ca.concordia.encs.citydata.producers.RandomNumberProducer\"\n        },\n        {\n          \"name\": \"targetProducerParams\",\n          \"value\": [\n            {\n              \"name\": \"listSize\",\n              \"value\": 5\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
@@ -179,11 +205,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/exists/",
+							"raw": "{{baseURL}}/exists/",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"exists",
 								""
@@ -199,21 +224,23 @@
 							"type": "noauth"
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "https://ngci.encs.concordia.ca/citydata/apply/async/88738236-9a90-449c-8c7b-7dde540b3efa",
-							"protocol": "https",
+							"raw": "localhost:8080/apply/async/4901bb00-4f2a-4265-92dc-5504f2f136a5",
 							"host": [
-								"ngci",
-								"encs",
-								"concordia",
-								"ca"
+								"localhost"
 							],
+							"port": "8080",
 							"path": [
-								"citydata",
 								"apply",
 								"async",
-								"88738236-9a90-449c-8c7b-7dde540b3efa"
+								"4901bb00-4f2a-4265-92dc-5504f2f136a5"
 							]
 						}
 					},
@@ -222,7 +249,7 @@
 			]
 		},
 		{
-			"name": "Other",
+			"name": "4. Other",
 			"item": [
 				{
 					"name": "health/ping",
@@ -230,11 +257,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/health/ping",
+							"raw": "{{baseURL}}/health/ping",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"health",
 								"ping"
@@ -252,12 +278,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/report/producers",
-							"protocol": "http",
+							"raw": "{{baseURL}}/report/producers",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8080",
 							"path": [
 								"report",
 								"producers"
@@ -267,6 +291,13 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8080",
+			"type": "default"
 		}
 	]
 }
