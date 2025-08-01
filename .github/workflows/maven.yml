@@ -30,7 +30,6 @@ jobs:
         HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
         HUB_PASSWORD: ${{ secrets.HUB_PASSWORD }}
 
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -43,6 +42,13 @@ jobs:
     - name: Go to Middleware folder
       run: ls -la
       working-directory: Middleware
+
+    - name: Generate keypair for authentication
+      run: |
+        mkdir -p src/main/resources/certs
+        openssl genrsa -out keypair.pem 2048
+        openssl rsa -in keypair.pem -pubout -out public.pem  
+        openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
     
     - name: Test with Maven
       run: mvn test

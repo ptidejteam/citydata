@@ -41,8 +41,8 @@ Before generating the public and private keys, ensure you have `openssl` install
 
 ```bash
 openssl genrsa -out keypair.pem 2048
-openssl rsa -in keypair.pem -pubout -out public_key.pem
-openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private_key.pem
+openssl rsa -in keypair.pem -pubout -out public.pem
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
 ```
 - Step 3: Once public and private keys are generated, you can delete the keypair.pem
 
