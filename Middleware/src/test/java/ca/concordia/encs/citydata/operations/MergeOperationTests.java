@@ -17,18 +17,26 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
-/***
+/**
  * Tests for MergeOperation
- *
  * @author Sikandar Ejaz
- * @since 2025-04-08
+ * @since 08-04-2025
+ * 
+ * Tests added for MergeOperation 
+ * Author: Sikandar Ejaz 
+ * Date: 08-04-2025
+ * 
+ * Last Update: 16-06-2025
+ * Fixed failing tests after implementing Authentication
  */
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class MergeOperationTests {
+public class MergeOperationTests extends TestTokenGenerator {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -37,8 +45,8 @@ public class MergeOperationTests {
 	public void testMergeOperation() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
 
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk());
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk());
 	}
 
 	@Test
@@ -46,7 +54,8 @@ public class MergeOperationTests {
 		String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
 		JsonObject jsonObject = com.google.gson.JsonParser.parseString(jsonPayload).getAsJsonObject();
 		jsonObject.getAsJsonArray("apply").get(0).getAsJsonObject().remove("withParams");
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
 				.andExpect(status().is5xxServerError())
 				.andExpect(content().string(containsString("")));
 	}
@@ -68,7 +77,8 @@ public class MergeOperationTests {
 		}
 		applyObject.add("withParams", withParamsArray);
 
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
 				.andExpect(status().is5xxServerError())
 				.andExpect(content().string(containsString("")));
 	}
@@ -80,7 +90,8 @@ public class MergeOperationTests {
 		jsonObject.getAsJsonArray("apply").get(0).getAsJsonObject().getAsJsonArray("withParams").get(0)
 				.getAsJsonObject().addProperty("value", "Wrong.Producer");
 
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
 				.andExpect(status().is5xxServerError());
 	}
 
@@ -91,15 +102,16 @@ public class MergeOperationTests {
 		jsonObject.getAsJsonArray("apply").get(0).getAsJsonObject().getAsJsonArray("withParams").get(1)
 				.getAsJsonObject().getAsJsonArray("value").get(0).getAsJsonObject().addProperty("name", "wrongParam");
 
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
 				.andExpect(status().is5xxServerError());
 	}
 
 	@Test
 	public void testMergeOperationWithBrokenJson() throws Exception {
 		String brokenJson = PayloadFactory.getInvalidJson();
-		mockMvc.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(brokenJson))
-				.andExpect(status().is4xxClientError())
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(brokenJson)).andExpect(status().is4xxClientError())
 				.andExpect(content().string(containsString("")));
 	}
 

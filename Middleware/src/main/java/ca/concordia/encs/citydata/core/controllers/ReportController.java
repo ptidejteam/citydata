@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.concordia.encs.citydata.core.utils.ProducerUsageData;
 import ca.concordia.encs.citydata.datastores.MongoDataStore;
 
-/***
+/**
  * This class has all the routes for the report generation
  * 
  * @author Rushin Makwana

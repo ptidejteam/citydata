@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.UUID;
 
-import ca.concordia.encs.citydata.PayloadFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
@@ -25,17 +26,21 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  *
  * @author Minette Zongo
  * @since 2025-02-26
- */
+ *  
+ * Last Update: 18-07-2025 
+ * Author Sikandar Ejaz 
+ * Fixed failing tests after implementing Authentication
+*/
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ExistsTest {
+public class ExistsTest extends TestTokenGenerator {
 
 	@Autowired
 	private MockMvc mockMvc;
 
-	// Store the runnerId as an instance variable so it can be used across test
-	// methods
+	// Store the runnerId as an instance variable so it can be used across test methods
 	private UUID runnerId;
 
 	@Test
@@ -45,7 +50,8 @@ public class ExistsTest {
 
 	    // creating a producer
 	    MvcResult syncResult = mockMvc
-	        .perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 	        .andExpect(status().isOk()).andReturn();
 
 	    // Get the response but don't try to parse it as a UUID
@@ -56,7 +62,8 @@ public class ExistsTest {
 	    
 	    // Check if the query exists
 	    MvcResult existsResult = mockMvc
-	        .perform(post("/exists/").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 	        .andExpect(status().isOk()).andReturn();
 
 	    String responseContent = existsResult.getResponse().getContentAsString();
@@ -69,7 +76,8 @@ public class ExistsTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerListDatasets");
 
 		MvcResult existsResult = mockMvc
-				.perform(post("/exists/").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isNotFound()).andReturn();
 
 		String responseContent = existsResult.getResponse().getContentAsString();
@@ -79,7 +87,7 @@ public class ExistsTest {
 	@Test
 	void testBrokenJsonQuery() throws Exception {
 		String jsonPayload = PayloadFactory.getInvalidJson();
-		mockMvc.perform(post("/exists/") // Changed from get to post to match my endpoint
+		mockMvc.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 				.andExpect(status().isInternalServerError());
 	}
@@ -89,14 +97,17 @@ public class ExistsTest {
 		String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
 		MvcResult existsResult = mockMvc
-				.perform(post("/exists/").contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andReturn();
+				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+				.andReturn();
 
 		String responseContent = existsResult.getResponse().getContentAsString();
 		int status = existsResult.getResponse().getStatus();
 
 		if (status == 404 || responseContent.equals("[]")) {
 			MvcResult syncResult = mockMvc
-					.perform(post("/apply/sync").contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
+					.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+							.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
 					.andReturn();
 
 			int syncStatus = syncResult.getResponse().getStatus();
