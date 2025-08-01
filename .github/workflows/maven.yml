@@ -1,60 +1,23 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+- uses: actions/checkout@v4
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+- name: Set up JDK 21
+  uses: actions/setup-java@v4
+  with:
+    java-version: '21'
+    distribution: 'temurin'
+    cache: maven
 
-name: Ptidej Middleware CI with Maven
+- name: Generate keypair for authentication (in correct location)
+  working-directory: Middleware
+  run: |
+    mkdir -p src/main/resources/certs
+    openssl genpkey -algorithm RSA -out src/main/resources/certs/private.pem -pkeyopt rsa_keygen_bits:2048
+    openssl rsa -pubout -in src/main/resources/certs/private.pem -out src/main/resources/certs/public.pem
 
-on:
-  push:
-    branches: [ "master" ]
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
-  pull_request:
-    branches: [ "master" ]
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
-    
-jobs:
-  build:
+- name: Clean and test with Maven
+  run: mvn clean test
+  working-directory: Middleware
 
-    runs-on: ubuntu-latest
-    environment: test
-    env:
-        HUB_APPLICATION_UUID: ${{ secrets.HUB_APPLICATION_UUID }}
-        HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
-        HUB_PASSWORD: ${{ secrets.HUB_PASSWORD }}
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-
-    - name: Go to Middleware folder
-      run: ls -la
-      working-directory: Middleware
-
-    - name: Generate keypair for authentication
-      working-directory: Middleware
-      run: |
-        mkdir -p src/main/resources/certs
-        openssl genrsa -out keypair.pem 2048
-        openssl rsa -in keypair.pem -pubout -out public.pem  
-        openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
-    
-    - name: Test with Maven
-      run: mvn test
-      working-directory: Middleware
-        
-    - name: Build with Maven
-      run: mvn install
-      working-directory: Middleware
+- name: Build with Maven
+  run: mvn install
+  working-directory: Middleware
