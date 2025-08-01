@@ -22,14 +22,8 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     environment: test
-    env:
-        HUB_APPLICATION_UUID: ${{ secrets.HUB_APPLICATION_UUID }}
-        HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
-        HUB_PASSWORD: ${{ secrets.HUB_PASSWORD }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -48,8 +42,12 @@ jobs:
           openssl rsa -pubout -in src/main/resources/certs/private.pem -out src/main/resources/certs/public.pem
 
       - name: Clean and test with Maven
-        run: mvn clean test
         working-directory: Middleware
+        run: |
+          mvn clean test \
+            -DHUB_APPLICATION_UUID=${{ secrets.HUB_APPLICATION_UUID }} \
+            -DHUB_USERNAME=${{ secrets.HUB_USERNAME }} \
+            -DHUB_PASSWORD=${{ secrets.HUB_PASSWORD }}
 
       - name: Build with Maven
         run: mvn install
