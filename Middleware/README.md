@@ -25,6 +25,8 @@ You can see a more detailed breakdown of responsibilities for the middleware [he
 - Maven version 3.7.x
 - Postman (optional)
 
+To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYdata development team members use either Eclipse 2024-06 (4.32.0) or IntelliJ IDEA 2024.3.4.1.
+
 ## JWT Authentication Added to CityData
 
 - To ensure security of CityData, authentication is implemented and now the application is secured.
@@ -43,9 +45,6 @@ openssl rsa -in keypair.pem -pubout -out public_key.pem
 openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private_key.pem
 ```
 - Step 3: Once public and private keys are generated, you can delete the keypair.pem
-
-
-##To collaborate with CITYdata, you can use the Java IDE of your choice. The CITYdata development team members use either Eclipse 2024-06 (4.32.0) or IntelliJ IDEA 2024.3.4.1.
 
 ## How do I set it up?
 
