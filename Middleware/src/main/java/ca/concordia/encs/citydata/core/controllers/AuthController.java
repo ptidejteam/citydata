@@ -27,15 +27,12 @@ public class AuthController {
 	private final TokenService tokenService;
 	private final AuthenticationManager authenticationManager;
 	private final PasswordEncoder passwordEncoder;
-	private final SecurityConfig securityConfig;
 
 	public AuthController(TokenService tokenService, AuthenticationManager authenticationManager,
 			PasswordEncoder passwordEncoder, SecurityConfig securityConfig) {
 		this.tokenService = tokenService;
 		this.authenticationManager = authenticationManager;
 		this.passwordEncoder = passwordEncoder;
-		this.securityConfig = securityConfig;
-
 	}
 
 	@PostMapping("/authenticate")
