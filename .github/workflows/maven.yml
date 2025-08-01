@@ -44,6 +44,7 @@ jobs:
       working-directory: Middleware
 
     - name: Generate keypair for authentication
+      working-directory: Middleware
       run: |
         mkdir -p src/main/resources/certs
         openssl genrsa -out keypair.pem 2048
