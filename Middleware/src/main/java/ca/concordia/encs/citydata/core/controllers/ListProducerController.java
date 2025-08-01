@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.core.utils.Constants;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
-/***
+/**
  * This class is to print all available producers and their characteristics
  * 
  * @author Sikandar Ejaz
