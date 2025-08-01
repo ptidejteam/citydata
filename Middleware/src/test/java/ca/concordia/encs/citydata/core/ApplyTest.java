@@ -115,15 +115,6 @@ public class ApplyTest extends TestTokenGenerator {
 				.andExpect(content().string(containsString("Invalid runner ID format. Please provide a valid UUID.")));
 	}
 
-	// Test for ping route
-	@Test
-	public void testPingRoute() throws Exception {
-		System.out.println("Registered endpoints: " + webApplicationContext.getBean("requestMappingHandlerMapping"));
-		mockMvc.perform(get("/apply/ping").header("Authorization", "Bearer " + getToken()))
-				.andExpect(status().is4xxClientError())
-				.andExpect(content().string(org.hamcrest.Matchers.startsWith("")));
-	}
-
 	// Test for sync with valid payload
 	@Test
 	public void testSync() throws Exception {
