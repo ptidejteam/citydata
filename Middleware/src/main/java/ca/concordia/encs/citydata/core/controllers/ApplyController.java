@@ -21,7 +21,7 @@ import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.producers.ExceptionProducer;
 import ca.concordia.encs.citydata.runners.SequentialRunner;
 
-/***
+/**
  * This class manages all requests sent to the /apply route
  * 
  * @author Gabriel C. Ullmann

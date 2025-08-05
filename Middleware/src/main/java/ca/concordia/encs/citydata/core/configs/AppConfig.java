@@ -3,7 +3,7 @@ package ca.concordia.encs.citydata.core.configs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/***
+/**
  * This is the Spring Boot base configuration file.
  * 
  * @author Gabriel C. Ullmann, Sikandar Ejaz

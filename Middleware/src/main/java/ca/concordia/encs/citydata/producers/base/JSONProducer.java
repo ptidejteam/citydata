@@ -1,5 +1,6 @@
 package ca.concordia.encs.citydata.producers.base;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import com.google.gson.JsonElement;
@@ -25,23 +26,26 @@ public class JSONProducer extends AbstractProducer<JsonObject> implements IProdu
 
 	@Override
 	public void fetch() {
+		final ArrayList<JsonObject> jsonOutput = new ArrayList<>();
 
-		final ArrayList<JsonObject> jsonOutput = new ArrayList<JsonObject>();
-		final String inputJson = new String(this.fetchFromPath());
+		// Use ByteArrayOutputStream to fetch data
 
-		// convert JSON string to object
-		final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
+        OutputStream outputStream = this.fetchFromPath();
+        String inputJson = outputStream.toString();
 
-		JsonObject outputJsonObject = new JsonObject();
-		if (inputJsonElement.isJsonArray()) {
-			outputJsonObject.add("result", inputJsonElement);
-		} else {
-			outputJsonObject = inputJsonElement.getAsJsonObject();
-		}
+        // Convert JSON string to object
+        final JsonElement inputJsonElement = JsonParser.parseString(inputJson);
 
-		jsonOutput.add(outputJsonObject);
-		this.setResult(jsonOutput);
-		this.applyOperation();
-	}
+        JsonObject outputJsonObject = new JsonObject();
+        if (inputJsonElement.isJsonArray()) {
+            outputJsonObject.add("result", inputJsonElement);
+        } else {
+            outputJsonObject = inputJsonElement.getAsJsonObject();
+        }
+
+        jsonOutput.add(outputJsonObject);
+        this.setResult(jsonOutput);
+        this.applyOperation();
+    }
 
 }
