@@ -7,12 +7,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.core.implementations.AbstractRunner;
+import ca.concordia.encs.citydata.core.contracts.IDataStore;
 import ca.concordia.encs.citydata.core.contracts.IOperation;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.contracts.IRunner;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
-import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
+import ca.concordia.encs.citydata.datastores.DataStoreManager;
+//import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.producers.ExceptionProducer;
 
 /**
@@ -93,18 +95,28 @@ public class SingleStepRunner extends AbstractRunner implements IRunner {
 			this.setAsDone();
 			System.out.println("Run completed!");
 		} catch (Exception e) {
-			// stop runner as soon as an exception is thrown to avoid infinite loops
-			final InMemoryDataStore store = InMemoryDataStore.getInstance();
-			store.set(this.getMetadataString("id"), new ExceptionProducer(e));
-			this.setAsDone();
+			//InMemoryDataStore store = InMemoryDataStore.getInstance();
+			//store.set(this.getMetadataString("id"), new ExceptionProducer(e));
+			// New implementation with respect to DataStoreManager
+			DataStoreManager manager = DataStoreManager.getInstance();
+	        IDataStore<IProducer<?>> store = manager.getStore("InMemory");
+	        store.set(this.getMetadataString("id"), new ExceptionProducer(e));
+
+	        this.setAsDone();
 		}
 	}
 
 	@Override
-	public void storeResults(IProducer<?> producer) {
-		final InMemoryDataStore store = InMemoryDataStore.getInstance();
-		final String runnerId = this.getMetadata("id").toString();
-		store.set(runnerId, producer);
+	public void storeResults(IProducer<?> producer) {		
+		//InMemoryDataStore store = InMemoryDataStore.getInstance();
+		//String runnerId = this.getMetadata("id").toString();
+		//store.set(runnerId, producer);
+		// New implementation with respect to DataStoreManager
+		DataStoreManager manager = DataStoreManager.getInstance();
+	    IDataStore<IProducer<?>> store = manager.getStore("InMemory");
+	    String runnerId = this.getMetadata("id").toString();
+	    System.out.println("Storing producer with runnerId = " + runnerId);
+	    store.set(runnerId, producer);
 	}
 
 }
