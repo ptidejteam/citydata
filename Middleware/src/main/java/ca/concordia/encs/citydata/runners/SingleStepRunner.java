@@ -95,9 +95,6 @@ public class SingleStepRunner extends AbstractRunner implements IRunner {
 			this.setAsDone();
 			System.out.println("Run completed!");
 		} catch (Exception e) {
-			//InMemoryDataStore store = InMemoryDataStore.getInstance();
-			//store.set(this.getMetadataString("id"), new ExceptionProducer(e));
-			// New implementation with respect to DataStoreManager
 			DataStoreManager manager = DataStoreManager.getInstance();
 	        IDataStore<IProducer<?>> store = manager.getStore("InMemory");
 	        store.set(this.getMetadataString("id"), new ExceptionProducer(e));
@@ -108,11 +105,7 @@ public class SingleStepRunner extends AbstractRunner implements IRunner {
 
 	@Override
 	public void storeResults(IProducer<?> producer) {		
-		//InMemoryDataStore store = InMemoryDataStore.getInstance();
-		//String runnerId = this.getMetadata("id").toString();
-		//store.set(runnerId, producer);
-		// New implementation with respect to DataStoreManager
-		DataStoreManager manager = DataStoreManager.getInstance();
+	    DataStoreManager manager = DataStoreManager.getInstance();
 	    IDataStore<IProducer<?>> store = manager.getStore("InMemory");
 	    String runnerId = this.getMetadata("id").toString();
 	    System.out.println("Storing producer with runnerId = " + runnerId);
