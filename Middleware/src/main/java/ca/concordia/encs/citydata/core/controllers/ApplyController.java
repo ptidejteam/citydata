@@ -14,7 +14,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import ca.concordia.encs.citydata.core.contracts.IDataStore;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
+import ca.concordia.encs.citydata.datastores.DataStoreManager;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.producers.ExceptionProducer;
 import ca.concordia.encs.citydata.runners.SequentialRunner;
@@ -48,7 +50,8 @@ public class ApplyController {
 						}
 					} catch (Exception e) {
 						deckard.setAsDone();
-						final InMemoryDataStore store = InMemoryDataStore.getInstance();
+						//final InMemoryDataStore store = InMemoryDataStore.getInstance();
+						IDataStore<IProducer<?>> store = DataStoreManager.getInstance().getStore("InMemory");
 						store.set(deckard.getId(), new ExceptionProducer(e));
 					}
 				}
@@ -71,7 +74,8 @@ public class ApplyController {
 		}
 
 		// else, return the data
-		final InMemoryDataStore store = InMemoryDataStore.getInstance();
+		//final InMemoryDataStore store = InMemoryDataStore.getInstance();
+		IDataStore<IProducer<?>> store = DataStoreManager.getInstance().getStore("InMemory");
 		final IProducer<?> resultProducer = store.get(runnerId);
 
 		// if the thread, which cannot throw exceptions, produces an ExceptionProducer,
@@ -120,7 +124,8 @@ public class ApplyController {
     public ResponseEntity<String> asyncId(@PathVariable("runnerId") String runnerIdStr) {
         try {
             UUID runnerId = UUID.fromString(runnerIdStr);
-            InMemoryDataStore store = InMemoryDataStore.getInstance();
+            //InMemoryDataStore store = InMemoryDataStore.getInstance();
+            IDataStore<IProducer<?>> store = DataStoreManager.getInstance().getStore("InMemory");
             IProducer<?> storeResult = store.get(runnerId);
 
             if (storeResult != null) {
