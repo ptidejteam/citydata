@@ -10,7 +10,6 @@ import java.util.Set;
 
 public class DataStoreManager extends AbstractEntity {
 	
-	// Static registry of all known datastores
 	private static final Map<String, IDataStore<?>> stores = new HashMap<>();
 
 	private static final DataStoreManager instance = new DataStoreManager();
@@ -24,13 +23,11 @@ public class DataStoreManager extends AbstractEntity {
         return instance;
     }
     
-    // Register all known datastores
     private void registerStores() {
     	stores.put("InMemory", InMemoryDataStore.getInstance());
     	stores.put("Disk", DiskDatastore.getInstance());
     	stores.put("MongoDB", MongoDataStore.getInstance());
     	
-    	// For simplicity we can add aliases
         stores.put("Memory", InMemoryDataStore.getInstance());
     	stores.put("File", DiskDatastore.getInstance());
     	stores.put("Mongo", MongoDataStore.getInstance());
