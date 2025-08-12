@@ -165,8 +165,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingUse))
-				.andExpect(status().isInternalServerError())
-				.andExpect(
+				.andExpect(status().isInternalServerError()).andExpect(
 						content().string(containsString("[{\"result\":\"[Error: Missing required 'use' field]\"}]")));
 	}
 
@@ -177,8 +176,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
-				.andExpect(status().is5xxServerError())
-				.andExpect(content()
+				.andExpect(status().is5xxServerError()).andExpect(content()
 						.string(containsString("[{\"result\":\"[Error: Missing required 'withParams' field]\"}]")));
 	}
 
@@ -214,8 +212,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString(
+				.andExpect(status().isInternalServerError()).andExpect(content().string(containsString(
 						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
 	}
 

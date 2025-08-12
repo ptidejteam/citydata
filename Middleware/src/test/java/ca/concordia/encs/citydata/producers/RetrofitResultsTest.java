@@ -23,18 +23,17 @@ import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 
-/*
- * Fixed failing tests after implementing Authentication
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
- */
-
 /**
  * Test: Hub building retrofit results Producer
  *
  * @author Gabriel C. Ullmann
  * @since 2025-06-18
+ * 
+ * Last Update: Fixed failing tests after implementing Authentication
+ * @author Sikandar Ejaz 
+ * @since 18-07-2025
  */
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
