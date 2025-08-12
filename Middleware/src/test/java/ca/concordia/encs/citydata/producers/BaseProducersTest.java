@@ -15,7 +15,7 @@ import ca.concordia.encs.citydata.producers.base.JSONProducer;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /**
- * Tests for Base (CSV and JSON Producers) Producers
+ * Tests for Base (CSV and JSON) Producers
  * @author Sikandar Ejaz
  * @since 08-12-2025
  */
