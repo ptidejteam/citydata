@@ -13,6 +13,9 @@ env.json
 joularjx-result/*/all/total/methods/joularJX-*-all-methods-energy.csv
 joularjx-result/*/app/total/methods/joularJX-*-filtered-methods-energy.csv
 
+## Jprofiler results ##
+jprofiler/*
+
 ### STS ###
 .apt_generated
 .classpath

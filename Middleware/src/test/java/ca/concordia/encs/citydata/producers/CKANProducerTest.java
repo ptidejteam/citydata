@@ -100,6 +100,7 @@ public class CKANProducerTest extends TestTokenGenerator {
 
 		String text = asyncRequestResult.getResponse().getContentAsString();
 		String uuidRegex = "\\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\b";
+
 		Matcher matcher = Pattern.compile(uuidRegex).matcher(text);
 		if (matcher.find()) {
 			runnerId = matcher.group();

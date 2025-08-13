@@ -37,17 +37,14 @@ import ca.concordia.encs.citydata.operations.MergeOperation;
 public class GeometryProducerTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
-	
-	private GeometryProducer geometryProducer;
-	private EnergyConsumptionProducer energyConsumptionProducer;
-	private MergeOperation mergeOperation;
+
     private final String CITY = "montreal";
 
     @BeforeEach
     void setUp() {
-        geometryProducer = new GeometryProducer();
-        energyConsumptionProducer = new EnergyConsumptionProducer();
-        mergeOperation = new MergeOperation();
+        GeometryProducer geometryProducer = new GeometryProducer();
+        EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
+        MergeOperation mergeOperation = new MergeOperation();
     }
 
     /**

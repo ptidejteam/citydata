@@ -55,8 +55,8 @@ public class FireBaseTest {
 	@Test
 	public void testFetchDataFromFirebase() {
 
-		if (skipTest) {
-			assertNotNull(skipTest, "Should skip test!");
+		if (skipTest ) {
+			System.out.println("Should skip test!");
 		} else {
 			DatabaseReference ref = database.getReference("/");
 			ref.addListenerForSingleValueEvent(new ValueEventListener() {

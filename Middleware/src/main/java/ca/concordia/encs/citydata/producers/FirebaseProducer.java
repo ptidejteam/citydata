@@ -18,16 +18,13 @@ import com.google.gson.JsonParser;
  */
 public class FirebaseProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
-	private final String databaseURL;
-	private final String nodePath; // Path to the Firebase node to fetch data from
-	private final RequestOptions requestOptions; // Any request options if needed
+    private final String nodePath; // Path to the Firebase node to fetch data from
 
-	public FirebaseProducer(String databaseURL, String nodePath, RequestOptions requestOptions) {
-		this.databaseURL = databaseURL;
-		this.nodePath = nodePath;
-		this.requestOptions = requestOptions;
+    public FirebaseProducer(String databaseURL, String nodePath, RequestOptions requestOptions) {
+        this.nodePath = nodePath;
+        // Any request options if needed
 
-		FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 	}
 	@Override
 	public void fetch(){

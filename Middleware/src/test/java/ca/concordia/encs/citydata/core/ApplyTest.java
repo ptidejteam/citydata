@@ -24,7 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -54,11 +53,9 @@ public class ApplyTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Autowired
-	private TokenService tokenService;
 
 	@Autowired
-	private WebApplicationContext webApplicationContext;
+	private TokenService tokenService;
 
 	private void performPostRequest(String url, String contentType, String content) throws Exception {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
@@ -119,6 +116,7 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void testSync() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
+
 		String token = getToken();
 
 		performPostRequestWithAuth("/apply/sync", MediaType.APPLICATION_JSON_VALUE, jsonPayload, getToken());
@@ -229,6 +227,7 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void testGetRequiredFieldMissing() {
 		JsonObject jsonObject = new JsonObject();
+
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			ReflectionUtils.getRequiredField(jsonObject, "missingField");
 		});

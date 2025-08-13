@@ -1,8 +1,6 @@
 package ca.concordia.encs.citydata.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,7 +66,7 @@ public class ExistsTest extends TestTokenGenerator {
 
 	    String responseContent = existsResult.getResponse().getContentAsString();
 
-	    assertFalse(responseContent.equals("[]"), "Response should not be an empty array");
+        assertNotEquals("[]", responseContent, "Response should not be an empty array");
 	}
 
 	@Test
@@ -121,7 +119,7 @@ public class ExistsTest extends TestTokenGenerator {
 				fail("apply/sync failed with status: " + syncStatus + " and response: " + syncResponse);
 			}
 		} else if (status == 200) {
-			assertFalse(responseContent.equals("[]"), "Response should not be an empty array");
+            assertNotEquals("[]", responseContent, "Response should not be an empty array");
 		} else {
 			fail("Unexpected status code: " + status + ". Response content: " + responseContent);
 		}
