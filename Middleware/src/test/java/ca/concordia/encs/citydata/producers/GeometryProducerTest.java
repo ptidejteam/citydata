@@ -27,7 +27,7 @@ import ca.concordia.encs.citydata.operations.MergeOperation;
  *
  * Last Update: Fixed failing tests after implementing Authentication
  * @author Sikandar Ejaz 
- * @since 18-07-2025
+ * @since 2025-07-18
  */
 
 @SpringBootTest(classes = AppConfig.class)
@@ -37,16 +37,13 @@ public class GeometryProducerTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
-	private GeometryProducer geometryProducer;
-	private EnergyConsumptionProducer energyConsumptionProducer;
-	private MergeOperation mergeOperation;
 	private final String CITY = "montreal";
 
 	@BeforeEach
 	void setUp() {
-		geometryProducer = new GeometryProducer();
-		energyConsumptionProducer = new EnergyConsumptionProducer();
-		mergeOperation = new MergeOperation();
+		GeometryProducer geometryProducer = new GeometryProducer();
+		EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
+		MergeOperation mergeOperation = new MergeOperation();
 	}
 
 	/**

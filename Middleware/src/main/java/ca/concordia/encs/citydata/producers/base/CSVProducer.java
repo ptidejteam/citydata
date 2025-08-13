@@ -28,6 +28,7 @@ public class CSVProducer extends AbstractProducer<String> implements IProducer<S
 
 	@Override
 	public void fetch() {
+    
 		try (OutputStream outputStream = this.fetchFromPath();
 			 OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
 			writer.flush(); // Ensure all data is written to the stream

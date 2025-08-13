@@ -10,13 +10,16 @@ import java.nio.file.Paths;
  * @since 2025-02-07
  */
 public interface Constants {
+	// IntelliJ points out as an issue, but these should all be static
+	// and final, so we prevent accidental changes
 	public static final Path ENV_PATH = Paths.get("env.json").toAbsolutePath();
 
-	public static final String SOURCE_CODE_ROOT_PATH = "./src/main/java/";
+	static String SOURCE_CODE_ROOT_PATH = "./src/main/java/";
 
-	public static final String PRODUCER_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH + "ca/concordia/encs/citydata/producers/";
+	static String PRODUCER_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH + "ca/concordia/encs" +
+			"/citydata/producers/";
 
-	public static final String OPERATION_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH
+	static String OPERATION_ROOT_PACKAGE = SOURCE_CODE_ROOT_PATH
 			+ "ca/concordia/encs/citydata/operations/";
 
 }

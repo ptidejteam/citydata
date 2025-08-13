@@ -111,9 +111,9 @@ public class ApplyController {
 		}
 
 		return ResponseEntity.status(responseCode)
-				.body("Hello! The runner " + runnerId.toString()
+				.body("Hello! The runner " + runnerId
 						+ " is currently working on your request. Please make a GET request to /apply/async/ "
-						+ runnerId.toString() + " to retrieve request results.");
+						+ runnerId + " to retrieve request results.");
 	}
 
 	@RequestMapping(value = "/async/{runnerId}", method = RequestMethod.GET)

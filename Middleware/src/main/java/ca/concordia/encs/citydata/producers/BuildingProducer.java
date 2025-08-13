@@ -24,7 +24,8 @@ public class BuildingProducer extends AbstractProducer<String> implements IProdu
 		}
 	}
 
-	@Override
+	@SuppressWarnings("rawtypes")
+    @Override
 	public void setOperation(IOperation operation) {
 		this.jsonProducer.setOperation(operation);
 	}
