@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
 

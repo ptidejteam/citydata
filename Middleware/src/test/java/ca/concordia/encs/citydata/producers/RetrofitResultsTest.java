@@ -19,7 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.StringUtils;
 

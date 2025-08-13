@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.core;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import ca.concordia.encs.citydata.services.TokenService;
 /**
  * Added global token generation for running tests
  * @author Sikandar Ejaz 
- * @since 18-07-2025
+ * @since 2025-07-18
  */
 
 @SpringBootTest

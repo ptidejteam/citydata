@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
