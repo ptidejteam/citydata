@@ -1,4 +1,4 @@
-package ca.concordia.encs.citydata;
+package ca.concordia.encs.citydata.core;
 
 import java.util.List;
 
@@ -13,15 +13,14 @@ import ca.concordia.encs.citydata.services.TokenService;
 
 /**
  * Added global token generation for running tests
- * Author: Sikandar Ejaz 
- * Date: 18-07-2025
+ * @author Sikandar Ejaz 
+ * @since 2025-07-18
  */
 
 @SpringBootTest
 public class TestTokenGenerator {
 	@Autowired
 	private TokenService tokenService;
-
 
 	public String getToken() {
 		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));

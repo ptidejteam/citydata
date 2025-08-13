@@ -15,21 +15,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
 
-/*
- * Tests the API endpoint with the merge operation between EnergyConsumption and
- * Geometry producers
+/**
+ * Tests the API endpoint with the merge operation between EnergyConsumption and Geometry producers
+ *
+ * @author Minette Zongo M. 
+ * @since 29-04-2025 
+ *
+ * Last Update: Fixed failing tests after implementing Authentication
+ * @author Sikandar Ejaz 
+ * @since 2025-07-18
  */
-/*
- * Author: Minette Zongo M. 2025-04-29 
- */
-/* Last Update: 18-07-2025 
- Author Sikandar Ejaz 
- Fixed failing tests after implementing Authentication*/
-
 
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
@@ -38,28 +37,26 @@ public class GeometryProducerTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
-    private final String CITY = "montreal";
+	private final String CITY = "montreal";
 
-    @BeforeEach
-    void setUp() {
-        GeometryProducer geometryProducer = new GeometryProducer();
-        EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
-        MergeOperation mergeOperation = new MergeOperation();
-    }
+	@BeforeEach
+	void setUp() {
+		GeometryProducer geometryProducer = new GeometryProducer();
+		EnergyConsumptionProducer energyConsumptionProducer = new EnergyConsumptionProducer();
+		MergeOperation mergeOperation = new MergeOperation();
+	}
 
-    /**
-     * 
-     */
-    @Test
-    public void testMergeOperationViaAPI() throws Exception {
-        // Get example query using the PayloadFactory
-        String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
+	/**
+	 * 
+	 */
+	@Test
+	public void testMergeOperationViaAPI() throws Exception {
+		// Get example query using the PayloadFactory
+		String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonPayload))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("result")));
-    }    
-	
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("result")));
+	}
+
 }
