@@ -36,20 +36,11 @@ public class RouteController {
 
             requestMappingInfo.getDirectPaths();
             final List<String> paths = requestMappingInfo.getDirectPaths().stream().toList(); // Simplified as Condition 'requestMappingInfo. getDirectPaths() != null' is always 'true' (Earlier -paths = requestMappingInfo.getDirectPaths() != null
-//					? requestMappingInfo.getDirectPaths().stream().toList()
-//					: requestMappingInfo.getPatternsCondition() != null
-//					? requestMappingInfo.getPatternsCondition().getPatterns().stream().toList()
-//					: List.of("[No Route Patterns]");
+
 
 			final String methods =
 					requestMappingInfo.getMethodsCondition().toString(); //
-			// Simplified as requestMappingInfo.getDirectPaths() != null was
-			// always true from paths = requestMappingInfo.getDirectPaths() != null
-			//					? requestMappingInfo.getDirectPaths().stream().toList()
-			//					: requestMappingInfo.getPatternsCondition() != null
-			//							? requestMappingInfo.getPatternsCondition().getPatterns().stream().toList()
-			//							: List.of("[No Route Patterns]");
-
+		
 			paths.forEach(path -> {
 				// Exclude Spring Boot's default error routes
 				if (!path.startsWith("/error")) {

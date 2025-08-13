@@ -27,7 +27,6 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * @author Gabriel C. Ullmann
  * @since 2025-02-12
  */
-@SuppressWarnings("LoopStatementThatDoesntLoop")
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
@@ -92,9 +91,8 @@ public class CKANProducerTest {
 		Pattern pattern = Pattern.compile(uuidRegex);
 		Matcher matcher = pattern.matcher(text);
 
-		while (matcher.find()) {
+		if (matcher.find()) {
 			runnerId = matcher.group();
-			break;
 		}
 
 		mockMvc.perform(get("/apply/async/" + runnerId)).andExpect(status().isOk())

@@ -23,7 +23,9 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * @author Gabriel C. Ullmann
  * @since 2025-04-04
  */
-@SuppressWarnings("ALL")
+//TODO: Intellj keeps showing few trivial warnings here which perhaps have no impact
+// on code or in functionality, but it is worth checking later if needed, rather than
+// supressing them.
 public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	private JsonArray buildingIds;

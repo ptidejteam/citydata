@@ -1,0 +1,10 @@
+startCPURecording true
+startAllocRecording true
+startMonitorRecording
+startThreadProfiling
+sleep 50
+stopCPURecording
+stopAllocRecording
+stopMonitorRecording
+stopThreadProfiling
+saveSnapshot jprofiler/snapshot.jps
