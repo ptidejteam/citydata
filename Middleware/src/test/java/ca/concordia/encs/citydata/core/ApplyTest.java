@@ -57,9 +57,6 @@ public class ApplyTest extends TestTokenGenerator {
 	@Autowired
 	private TokenService tokenService;
 
-	@Autowired
-	private WebApplicationContext webApplicationContext;
-
 	private void performPostRequest(String url, String contentType, String content) throws Exception {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("result")));
