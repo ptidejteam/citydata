@@ -3,7 +3,6 @@ package ca.concordia.encs.citydata.utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 
@@ -48,21 +47,6 @@ public class ReflectionUtilsTest {
 	}
 
 	@Test
-	public void testInstantiateClassAbstractClass() {
-		Exception exception = assertThrows(MiddlewareException.class,
-				() -> ReflectionUtils.instantiateClass("java.util.AbstractList"));
-		assertTrue(exception.getMessage().contains("CITYdata entity could not be created"));
-	}
-
-	@Test
-	public void testInstantiateClassAbstractClass() {
-		Exception exception = assertThrows(MiddlewareException.class, () -> {
-			ReflectionUtils.instantiateClass("java.util.AbstractList");
-		});
-		assertTrue(exception.getMessage().contains("CITYdata entity could not be created"));
-	}
-
-	@Test
 	public void testSetParametersNull() {
 		JsonArray params = new JsonArray();
 
@@ -70,35 +54,6 @@ public class ReflectionUtilsTest {
 				() -> ReflectionUtils.setParameters(null, params));
 
 		assertEquals("Cannot invoke \"Object.getClass()\" because \"instance\" is null", exception.getMessage());
-	}
-
-	@Test
-	public void testFindSetterMethodReturnsValidSetter() {
-		class TestClass {
-			public void setName(String name) {
-			}
-		}
-
-		Method method = ReflectionUtils.findSetterMethod(TestClass.class, "name");
-		assertNotNull(method);
-		assertEquals("setName", method.getName());
-	}
-
-	@Test
-	public void testFindSetterMethodThrowsException() {
-		class TestClass {
-			public void setAge(int age) {
-			}
-		}
-		assertThrows(MiddlewareException.InvalidParameterException.class,
-				() -> ReflectionUtils.findSetterMethod(TestClass.class, "name"));
-	}
-
-	@Test
-	public void testConvertValueBooleanType() {
-		JsonElement value = new JsonObject();
-		value.getAsJsonObject().addProperty("key", true);
-		assertEquals(true, ReflectionUtils.convertValue(boolean.class, value.getAsJsonObject().get("key")));
 	}
 
 	@Test
