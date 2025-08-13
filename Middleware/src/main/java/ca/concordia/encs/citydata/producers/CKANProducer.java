@@ -1,8 +1,12 @@
 package ca.concordia.encs.citydata.producers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.exceptions.MiddlewareException.DataStoreFailureReadingException;
 import com.google.gson.JsonObject;
 
@@ -16,7 +20,7 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
 /**
  * This producer can connect to a CKAN instance and fetch a resource.
- * @author Gabriel C. Ullmann
+ * @author Gabriel C. Ullmann, Rushin D. Makwana
  * @since 2025-02-12
  */
 public class CKANProducer extends AbstractProducer<String> implements IProducer<String> {
@@ -74,7 +78,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 		return false;
 	}
 
-	private byte[] fetchFromCkan() {
+	private OutputStream fetchFromCkan() {
 		try {
 			// fetch resource metadata first
 			final CKANMetadataProducer metadataProducer = new CKANMetadataProducer();
@@ -126,7 +130,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 			this.setResult(errorMessageList);
 		}
 
-		return new byte[0];
+		return new ByteArrayOutputStream();
 	}
 
 	@Override
@@ -135,15 +139,18 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 		if (this.resourceId != null) {
 			// before attempting to fetch, check if a file with this resource ID already
 			// exists in the disk
-			byte[] file;
+			OutputStream fileStream = null;
 			try {
-				file = diskStore.get(this.resourceId);
+				fileStream = new ByteArrayOutputStream();
+				fileStream.write(diskStore.get(this.resourceId));
 			} catch (DataStoreFailureReadingException e) {
 				// if not, fetch from CKAN and save on disk
-				file = fetchFromCkan();
-				diskStore.set(this.resourceId, file);
+				fileStream = fetchFromCkan();
+				diskStore.set(this.resourceId, ((ByteArrayOutputStream) fileStream).toByteArray());
+			} catch (IOException e) {
+				throw new MiddlewareException.DatasetNotFound("Data Not Found");
 			}
-			this.intermediateResult.add(new String(file));
+			this.intermediateResult.add(fileStream.toString());
 			this.setResult(this.intermediateResult);
 			this.applyOperation();
 		}

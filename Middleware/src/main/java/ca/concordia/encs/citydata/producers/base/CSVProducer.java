@@ -1,8 +1,12 @@
 package ca.concordia.encs.citydata.producers.base;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ca.concordia.encs.citydata.core.exceptions.MiddlewareException;
 import ca.concordia.encs.citydata.core.implementations.AbstractProducer;
 import ca.concordia.encs.citydata.core.contracts.IProducer;
 import ca.concordia.encs.citydata.core.utils.RequestOptions;
@@ -24,12 +28,20 @@ public class CSVProducer extends AbstractProducer<String> implements IProducer<S
 
 	@Override
 	public void fetch() {
-		final String csvString = new String(this.fetchFromPath());
+    
+		try (OutputStream outputStream = this.fetchFromPath();
+			 OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
+			writer.flush(); // Ensure all data is written to the stream
+			String csvString = outputStream.toString();
 
-		// split CSV string by line, add lines to the list
-        final ArrayList<String> csvLines = new ArrayList<>(Arrays.asList(csvString.split(System.lineSeparator())));
-		this.setResult(csvLines);
-		this.applyOperation();
+			// Split CSV string by line, add lines to the list
+			ArrayList<String> csvLines = new ArrayList<>();
+			csvLines.addAll(Arrays.asList(csvString.split(System.lineSeparator())));
+			this.setResult(csvLines);
+			this.applyOperation();
+		} catch (IOException e) {
+			throw new MiddlewareException.DatasetNotFound("Error processing CSV data");
+		}
 	}
 
 }

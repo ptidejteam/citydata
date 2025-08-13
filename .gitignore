@@ -234,3 +234,5 @@ cython_debug/
 # OTHER
 #########
 .DS_Store
+
+certs/

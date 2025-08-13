@@ -1,9 +1,9 @@
 package ca.concordia.encs.citydata.producers;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.containsString;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,20 +14,27 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ca.concordia.encs.citydata.PayloadFactory;
+import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
-import ca.concordia.encs.citydata.PayloadFactory;
 
-/***
- * Tests the API endpoint with the merge operation between EnergyConsumption and Geometry producers
- * 
- * @author Minette Zongo M.
- * @since 2025-04-29
+/*
+ * Tests the API endpoint with the merge operation between EnergyConsumption and
+ * Geometry producers
  */
+/*
+ * Author: Minette Zongo M. 2025-04-29 
+ */
+/* Last Update: 18-07-2025 
+ Author Sikandar Ejaz 
+ Fixed failing tests after implementing Authentication*/
+
+
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class GeometryProducerTest {
+public class GeometryProducerTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -48,7 +55,7 @@ public class GeometryProducerTest {
         // Get example query using the PayloadFactory
         String jsonPayload = PayloadFactory.getExampleQuery("mergeEnergyConsumptionAndGeometries");
 
-        mockMvc.perform(post("/apply/sync")
+		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonPayload))
                 .andExpect(status().isOk())
