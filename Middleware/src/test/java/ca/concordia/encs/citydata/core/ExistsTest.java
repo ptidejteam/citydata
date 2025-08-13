@@ -1,18 +1,18 @@
 package ca.concordia.encs.citydata.core;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
@@ -24,18 +24,19 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * @author Minette Zongo
  * @since 2025-02-26
  *  
- * Last Update: 2025-07-18 
- * Author Sikandar Ejaz 
- * Fixed failing tests after implementing Authentication
+ * Last Update: Fixed failing tests after implementing Authentication
+ * @author Sikandar Ejaz 
+ * @since 2025-07-18 
+ * 
+ * Last Update: Added universal MockMvc
+ * @author Sikandar Ejaz
+ * @since 2025-08-13
 */
 
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ExistsTest extends TestTokenGenerator {
-
-	@Autowired
-	private MockMvc mockMvc;
+public class ExistsTest extends AuthenticatorMvc {
 
 	// Store the runnerId as an instance variable so it can be used across test methods
 	private UUID runnerId;
@@ -65,7 +66,7 @@ public class ExistsTest extends TestTokenGenerator {
 
 		String responseContent = existsResult.getResponse().getContentAsString();
 
-        assertNotEquals("[]", responseContent, "Response should not be an empty array");
+		assertNotEquals("[]", responseContent, "Response should not be an empty array");
 	}
 
 	@Test
@@ -114,7 +115,7 @@ public class ExistsTest extends TestTokenGenerator {
 				fail("apply/sync failed with status: " + syncStatus + " and response: " + syncResponse);
 			}
 		} else if (status == 200) {
-            assertNotEquals("[]", responseContent, "Response should not be an empty array");
+			assertNotEquals("[]", responseContent, "Response should not be an empty array");
 		} else {
 			fail("Unexpected status code: " + status + ". Response content: " + responseContent);
 		}

@@ -23,7 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -47,11 +46,7 @@ import ca.concordia.encs.citydata.services.TokenService;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class ApplyTest extends TestTokenGenerator {
-
-	@Autowired
-	private MockMvc mockMvc;
-
+public class ApplyTest extends AuthenticatorMvc {
 
 	@Autowired
 	private TokenService tokenService;

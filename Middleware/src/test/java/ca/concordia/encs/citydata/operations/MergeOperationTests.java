@@ -6,40 +6,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.core.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.AuthenticatorMvc;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
  * Tests for MergeOperation
  * @author Sikandar Ejaz
- * @since 08-04-2025
+ * @since 2025-04-08
  * 
- * Tests added for MergeOperation 
- * Author: Sikandar Ejaz 
- * Date: 08-04-2025
+ * Update: Fixed failing tests after implementing Authentication
+ * @author Sikandar Ejaz
+ * @since 2025-06-16
  * 
- * Last Update: 16-06-2025
- * Fixed failing tests after implementing Authentication
+ * Last Update: Added universal MockMvc
+ * @author Sikandar Ejaz
+ * @since 2025-08-13
  */
 
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class MergeOperationTests extends TestTokenGenerator {
-
-	@Autowired
-	private MockMvc mockMvc;
+public class MergeOperationTests extends AuthenticatorMvc {
 
 	@Test
 	public void testMergeOperation() throws Exception {
@@ -56,8 +52,7 @@ public class MergeOperationTests extends TestTokenGenerator {
 		jsonObject.getAsJsonArray("apply").get(0).getAsJsonObject().remove("withParams");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
-				.andExpect(status().is5xxServerError())
-				.andExpect(content().string(containsString("")));
+				.andExpect(status().is5xxServerError()).andExpect(content().string(containsString("")));
 	}
 
 	@Test
@@ -79,8 +74,7 @@ public class MergeOperationTests extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(jsonObject.toString()))
-				.andExpect(status().is5xxServerError())
-				.andExpect(content().string(containsString("")));
+				.andExpect(status().is5xxServerError()).andExpect(content().string(containsString("")));
 	}
 
 	@Test

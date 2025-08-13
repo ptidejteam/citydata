@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import ca.concordia.encs.citydata.BaseMvc;
 import ca.concordia.encs.citydata.services.TokenService;
 
 /**
@@ -18,7 +19,8 @@ import ca.concordia.encs.citydata.services.TokenService;
  */
 
 @SpringBootTest
-public class TestTokenGenerator {
+public abstract class AuthenticatorMvc extends BaseMvc {
+
 	@Autowired
 	private TokenService tokenService;
 

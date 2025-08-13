@@ -7,15 +7,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.core.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.AuthenticatorMvc;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.operations.MergeOperation;
 
@@ -33,9 +31,7 @@ import ca.concordia.encs.citydata.operations.MergeOperation;
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class GeometryProducerTest extends TestTokenGenerator {
-	@Autowired
-	private MockMvc mockMvc;
+public class GeometryProducerTest extends AuthenticatorMvc {
 
 	private final String CITY = "montreal";
 
@@ -46,9 +42,6 @@ public class GeometryProducerTest extends TestTokenGenerator {
 		MergeOperation mergeOperation = new MergeOperation();
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void testMergeOperationViaAPI() throws Exception {
 		// Get example query using the PayloadFactory

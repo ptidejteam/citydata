@@ -13,21 +13,19 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.core.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.AuthenticatorMvc;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.datastores.InMemoryDataStore;
 import ca.concordia.encs.citydata.runners.SingleStepRunner;
 
-/***
+/**
  * This test validates the energy consumption data filtering through the API
  * endpoint and also directly through the producer component.
  * <p>
@@ -39,19 +37,16 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * 
  * @author Minette Zongo M., Gabriel C. Ullmann
  * @since 2025-04-29
- */
-
-/*
- * Last Update: 18-07-2025 Author Sikandar Ejaz Fixed failing tests after
- * implementing Authentication
+*
+ * Last Update: Fixed failing tests after implementing Authentication
+ * @author Sikandar Ejaz 
+ * @since 2025-07-18 
  */
 
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class EnergyConsumptionWithFilterTest extends TestTokenGenerator {
-	@Autowired
-	private MockMvc mockMvc;
+public class EnergyConsumptionWithFilterTest extends AuthenticatorMvc {
 
 	private EnergyConsumptionProducer energyConsumptionProducer;
 
@@ -110,8 +105,8 @@ public class EnergyConsumptionWithFilterTest extends TestTokenGenerator {
 	public void testEnergyConsumptionWithAverage() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("energyConsumptionAverage");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("0.35069153"))).andReturn();
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("0.35069153"))).andReturn();
 
 	}
 

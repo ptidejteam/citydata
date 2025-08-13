@@ -10,16 +10,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.core.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.AuthenticatorMvc;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
@@ -27,37 +25,31 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  *
  * @author Gabriel C. Ullmann
  * @since 2025-02-12
- */
-
-/*
- * Last Update: 18-07-2025 
- * Author Sikandar Ejaz 
- * Fixed failing tests after implementing Authentication
+ * 
+ * Last Update: Fixed failing tests after implementing Authentication 
+ * @author Sikandar Ejaz 
+ * @since 2025-07-18
  */
 
 @SpringBootTest(classes = AppConfig.class)
 @AutoConfigureMockMvc
 @ComponentScan(basePackages = "ca.concordia.encs.citydata.core")
-public class CKANProducerTest extends TestTokenGenerator {
-
-	@Autowired
-	private MockMvc mockMvc;
+public class CKANProducerTest extends AuthenticatorMvc {
 
 	// FETCHING METADATA
 	@Test
 	void testListDatasets() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerListDatasets");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("montreal-buildings")));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("montreal-buildings")));
 	}
 
 	@Test
 	void testFetchDatasetMetadata() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerDataset");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("a948a9ed-9e79-46eb-9cf2-a1a3e56ac9b0")));
 	}
 
@@ -65,8 +57,7 @@ public class CKANProducerTest extends TestTokenGenerator {
 	void testFetchResourceMetadata() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerResource");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
 				.andExpect(content().string(containsString("a948a9ed-9e79-46eb-9cf2-a1a3e56ac9b0")));
 	}
 
@@ -75,8 +66,8 @@ public class CKANProducerTest extends TestTokenGenerator {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanMetadataProducerDataset").replace("montreal-buildings",
 				"bogus-dataset");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("Not found")));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("Not found")));
 	}
 
 	// FETCHING DATA
@@ -84,8 +75,8 @@ public class CKANProducerTest extends TestTokenGenerator {
 	void testFetchResource() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("ckanProducer");
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("FeatureCollection")));
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andExpect(status().isOk())
+				.andExpect(content().string(containsString("FeatureCollection")));
 	}
 
 	@Test
