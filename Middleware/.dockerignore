@@ -1,0 +1,55 @@
+# Build artifacts
+
+target/
+!target/_.jar
+_.class
+
+# IDE files
+
+.idea/
+.vscode/
+_.iml
+_.ipr
+\*.iws
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Git
+
+.git/
+.gitignore
+
+# Docker
+
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+
+\*.log
+logs/
+
+# Test reports
+
+test-results/
+coverage/
+
+# Node modules (if using frontend)
+
+node_modules/
+
+# Temporary files
+
+_.tmp
+_.temp
+
+# Security keys (generated fresh in Docker)
+
+_.pem
+_.key
+\*.crt
+src/main/resources/certs/

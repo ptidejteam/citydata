@@ -83,7 +83,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(
 						auth -> auth
 								.requestMatchers("/authenticate", "/health/ping", "producers/list", "/operations/list",
-										"/routes/list")
+										"/routes/list", "/error")
 								.permitAll().anyRequest().authenticated())
 				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
