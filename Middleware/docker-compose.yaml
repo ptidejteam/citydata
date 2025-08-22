@@ -1,0 +1,47 @@
+services:
+  # CITYdata Java Spring Application
+  citydata:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: citydata
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/myapp
+      - JAVA_OPTS=-Xms512m -Xmx1024m
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - citydata-network
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-citydata
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    networks:
+      - citydata-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+networks:
+  citydata-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
