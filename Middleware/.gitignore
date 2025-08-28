@@ -49,3 +49,5 @@ build/
 !**/src/main/**/target/
 !**/src/test/**
 
+## Ignore JWT certs/keys
+Middleware/src/main/resources/certs/
