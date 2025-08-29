@@ -75,9 +75,10 @@ public abstract class AbstractProducer<E> extends AbstractEntity implements IPro
 		this.runners.add(aRunner);
 	}
 
-	@Override
+	@SuppressWarnings("rawtypes")
+    @Override
 	public void setOperation(IOperation operation) {
-		this.operation = operation;
+        this.operation = operation;
 	}
 
 	@Override

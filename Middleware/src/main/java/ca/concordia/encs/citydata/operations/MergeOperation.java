@@ -45,19 +45,17 @@ public class MergeOperation extends AbstractOperation<String> implements IOperat
 
 		try {
 			final SingleStepRunner deckard = new SingleStepRunner(targetProducer, targetProducerParams);
-			final Thread runnerTask = new Thread() {
-				public void run() {
-					try {
-						deckard.runSteps();
-						while (!deckard.isDone()) {
-							System.out.println("Busy waiting!");
-						}
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
-					}
+			final Thread runnerTask = new Thread(() -> {
+                try {
+                    deckard.runSteps();
+                    while (!deckard.isDone()) {
+                        System.out.println("Busy waiting!");
+                    }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
 
-				}
-			};
+            });
 			runnerTask.start();
 			runnerTask.join();
 
@@ -65,7 +63,7 @@ public class MergeOperation extends AbstractOperation<String> implements IOperat
 			final InMemoryDataStore store = InMemoryDataStore.getInstance();
 
 			final ArrayList<?> targetList =  store.get(runnerId).getResult();
-			if (targetList != null && targetList.size() > 0) {
+			if (targetList != null && !targetList.isEmpty()) {
 				String timeStampTarget = new SimpleDateFormat(timeStampFormat).format(timeObject);
 				sourceList.add("{\"" + timeStampTarget + "\": \"" + targetList + "\" }");
 			}

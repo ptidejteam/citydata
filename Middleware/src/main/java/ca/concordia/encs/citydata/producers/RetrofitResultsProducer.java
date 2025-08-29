@@ -23,11 +23,13 @@ import ca.concordia.encs.citydata.runners.SingleStepRunner;
  * @author Gabriel C. Ullmann
  * @since 2025-04-04
  */
+//TODO: Intellj keeps showing few trivial warnings here which perhaps have no impact
+// on code or in functionality, but it is worth checking later if needed, rather than
+// supressing them.
 public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implements IProducer<JsonObject> {
 
 	private JsonArray buildingIds;
-	private JSONProducer jsonProducer;
-	private IOperation<JsonObject> jsonProducerOperation;
+    private IOperation<JsonObject> jsonProducerOperation;
 	private IRunner runnerObserver;
 
 	private final String HUB_APPLICATION_UUID = StringUtils.getEnvVariable("HUB_APPLICATION_UUID");
@@ -138,10 +140,10 @@ public class RetrofitResultsProducer extends AbstractProducer<JsonObject> implem
 
 			// get retrofit result
 			final RequestOptions requestOptions = this.getRetrofitOptions(startResponseHeaders);
-			this.jsonProducer = new JSONProducer(HUB_RETROFIT_URL, requestOptions);
-			this.jsonProducer.setOperation(this.jsonProducerOperation);
-			this.jsonProducer.addObserver(this.runnerObserver);
-			this.jsonProducer.fetch();
+            JSONProducer jsonProducer = new JSONProducer(HUB_RETROFIT_URL, requestOptions);
+			jsonProducer.setOperation(this.jsonProducerOperation);
+			jsonProducer.addObserver(this.runnerObserver);
+			jsonProducer.fetch();
 		} else {
 			errorObject.addProperty("error",
 					"No buildingIds informed. Please use the 'buildingIds' parameter to specify buildingIds.");

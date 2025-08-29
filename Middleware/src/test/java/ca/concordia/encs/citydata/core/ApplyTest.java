@@ -24,13 +24,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 import ca.concordia.encs.citydata.core.utils.ReflectionUtils;
 import ca.concordia.encs.citydata.services.TokenService;
@@ -43,7 +41,7 @@ import ca.concordia.encs.citydata.services.TokenService;
  * 
  * Fixed failing tests after implementing Authentication
  * Author: Sikandar Ejaz 
- * Date: 18-07-2025
+ * Date: 2025-07-18
  */
 
 @SpringBootTest(classes = AppConfig.class)
@@ -54,11 +52,9 @@ public class ApplyTest extends TestTokenGenerator {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Autowired
-	private TokenService tokenService;
 
 	@Autowired
-	private WebApplicationContext webApplicationContext;
+	private TokenService tokenService;
 
 	private void performPostRequest(String url, String contentType, String content) throws Exception {
 		mockMvc.perform(post(url).contentType(contentType).content(content)).andExpect(status().isOk())
@@ -119,6 +115,7 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void testSync() throws Exception {
 		String jsonPayload = PayloadFactory.getBasicQuery();
+
 		String token = getToken();
 
 		performPostRequestWithAuth("/apply/sync", MediaType.APPLICATION_JSON_VALUE, jsonPayload, getToken());
@@ -165,8 +162,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingUse))
-				.andExpect(status().isInternalServerError())
-				.andExpect(
+				.andExpect(status().isInternalServerError()).andExpect(
 						content().string(containsString("[{\"result\":\"[Error: Missing required 'use' field]\"}]")));
 	}
 
@@ -177,8 +173,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 				.contentType(MediaType.APPLICATION_JSON).content(missingWithParams))
-				.andExpect(status().is5xxServerError())
-				.andExpect(content()
+				.andExpect(status().is5xxServerError()).andExpect(content()
 						.string(containsString("[{\"result\":\"[Error: Missing required 'withParams' field]\"}]")));
 	}
 
@@ -214,8 +209,7 @@ public class ApplyTest extends TestTokenGenerator {
 
 		mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON).content(missingParamsForOperation))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().string(containsString(
+				.andExpect(status().isInternalServerError()).andExpect(content().string(containsString(
 						"[{\"result\":\"[Producer or Operation parameter 'generationProcess' was not found. Please make sure you input names and values correctly for every parameter.]\"}]")));
 	}
 
@@ -229,6 +223,7 @@ public class ApplyTest extends TestTokenGenerator {
 	@Test
 	public void testGetRequiredFieldMissing() {
 		JsonObject jsonObject = new JsonObject();
+
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			ReflectionUtils.getRequiredField(jsonObject, "missingField");
 		});

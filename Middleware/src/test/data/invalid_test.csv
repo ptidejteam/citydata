@@ -1,0 +1,4 @@
+name,age,city,active
+John Doe,,New York,true
+,25,Los Angeles,
+Bob Johnson,35,,false

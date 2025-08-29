@@ -13,7 +13,9 @@ import com.google.gson.JsonObject;
  */
 public abstract class PayloadFactory {
 
-	public static String getBasicQuery() {
+	//TODO Have to look into this method in the future to make it shorter and more
+	// readable.
+    public static String getBasicQuery() {
 		JsonObject payload = new JsonObject();
 		payload.addProperty("use", "ca.concordia.encs.citydata.producers.RandomStringProducer");
 
@@ -71,7 +73,8 @@ public abstract class PayloadFactory {
 		return new String(Files.readAllBytes(filePath));
 	}
 
-	public static String getInvalidJson() throws Exception {
+	@SuppressWarnings("SameReturnValue")
+    public static String getInvalidJson() {
 		return "{broken_json:}";
 	}
 

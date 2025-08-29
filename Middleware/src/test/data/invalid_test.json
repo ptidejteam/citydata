@@ -1,0 +1,5 @@
+{
+    "name": "John Doe",
+    "age": 30,
+    "city": "New York"
+    // missing closing brace and has comment

@@ -21,8 +21,7 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 	private String url;
 	private String resourceId;
 	private String datasetName;
-	private JSONProducer jsonProducer;
-	private IOperation<JsonObject> jsonProducerOperation;
+    private IOperation<JsonObject> jsonProducerOperation;
 	private IRunner runnerObserver;
 
 	public void setUrl(String url) {
@@ -43,33 +42,19 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 		this.resourceId = resourceId;
 	}
 
-	@Override
+	@SuppressWarnings("rawtypes")
+    @Override
 	public void setOperation(IOperation operation) {
-		this.jsonProducerOperation = operation;
+        //noinspection unchecked
+        this.jsonProducerOperation = operation;
 	}
 
 	@Override
 	public void fetch() {
 		if (this.url != null) {
-			String actionUrl = this.url;
-			if (this.resourceId != null) {
-				actionUrl += "/action/resource_show?id=" + this.resourceId;
-			} else if (this.datasetName != null) {
-				actionUrl += "/action/package_show?id=" + this.datasetName;
-			} else {
-				// if no dataset or resource is specified, fetch the list of all datasets
-				actionUrl += "/action/package_list";
-			}
-
-			// all CKAN metadata routes are GET routes
-			RequestOptions requestOptions = new RequestOptions();
-			requestOptions.setMethod("GET");
-
-			// delegate to JSON producer
-			this.jsonProducer = new JSONProducer(actionUrl, requestOptions);
-			this.jsonProducer.setOperation(this.jsonProducerOperation);
-			this.jsonProducer.addObserver(this.runnerObserver);
-			this.jsonProducer.fetch();
+			JSONProducer jsonProducer = getJsonProducer();
+			jsonProducer.addObserver(this.runnerObserver);
+			jsonProducer.fetch();
 		} else {
 			final JsonObject errorObject = new JsonObject();
 			errorObject.addProperty("error",
@@ -81,6 +66,27 @@ public class CKANMetadataProducer extends AbstractProducer<JsonObject> implement
 			super.setOperation(this.jsonProducerOperation);
 			this.applyOperation();
 		}
+	}
+
+	private JSONProducer getJsonProducer() {
+		String actionUrl = this.url;
+		if (this.resourceId != null) {
+			actionUrl += "/action/resource_show?id=" + this.resourceId;
+		} else if (this.datasetName != null) {
+			actionUrl += "/action/package_show?id=" + this.datasetName;
+		} else {
+			// if no dataset or resource is specified, fetch the list of all datasets
+			actionUrl += "/action/package_list";
+		}
+
+		// all CKAN metadata routes are GET routes
+		RequestOptions requestOptions = new RequestOptions();
+		requestOptions.setMethod("GET");
+
+		// delegate to JSON producer
+		JSONProducer jsonProducer = new JSONProducer(actionUrl, requestOptions);
+		jsonProducer.setOperation(this.jsonProducerOperation);
+		return jsonProducer;
 	}
 
 	@Override

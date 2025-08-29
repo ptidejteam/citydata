@@ -13,7 +13,7 @@ public class RequestOptions {
 	private String method;
 	private String requestBody = "";
 	private Boolean isReturnHeaders = false;
-	private final HashMap<String, String> headers = new HashMap<String, String>();
+	private final HashMap<String, String> headers = new HashMap<>();
 
 	public String getMethod() {
 		return this.method;

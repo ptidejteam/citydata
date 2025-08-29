@@ -44,6 +44,7 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 		this.resourceId = resourceId;
 	}
 
+	@SuppressWarnings("unchecked")
 	private ArrayList<JsonObject> getMetadataObject(AbstractRunner aRunner) {
 		final InMemoryDataStore memoryStore = InMemoryDataStore.getInstance();
 		final String runnerId = aRunner.getMetadata("id").toString();
@@ -55,11 +56,12 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 	}
 
 	private JsonObject getResourceAttributes(ArrayList<JsonObject> metadataObject) {
-		final JsonObject metadataResults = metadataObject.size() > 0 ? metadataObject.get(0).get("result").getAsJsonObject()
+		final JsonObject metadataResults = !metadataObject.isEmpty() ? metadataObject.getFirst().get("result").getAsJsonObject()
 				: null;
 
 		final JsonObject attributesObject = new JsonObject();
-		attributesObject.addProperty("sizeInMb", metadataResults.get("size").getAsInt() / 1000000);
+        assert metadataResults != null;
+        attributesObject.addProperty("sizeInMb", metadataResults.get("size").getAsInt() / 1000000);
 		attributesObject.addProperty("mimetype", metadataResults.get("mimetype").getAsString());
 		attributesObject.addProperty("url", metadataResults.get("url").getAsString());
 
@@ -83,20 +85,18 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 			metadataProducer.setUrl(this.url);
 			metadataProducer.setResourceId(this.resourceId);
 			final SingleStepRunner deckard = new SingleStepRunner(metadataProducer);
-			final Thread runnerTask = new Thread() {
-				public void run() {
-					try {
-						deckard.runSteps();
-						while (!deckard.isDone()) {
-							System.out.println("Busy waiting!");
-						}
-					} catch (Exception e) {
-						deckard.setAsDone();
-						System.out.println(e.getMessage());
-					}
+			final Thread runnerTask = new Thread(() -> {
+                try {
+                    deckard.runSteps();
+                    while (!deckard.isDone()) {
+                        System.out.println("Busy waiting!");
+                    }
+                } catch (Exception e) {
+                    deckard.setAsDone();
+                    System.out.println(e.getMessage());
+                }
 
-				}
-			};
+            });
 			runnerTask.start();
 			runnerTask.join();
 
@@ -117,8 +117,8 @@ public class CKANProducer extends AbstractProducer<String> implements IProducer<
 				final RequestOptions requestOptions = new RequestOptions();
 				requestOptions.setMethod("GET");
 				this.setFilePath(resourceUrl);
-				this.setFileOptions(requestOptions); ;
-				return this.fetchFromPath();
+				this.setFileOptions(requestOptions);
+                return this.fetchFromPath();
 			} else {
 				intermediateResult.add("Sorry, the " + mimetype + " type is not currently supported by this producer. "
 						+ "If you wish to download the resource, please open this link in your browser: " + resourceUrl

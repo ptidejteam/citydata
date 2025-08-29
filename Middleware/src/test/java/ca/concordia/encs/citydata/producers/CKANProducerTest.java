@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
+import ca.concordia.encs.citydata.core.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
@@ -100,6 +100,7 @@ public class CKANProducerTest extends TestTokenGenerator {
 
 		String text = asyncRequestResult.getResponse().getContentAsString();
 		String uuidRegex = "\\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\b";
+
 		Matcher matcher = Pattern.compile(uuidRegex).matcher(text);
 		if (matcher.find()) {
 			runnerId = matcher.group();

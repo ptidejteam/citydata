@@ -1,8 +1,6 @@
 package ca.concordia.encs.citydata.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import ca.concordia.encs.citydata.PayloadFactory;
-import ca.concordia.encs.citydata.TestTokenGenerator;
 import ca.concordia.encs.citydata.core.configs.AppConfig;
 
 /**
@@ -27,7 +24,7 @@ import ca.concordia.encs.citydata.core.configs.AppConfig;
  * @author Minette Zongo
  * @since 2025-02-26
  *  
- * Last Update: 18-07-2025 
+ * Last Update: 2025-07-18 
  * Author Sikandar Ejaz 
  * Fixed failing tests after implementing Authentication
 */
@@ -45,30 +42,30 @@ public class ExistsTest extends TestTokenGenerator {
 
 	@Test
 	void testQueryExists() throws Exception {
-	    // Use getExampleQuery to load a specific query from a JSON file
-	    String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
+		// Use getExampleQuery to load a specific query from a JSON file
+		String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
-	    // creating a producer
-	    MvcResult syncResult = mockMvc
+		// creating a producer
+		MvcResult syncResult = mockMvc
 				.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
 						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-	        .andExpect(status().isOk()).andReturn();
+				.andExpect(status().isOk()).andReturn();
 
-	    // Get the response but don't try to parse it as a UUID
-	    String resultJson = syncResult.getResponse().getContentAsString();
-	    
-	    // Store this result for later use if needed, but don't parse as UUID
-	    // If you really need a UUID for later, you'll need to extract it from the JSON
-	    
-	    // Check if the query exists
-	    MvcResult existsResult = mockMvc
+		// Get the response but don't try to parse it as a UUID
+		String resultJson = syncResult.getResponse().getContentAsString();
+
+		// Store this result for later use if needed, but don't parse as UUID
+		// If you really need a UUID for later, you'll need to extract it from the JSON
+
+		// Check if the query exists
+		MvcResult existsResult = mockMvc
 				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
 						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-	        .andExpect(status().isOk()).andReturn();
+				.andExpect(status().isOk()).andReturn();
 
-	    String responseContent = existsResult.getResponse().getContentAsString();
+		String responseContent = existsResult.getResponse().getContentAsString();
 
-	    assertFalse(responseContent.equals("[]"), "Response should not be an empty array");
+        assertNotEquals("[]", responseContent, "Response should not be an empty array");
 	}
 
 	@Test
@@ -96,19 +93,15 @@ public class ExistsTest extends TestTokenGenerator {
 	void testQueryExistsFollowedBySync() throws Exception {
 		String jsonPayload = PayloadFactory.getExampleQuery("stringProducerRandom");
 
-		MvcResult existsResult = mockMvc
-				.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
-						.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-				.andReturn();
+		MvcResult existsResult = mockMvc.perform(post("/exists/").header("Authorization", "Bearer " + getToken())
+				.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andReturn();
 
 		String responseContent = existsResult.getResponse().getContentAsString();
 		int status = existsResult.getResponse().getStatus();
 
 		if (status == 404 || responseContent.equals("[]")) {
-			MvcResult syncResult = mockMvc
-					.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
-							.contentType(MediaType.APPLICATION_JSON).content(jsonPayload))
-					.andReturn();
+			MvcResult syncResult = mockMvc.perform(post("/apply/sync").header("Authorization", "Bearer " + getToken())
+					.contentType(MediaType.APPLICATION_JSON).content(jsonPayload)).andReturn();
 
 			int syncStatus = syncResult.getResponse().getStatus();
 			String syncResponse = syncResult.getResponse().getContentAsString();
@@ -121,7 +114,7 @@ public class ExistsTest extends TestTokenGenerator {
 				fail("apply/sync failed with status: " + syncStatus + " and response: " + syncResponse);
 			}
 		} else if (status == 200) {
-			assertFalse(responseContent.equals("[]"), "Response should not be an empty array");
+            assertNotEquals("[]", responseContent, "Response should not be an empty array");
 		} else {
 			fail("Unexpected status code: " + status + ". Response content: " + responseContent);
 		}
