@@ -7,6 +7,16 @@ import java.util.Map;
 import ca.concordia.encs.citydata.core.contracts.IDataStore;
 import ca.concordia.encs.citydata.core.contracts.IDatastoreManager;
 
+/**
+*
+* CityData datastores manager: a singleton implementation of IDatastoreManager that orchestrates all datastores.
+* 
+* @author Minette Zongo
+* @since 2025-08-19
+* 
+*/
+
+
 public class DatastoreManager implements IDatastoreManager {
 	private final Map<DatastoreType, IDataStore<?>> stores = new EnumMap<>(DatastoreType.class);
 
