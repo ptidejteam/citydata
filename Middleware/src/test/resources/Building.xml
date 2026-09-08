@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildings>
+  <building id="1001">
+    <address>1455 De Maisonneuve Blvd W</address>
+    <city>Montreal</city>
+    <yearBuilt>1966</yearBuilt>
+    <floors>17</floors>
+  </building>
+  <building id="1002">
+    <address>2155 Guy St</address>
+    <city>Montreal</city>
+    <yearBuilt>1974</yearBuilt>
+    <floors>12</floors>
+  </building>
+  <building id="1003">
+    <address>1515 Ste-Catherine W</address>
+    <city>Montreal</city>
+    <yearBuilt>2009</yearBuilt>
+    <floors>17</floors>
+  </building>
+</buildings>
