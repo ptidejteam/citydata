@@ -20,7 +20,7 @@ import ca.concordia.encs.citydata.core.utils.RequestOptions;
  *
  * @author Gabriel C. Ullmann
  * @since 2024-12-01
- * This base producer was refactored to follow AbsrtactProducer's new logic.
+ * This base producer was refactored to follow AbstractProducer's new logic.
  * @author Minette Zongo
  * @since 2026-08-03
  */

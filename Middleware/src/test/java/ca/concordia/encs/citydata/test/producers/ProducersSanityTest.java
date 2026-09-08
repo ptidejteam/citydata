@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 
+import ca.concordia.encs.citydata.producers.*;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonArray;
@@ -15,11 +16,6 @@ import com.google.gson.JsonObject;
 import ca.concordia.encs.citydata.operations.JsonFilterOperation;
 import ca.concordia.encs.citydata.operations.StandardFilteringOperation;
 import ca.concordia.encs.citydata.operations.TemporalAggregationOperation;
-import ca.concordia.encs.citydata.producers.JSONBuildingProducer;
-import ca.concordia.encs.citydata.producers.EnergyConsumptionProducer;
-import ca.concordia.encs.citydata.producers.CSVEnvironmentalSensorProducer;
-import ca.concordia.encs.citydata.producers.TXTGeoLocationProducer;
-import ca.concordia.encs.citydata.producers.CSVRoomOccupancyProducer;
 
 public class ProducersSanityTest {
 
@@ -93,6 +89,42 @@ public class ProducersSanityTest {
 		ArrayList<JsonObject> result = producer.getResult();
 		System.out.println("Result size: " + result.size());
 	    result.forEach(System.out::println);
+	}
+	
+	@Test
+	public void testXLSXTemperatureProducer() {
+		final XLSXTemperatureProducer producer = new XLSXTemperatureProducer(null);
+		producer.setFilePath("LB Building/Sensor Data/Temperature/Weekly_Report (temp and flow)_01-01-24.xlsx");
+		producer.fetch();
+		
+		ArrayList<JsonObject> result = producer.getResult();
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		System.out.println("XLSX Result count: " + result.size());
+		result.stream().limit(5).forEach(System.out::println);
+	}
+
+	@Test
+	public void testJPGMetadataProducer() {
+		final JPGMetadataProducer producer = new JPGMetadataProducer(null);
+		producer.setFilePath("citydata_logo.jpg");
+		producer.fetch();
+
+		ArrayList<JsonObject> result = producer.getResult();
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+
+		JsonObject metadata = result.getFirst();
+
+		assertTrue(metadata.has("width"));
+		assertTrue(metadata.has("height"));
+
+		int width = metadata.get("width").getAsInt();
+		int height = metadata.get("height").getAsInt();
+
+		assertTrue((width > 0) && (height > 0));
+
+		System.out.println("JPG result: " + result);
 	}
 
 	/* TODO: uncomment and make it run
